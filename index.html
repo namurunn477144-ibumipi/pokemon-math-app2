@@ -3,432 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>さんすうクイズ - いぶちゃん・みーちゃん</title>
+  <title>さんすうクイズ - いぶちゃん＆みーちゃん</title>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
+    /* ベース：けいさんモード（明るいスカイブルー） */
     :root {
-      --primary: #0288D1; --primary-shadow: #01579B;
+      --primary: #03A9F4; --primary-shadow: #0288D1;
       --secondary: #FFB300; --secondary-shadow: #FF8F00;
       --bg-color: #E1F5FE; --card-bg: #FFFFFF;
-      --text-main: #01579B; --correct: #4CAF50; --incorrect: #F44336;
-      --bg-dot: #81D4FA;
+      --text-main: #0277BD; --correct: #4CAF50; --incorrect: #F44336;
+      --bg-dot: #B3E5FC;
     }
-    body.mode-applied {
+    
+    /* せいかつモード（ディープネイビー） */
+    body.mode-life {
       --primary: #1A237E; --primary-shadow: #0D47A1;
-      --secondary: #FF9800; --secondary-shadow: #F57C00;
+      --secondary: #FFC107; --secondary-shadow: #FFA000;
       --bg-color: #E8EAF6; --card-bg: #FFFFFF;
       --text-main: #1A237E;
-      --bg-dot: #9FA8DA;
+      --bg-dot: #C5CAE9;
     }
+
     * { box-sizing: border-box; font-family: 'M PLUS Rounded 1c', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
     body { margin: 0; padding: 0; background-color: var(--bg-color); background-image: radial-gradient(var(--bg-dot) 2px, transparent 2px); background-size: 20px 20px; color: var(--text-main); overflow-x: hidden; touch-action: manipulation; transition: background-color 0.5s; }
+    
     #app { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; }
     .view { display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; transition: opacity 0.3s ease; }
     .view.hidden { display: none !important; opacity: 0; }
+    
     .app-header { text-align: center; margin-bottom: 10px; }
     #main-title { font-size: 2rem; color: var(--primary-shadow); line-height: 1.2; text-shadow: 2px 2px 0px #FFF; margin: 10px 0; transition: color 0.5s; }
     
-    .partner-stage { position: relative; width: 100%; border-radius: 24px; padding: 40px 20px 20px; border: 4px solid #FFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center; margin-bottom: 15px; cursor: pointer; overflow: hidden; transition: background 0.5s; }
-    .partner-stage.bg-lovely { background: linear-gradient(180deg, #E0F7FA 0%, #80DEEA 100%); }
-    .partner-stage.bg-cool { background: linear-gradient(180deg, #1A237E 0%, #3949AB 100%); border-color: #FFD700; }
-    .partner-stage.bg-cool #partner-name { color: #FFD700; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-    #partner-image { width: 160px; height: 160px; object-fit: contain; filter: drop-shadow(0 8px 6px rgba(0,0,0,0.2)); animation: float 3s ease-in-out infinite; transition: transform 0.3s; z-index: 5; position: relative; }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-    #partner-name { font-size: 1.8rem; color: var(--text-main); margin: 10px 0 0 0; pointer-events: none; font-weight: 900; }
-    .poke-comment { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #FFF; border: 3px solid var(--primary); border-radius: 20px; padding: 8px 15px; font-size: 1.1rem; font-weight: 900; color: var(--text-main); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 20; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
+    /* ステージ背景 */
+    .partner-stage { position: relative; width: 100%; border-radius: 24px; padding: 30px 20px 15px; border: 4px solid #FFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center; margin-bottom: 10px; cursor: pointer; overflow: hidden; transition: background 0.5s; }
     
-    .eating-msg { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; color: #FF5722; font-weight: 900; opacity: 0; pointer-events: none; text-shadow: 2px 2px 0 #FFF; transition: all 0.3s; z-index: 30; white-space: nowrap; }
-    .flying-food { position: fixed; font-size: 2.5rem; z-index: 1000; transition: all 0.5s cubic-bezier(0.5, -0.5, 1, 1); pointer-events: none; }
+    .partner-stage.bg-grass { background: linear-gradient(180deg, #E8F5E9 0%, #C8E6C9 100%); }
+    .partner-stage.bg-grass::before { content: '🌱☘️🍀'; position: absolute; bottom: 5px; left: 10px; font-size: 1.2rem; opacity: 0.6; }
+    .partner-stage.bg-grass::after { content: '🍀☘️🌱'; position: absolute; bottom: 5px; right: 10px; font-size: 1.2rem; opacity: 0.6; }
+
+    .partner-stage.bg-lovely { background: linear-gradient(180deg, #FFF0F5 0%, #FFD1DC 100%); }
+    .partner-stage.bg-lovely::before { content: '💖✨'; position: absolute; bottom: 8px; left: 12px; font-size: 1.2rem; opacity: 0.7; }
+    .partner-stage.bg-lovely::after { content: '✨💖'; position: absolute; bottom: 8px; right: 12px; font-size: 1.2rem; opacity: 0.7; }
+
+    .partner-stage.bg-cool { background: linear-gradient(180deg, #2A0845 0%, #6441A5 100%); border-color: #FFD700; }
+    .partner-stage.bg-cool::before { content: '⚡⭐'; position: absolute; bottom: 8px; left: 12px; font-size: 1.2rem; opacity: 0.8; }
+    .partner-stage.bg-cool::after { content: '⭐⚡'; position: absolute; bottom: 8px; right: 12px; font-size: 1.2rem; opacity: 0.8; }
+    .partner-stage.bg-cool #partner-name-room { color: #FFD700; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+    .partner-image { width: 130px; height: 130px; object-fit: contain; filter: drop-shadow(0 8px 6px rgba(0,0,0,0.2)); animation: float 3s ease-in-out infinite; transition: transform 0.3s; z-index: 5; position: relative; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .partner-name { font-size: 1.5rem; color: var(--text-main); margin: 5px 0 0 0; pointer-events: none; font-weight: 900; }
     
-    .status-board { width: 100%; background: rgba(0,0,0,0.05); padding: 12px 20px; border-radius: 16px; margin-bottom: 15px; }
-    .exp-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px; }
-    .exp-label { font-size: 1.1rem; font-weight: 800; }
-    .exp-value { font-size: 1.4rem; font-weight: 900; color: var(--primary-shadow); }
-    .exp-bar-bg { background-color: rgba(0,0,0,0.1); border-radius: 15px; height: 24px; overflow: hidden; border: 3px solid #FFF; }
-    .exp-bar-fill { background: var(--primary); height: 100%; width: 0%; border-radius: 10px; transition: width 0.6s ease; }
+    .poke-comment { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #FFF; border: 3px solid var(--primary); border-radius: 20px; padding: 6px 14px; font-size: 1rem; font-weight: 900; color: var(--text-main); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 20; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
+    .poke-comment::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-width: 8px 8px 0; border-style: solid; border-color: var(--primary) transparent transparent transparent; }
     
-    .food-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 20px; }
-    .food-header h3 { margin: 0 0 5px 0; font-size: 1.2rem; text-align: center; color: var(--primary-shadow); }
-    .food-header p { margin: 0; font-size: 0.85rem; color: var(--text-main); text-align: center; }
-    .food-list { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
-    .food-item { width: 70px; height: 70px; font-size: 2.5rem; background: #FFF9C4; border: 3px solid #FFF59D; border-radius: 16px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; box-shadow: 0 6px 0 #FBC02D; }
-    .food-item.locked { background: #E0E0E0; border-color: #F5F5F5; box-shadow: 0 6px 0 #BDBDBD; filter: grayscale(100%); pointer-events: none; }
-    .food-item.locked::after { content: '🔒'; position: absolute; font-size: 1.2rem; bottom: -5px; right: -5px; }
-    .food-item.eaten { background: #E8F5E9; border-color: #C8E6C9; box-shadow: 0 4px 0 #A5D6A7; transform: scale(0.95); pointer-events: none; filter: grayscale(100%) opacity(0.5); }
-    
-    .action-buttons { width: 100%; display: flex; flex-direction: column; gap: 10px; }
-    .btn { border: none; border-radius: 20px; font-weight: 900; cursor: pointer; text-align: center; display: inline-flex; justify-content: center; align-items: center; }
-    .btn-large { width: 100%; padding: 16px; font-size: 1.4rem; }
-    .btn-primary { background: var(--secondary); color: white; box-shadow: 0 8px 0 var(--secondary-shadow); }
-    .btn-outline { background: #FFF; color: var(--primary-shadow); border: 3px solid var(--primary); box-shadow: 0 6px 0 var(--primary); }
-    
-    .quiz-card { background: var(--card-bg); width: 100%; padding: 20px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #FFF; text-align: center; }
-    .question-word { font-size: 1.8rem; font-weight: 900; color: #333; margin: 15px 0; line-height: 1.4; }
-    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
-    .option-btn { background: #FFF; border: 4px solid var(--primary); border-radius: 16px; padding: 12px; font-size: 1.4rem; font-weight: 900; color: var(--text-main); display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 0 var(--primary); cursor: pointer; }
-    .voice-btn { background: var(--secondary); box-shadow: 0 6px 0 var(--secondary-shadow); border-radius: 50%; border: none; color: white; cursor: pointer; width: 50px; height: 50px; font-size: 1.5rem; display: inline-flex; justify-content: center; align-items: center; }
-
-    /* --- けいさん：きのみ改行表示スタイル --- */
-    .berry-container { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 15px 0; }
-    .berry-group { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
-    .berry-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; background: rgba(0,0,0,0.03); padding: 8px; border-radius: 12px; border: 2px dashed #B3E5FC; }
-    .berry-item { font-size: 1.8rem; line-height: 1; text-align: center; }
-    .berry-op { font-size: 1.8rem; font-weight: 900; color: var(--primary-shadow); margin: 4px 0; }
-
-    /* --- おかね：CSS全硬貨スタイル --- */
-    .coin-container { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin: 15px 0; }
-    .coin { border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; font-weight: 900; box-shadow: 0 4px 0 rgba(0,0,0,0.2); position: relative; }
-    .coin-1 { width: 42px; height: 42px; background: #E0E0E0; border: 3px solid #BDBDBD; color: #616161; font-size: 1rem; }
-    .coin-5 { width: 46px; height: 46px; background: #FFE082; border: 3px solid #FFCA28; color: #8D6E63; font-size: 1.1rem; }
-    .coin-5::after { content: ''; position: absolute; width: 10px; height: 10px; background: #FFF; border-radius: 50%; border: 1px solid #FFCA28; }
-    .coin-10 { width: 50px; height: 50px; background: #D7CCC8; border: 3px solid #A1887F; color: #4E342E; font-size: 1.2rem; }
-    .coin-50 { width: 48px; height: 48px; background: #CFD8DC; border: 3px solid #90A4AE; color: #37474F; font-size: 1.1rem; }
-    .coin-50::after { content: ''; position: absolute; width: 10px; height: 10px; background: #FFF; border-radius: 50%; border: 1px solid #90A4AE; }
-    .coin-100 { width: 52px; height: 52px; background: #ECEFF1; border: 3px solid #B0BEC5; color: #263238; font-size: 1.2rem; }
-    .coin-500 { width: 58px; height: 58px; background: #FFF59D; border: 3px solid #FBC02D; color: #F57F17; font-size: 1.3rem; }
-
-    /* --- とけい：CSS時計スタイル --- */
-    .clock-face { width: 140px; height: 140px; border: 6px solid var(--primary-shadow); border-radius: 50%; position: relative; margin: 10px auto; background: #FFF; }
-    .clock-center { position: absolute; width: 8px; height: 8px; background: #333; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; }
-    .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; }
-    .hour-hand { width: 6px; height: 38px; background: #333; z-index: 5; }
-    .minute-hand { width: 4px; height: 55px; background: #E91E63; z-index: 6; }
-
-    /* --- バー比較スタイル --- */
-    .bar-container { display: flex; flex-direction: column; gap: 12px; width: 100%; margin: 15px 0; }
-    .bar-item { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.2rem; }
-    .bar-fill { height: 28px; border-radius: 14px; background: var(--secondary); transition: width 0.3s; }
-
-    .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.95); z-index: 100; display: flex; justify-content: center; align-items: center; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-    .overlay.show { opacity: 1; pointer-events: auto; }
-    .feedback-card { text-align: center; background: #FFF; padding: 30px; border-radius: 30px; border: 5px solid var(--primary); width: 90%; max-width: 400px; }
-    .feedback-icon { font-size: 7rem; }
-    .feedback-text { font-size: 1.8rem; font-weight: 900; margin-top: 10px; }
-  </style>
-</head>
-<body>
-
-<div id="app">
-  <div id="room-view" class="view active">
-    <header class="app-header"><h1 id="main-title">けいさん クイズ</h1></header>
-    <div id="partner-stage" class="partner-stage bg-lovely" onclick="interactPokemon()">
-      <div id="poke-comment" class="poke-comment">がんばろうね！</div>
-      <img id="partner-image" src="" alt="パートナー">
-      <div id="eating-msg" class="eating-msg">もぐもぐ♪</div>
-      <h2 id="partner-name">ゴンベ</h2>
-    </div>
-    <div class="status-board">
-      <div class="exp-header"><span class="exp-label">なかよし度</span><span class="exp-value"><span id="exp-text">0</span>%</span></div>
-      <div class="exp-bar-bg"><div id="exp-bar" class="exp-bar-fill"></div></div>
-    </div>
-    <div class="food-section">
-      <div class="food-header"><h3>ごはんボックス</h3><p>4もんせいかいで、ごはんが1つひらくよ！</p></div>
-      <div id="food-list" class="food-list"></div>
-    </div>
-    <div class="action-buttons">
-      <button id="start-quiz-btn" class="btn btn-primary btn-large">けいさんクイズ (4もん)</button>
-      <button id="mode-toggle-btn" class="btn btn-outline btn-large" style="margin-top:5px;">🔄 せいかつクイズにきりかえ</button>
-      <button id="reset-game-btn" class="btn btn-primary btn-large" style="margin-top:5px; background:#E91E63; display:none;">あたらしいポケモンとあそぶ🔄</button>
-    </div>
-  </div>
-
-  <div id="quiz-view" class="view hidden">
-    <div style="margin-bottom:15px;"><span id="quiz-progress-text" class="btn btn-primary" style="padding:6px 16px; border-radius:15px;">だい 1 もん！</span></div>
-    <div id="quiz-content" class="quiz-card"></div>
-  </div>
-</div>
-
-<div id="feedback-overlay" class="overlay">
-  <div class="feedback-card">
-    <div id="feedback-icon" class="feedback-icon">⭕</div>
-    <div id="feedback-text" class="feedback-text">せいかい！</div>
-  </div>
-</div>
-
-<script>
-const allFoods = [
-  { name: "ハンバーガー", emoji: "🍔" }, { name: "おすし", emoji: "🍣" }, { name: "ラーメン", emoji: "🍜" }, { name: "おにぎり", emoji: "🍙" }, 
-  { name: "カレー", emoji: "🍛" }, { name: "ピザ", emoji: "🍕" }, { name: "アイス", emoji: "🍦" }, { name: "ドーナツ", emoji: "🍩" }
-];
-
-const eeveeEvolutions = [
-  { id: 134, name: "シャワーズ" }, { id: 135, name: "サンダース" }, { id: 136, name: "ブースター" },
-  { id: 196, name: "エーフィ" }, { id: 197, name: "ブラッキー" }, { id: 470, name: "リーフィア" },
-  { id: 471, name: "グレイシア" }, { id: 700, name: "ニンフィア" }
-];
-
-let isAppliedMode = false;
-let baseState = { exp: 0, keys: 0, isEvolved: false, partnerId: 446, partnerName: "ゴンベ", foods: [] };
-let appliedState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
-
-function getPokemonImageUrl(id) { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`; }
-
-function initBaseMode() {
-  baseState = { exp: 0, keys: 0, isEvolved: false, partnerId: 446, partnerName: "ゴンベ", foods: [] };
-  baseState.foods = [...allFoods].sort(() => 0.5 - Math.random()).slice(0, 4).map(f => ({ ...f, isEaten: false }));
-}
-function initAppliedMode() {
-  appliedState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
-  appliedState.foods = [...allFoods].sort(() => 0.5 - Math.random()).slice(0, 4).map(f => ({ ...f, isEaten: false }));
-}
-
-function renderRoom() {
-  const foodListEl = document.getElementById('food-list');
-  foodListEl.innerHTML = "";
-  const currentState = isAppliedMode ? appliedState : baseState;
-  
-  document.getElementById('partner-image').src = getPokemonImageUrl(currentState.partnerId);
-  document.getElementById('partner-name').innerText = currentState.partnerName;
-  document.getElementById('exp-text').innerText = currentState.exp;
-  document.getElementById('exp-bar').style.width = currentState.exp + "%";
-  
-  currentState.foods.forEach((food, index) => {
-    const isUnlocked = currentState.keys > index;
-    const foodEl = document.createElement('div');
-    if (food.isEaten) foodEl.className = 'food-item eaten';
-    else if (!isUnlocked) foodEl.className = 'food-item locked';
-    else {
-      foodEl.className = 'food-item';
-      foodEl.onclick = () => feedPartner(index, foodEl);
-    }
-    foodEl.innerText = food.emoji;
-    foodListEl.appendChild(foodEl);
-  });
-}
-
-function feedPartner(index, element) {
-  const currentState = isAppliedMode ? appliedState : baseState;
-  if (currentState.foods[index].isEaten) return;
-  element.classList.add('eaten');
-  currentState.foods[index].isEaten = true;
-  currentState.exp = Math.min(100, currentState.exp + 25);
-  
-  if (!isAppliedMode && currentState.exp === 100) {
-    currentState.isEvolved = true;
-    currentState.partnerId = 143;
-    currentState.partnerName = "カビゴン";
-  } else if (isAppliedMode && currentState.exp === 100 && !currentState.isEvolved) {
-    currentState.isEvolved = true;
-    const evo = eeveeEvolutions[Math.floor(Math.random() * eeveeEvolutions.length)];
-    currentState.partnerId = evo.id;
-    currentState.partnerName = evo.name;
-  }
-  renderRoom();
-}
-
-document.getElementById('mode-toggle-btn').onclick = () => {
-  isAppliedMode = !isAppliedMode;
-  document.body.classList.toggle('mode-applied', isAppliedMode);
-  document.getElementById('main-title').innerText = isAppliedMode ? "せいかつ クイズ" : "けいさん クイズ";
-  document.getElementById('start-quiz-btn').innerText = isAppliedMode ? "せいかつクイズ (4もん)" : "けいさんクイズ (4もん)";
-  document.getElementById('mode-toggle-btn').innerText = isAppliedMode ? "🔄 けいさんクイズにきりかえ" : "🔄 せいかつクイズにきりかえ";
-  renderRoom();
-};
-
-let currentQIndex = 0;
-document.getElementById('start-quiz-btn').onclick = () => {
-  document.getElementById('room-view').classList.add('hidden');
-  document.getElementById('quiz-view').classList.remove('hidden');
-  currentQIndex = 0;
-  showNextQuestion();
-};
-
-function showNextQuestion() {
-  if (currentQIndex >= 4) {
-    const currentState = isAppliedMode ? appliedState : baseState;
-    currentState.keys++;
-    document.getElementById('quiz-view').classList.add('hidden');
-    document.getElementById('room-view').classList.remove('hidden');
-    renderRoom();
-    return;
-  }
-  
-  document.getElementById('quiz-progress-text').innerText = `だい ${currentQIndex + 1} もん！`;
-  const contentEl = document.getElementById('quiz-content');
-  contentEl.innerHTML = "";
-  
-  if (!isAppliedMode) {
-    generateMathQuestion(contentEl);
-  } else {
-    generateLifeQuestion(contentEl);
-  }
-}
-
-/* --- ① けいさん（きのみ改行表示） --- */
-function generateMathQuestion(container) {
-  const isAdd = Math.random() > 0.5;
-  let a, b, ans;
-  if (isAdd) {
-    a = Math.floor(Math.random() * 5) + 1;
-    b = Math.floor(Math.random() * 5) + 1;
-    ans = a + b;
-  } else {
-    a = Math.floor(Math.random() * 5) + 4;
-    b = Math.floor(Math.random() * 3) + 1;
-    ans = a - b;
-  }
-  
-  const text = isAdd ? `${a} ＋ ${b} ＝ ？` : `${a} − ${b} ＝ ？`;
-  
-  // きのみGrid（5個1列）生成
-  let berryHtml = `<div class="berry-container"><div class="berry-group"><div class="berry-grid">`;
-  for(let i=0; i<a; i++) berryHtml += `<span class="berry-item">🍓</span>`;
-  berryHtml += `</div></div>`;
-  
-  berryHtml += `<div class="berry-op">${isAdd ? '＋' : '−'}</div>`;
-  
-  berryHtml += `<div class="berry-group"><div class="berry-grid">`;
-  for(let i=0; i<b; i++) berryHtml += `<span class="berry-item">${isAdd ? '🍓' : '❌'}</span>`;
-  berryHtml += `</div></div></div>`;
-
-  container.innerHTML = `
-    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-      <p class="question-sub" style="margin:0;">こたえは いくつかな？</p>
-      <button class="voice-btn" onclick="speakText('${text}')">🔊</button>
-    </div>
-    <div class="question-word">${text}</div>
-    ${berryHtml}
-    <div class="options-grid" id="q-opts"></div>
-  `;
-  
-  renderOptions(container, ans, [ans, ans+1, ans-1, ans+2].filter(v=>v>=0).slice(0,4));
-  speakText(text);
-}
-
-/* --- ②＆③ せいかつ（ひらがな化・全硬貨対応） --- */
-function generateLifeQuestion(container) {
-  const types = ['clock', 'money', 'bar'];
-  const type = types[currentQIndex % types.length];
-  
-  if (type === 'clock') {
-    const hour = Math.floor(Math.random() * 12) + 1;
-    const deg = hour * 30;
-    container.innerHTML = `
-      <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-        <p class="question-sub" style="margin:0;">なんじ かな？</p>
-        <button class="voice-btn" onclick="speakText('${hour}じ')">🔊</button>
-      </div>
-      <div class="clock-face">
-        <div class="clock-center"></div>
-        <div class="hand hour-hand" style="transform: rotate(${deg}deg);"></div>
-        <div class="hand minute-hand" style="transform: rotate(0deg);"></div>
-      </div>
-      <div class="options-grid" id="q-opts"></div>
-    `;
-    renderOptions(container, `${hour}じ`, [`${hour}じ`, `${(hour%12)+1}じ`, `${hour===1?12:hour-1}じ`, `${(hour+2)%12||12}じ`]);
-    speakText(`${hour}じ`);
-  } 
-  else if (type === 'money') {
-    // 1円, 5円, 10円, 50円, 100円, 500円玉対応
-    const coinTypes = [
-      { val: 1, class: 'coin-1', label: '1' },
-      { val: 5, class: 'coin-5', label: '5' },
-      { val: 10, class: 'coin-10', label: '10' },
-      { val: 50, class: 'coin-50', label: '50' },
-      { val: 100, class: 'coin-100', label: '100' },
-      { val: 500, class: 'coin-500', label: '500' }
-    ];
-    
-    // ランダムに2〜4個の硬貨を選択
-    const selectedCoins = [];
-    const count = Math.floor(Math.random() * 3) + 2;
-    let total = 0;
-    for(let i=0; i<count; i++) {
-      const coin = coinTypes[Math.floor(Math.random() * coinTypes.length)];
-      selectedCoins.push(coin);
-      total += coin.val;
-    }
-    
-    let coinsHtml = '<div class="coin-container">';
-    selectedCoins.forEach(c => {
-      coinsHtml += `<div class="coin ${c.class}">${c.label}</div>`;
-    });
-    coinsHtml += '</div>';
-
-    container.innerHTML = `
-      <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-        <p class="question-sub" style="margin:0;">ぜんぶで いくら かな？</p>
-        <button class="voice-btn" onclick="speakText('ぜんぶで いくらかな')">🔊</button>
-      </div>
-      ${coinsHtml}
-      <div class="options-grid" id="q-opts"></div>
-    `;
-    renderOptions(container, `${total}えん`, [`${total}えん`, `${total+5}えん`, `${total+10}えん`, `${Math.max(1, total-5)}えん`]);
-    speakText('ぜんぶで いくらかな');
-  }
-  else {
-    // ひらがな表記のバー比較（「ながい ほう」）
-    const lenA = Math.floor(Math.random() * 60) + 30;
-    const lenB = Math.floor(Math.random() * 60) + 30;
-    if (lenA === lenB) return generateLifeQuestion(container);
-    
-    const isALonger = lenA > lenB;
-    const correctAns = isALonger ? "あかい ほう" : "あおい ほう";
-
-    container.innerHTML = `
-      <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-        <p class="question-sub" style="margin:0;">ながい ほうは どちらかな？</p>
-        <button class="voice-btn" onclick="speakText('ながい ほうは どちらかな')">🔊</button>
-      </div>
-      <div class="bar-container">
-        <div class="bar-item"><span>あか:</span><div class="bar-fill" style="width:${lenA}%; background:#E91E63;"></div></div>
-        <div class="bar-item"><span>あお:</span><div class="bar-fill" style="width:${lenB}%; background:#2196F3;"></div></div>
-      </div>
-      <div class="options-grid" id="q-opts"></div>
-    `;
-    renderOptions(container, correctAns, ["あかい ほう", "あおい ほう"]);
-    speakText('ながい ほうは どちらかな');
-  }
-}
-
-function renderOptions(container, correctAns, options) {
-  const optsGrid = container.querySelector('#q-opts');
-  options.sort(() => 0.5 - Math.random()).forEach(opt => {
-    const btn = document.createElement('div');
-    btn.className = 'option-btn';
-    btn.innerText = opt;
-    btn.onclick = () => checkAnswer(String(opt) === String(correctAns), correctAns);
-    optsGrid.appendChild(btn);
-  });
-}
-
-function speakText(text) {
-  const msg = new SpeechSynthesisUtterance(text);
-  msg.lang = 'ja-JP';
-  msg.rate = 0.85;
-  window.speechSynthesis.speak(msg);
-}
-
-function checkAnswer(isCorrect, answerText) {
-  const overlay = document.getElementById('feedback-overlay');
-  const icon = document.getElementById('feedback-icon');
-  const text = document.getElementById('feedback-text');
-  
-  if (isCorrect) {
-    icon.innerText = "⭕"; icon.style.color = "var(--correct)";
-    text.innerText = "せいかい！"; text.style.color = "var(--correct)";
-    speakText("せいかい！やったね！");
-  } else {
-    icon.innerText = "❌"; icon.style.color = "var(--incorrect)";
-    text.innerText = `せいかいは：${answerText}`; text.style.color = "var(--incorrect)";
-    speakText("ざんねん！つぎはがんばろう！");
-  }
-  
-  overlay.classList.add('show');
-  setTimeout(() => {
-    overlay.classList.remove('show');
-    if (isCorrect) {
-      currentQIndex++;
-      showNextQuestion();
-    }
-  }, 1800);
-}
-
-window.onload = () => {
-  initBaseMode();
-  initAppliedMode();
-  renderRoom();
-};
-</script>
-</body>
-</html>
+    @keyframes jumpPoke { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
+    .anim-jump { animation: jumpPoke 0.4s ease !important; }
+    @keyframes spinPoke { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
+    .anim-spin { animation: spinPoke 0.5s
