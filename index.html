@@ -6,7 +6,6 @@
   <title>さんすうクイズ - いぶちゃん＆みーちゃん</title>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
-    /* ベース：けいさんモード（スカイブルー） */
     :root {
       --primary: #03A9F4; --primary-shadow: #0288D1;
       --secondary: #FFB300; --secondary-shadow: #FF8F00;
@@ -14,8 +13,6 @@
       --text-main: #0277BD; --correct: #4CAF50; --incorrect: #F44336;
       --bg-dot: #B3E5FC;
     }
-    
-    /* せいかつモード（ディープネイビー） */
     body.mode-life {
       --primary: #1A237E; --primary-shadow: #0D47A1;
       --secondary: #FFC107; --secondary-shadow: #FFA000;
@@ -23,28 +20,21 @@
       --text-main: #1A237E;
       --bg-dot: #C5CAE9;
     }
-
     * { box-sizing: border-box; font-family: 'M PLUS Rounded 1c', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
     body { margin: 0; padding: 0; background-color: var(--bg-color); background-image: radial-gradient(var(--bg-dot) 2px, transparent 2px); background-size: 20px 20px; color: var(--text-main); overflow-x: hidden; touch-action: manipulation; transition: background-color 0.5s; }
-    
     #app { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; }
     .view { display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; transition: opacity 0.3s ease; }
     .view.hidden { display: none !important; opacity: 0; }
-    
     .app-header { text-align: center; margin-bottom: 10px; }
     #main-title { font-size: 2rem; color: var(--primary-shadow); line-height: 1.2; text-shadow: 2px 2px 0px #FFF; margin: 10px 0; transition: color 0.5s; }
     
-    /* ステージ背景 */
     .partner-stage { position: relative; width: 100%; border-radius: 24px; padding: 30px 20px 15px; border: 4px solid #FFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center; margin-bottom: 10px; cursor: pointer; overflow: hidden; transition: background 0.5s; }
-    
     .partner-stage.bg-grass { background: linear-gradient(180deg, #E8F5E9 0%, #C8E6C9 100%); }
     .partner-stage.bg-grass::before { content: '🌱☘️🍀'; position: absolute; bottom: 5px; left: 10px; font-size: 1.2rem; opacity: 0.6; }
     .partner-stage.bg-grass::after { content: '🍀☘️🌱'; position: absolute; bottom: 5px; right: 10px; font-size: 1.2rem; opacity: 0.6; }
-
     .partner-stage.bg-lovely { background: linear-gradient(180deg, #FFF0F5 0%, #FFD1DC 100%); }
     .partner-stage.bg-lovely::before { content: '💖✨'; position: absolute; bottom: 8px; left: 12px; font-size: 1.2rem; opacity: 0.7; }
     .partner-stage.bg-lovely::after { content: '✨💖'; position: absolute; bottom: 8px; right: 12px; font-size: 1.2rem; opacity: 0.7; }
-
     .partner-stage.bg-cool { background: linear-gradient(180deg, #2A0845 0%, #6441A5 100%); border-color: #FFD700; }
     .partner-stage.bg-cool::before { content: '⚡⭐'; position: absolute; bottom: 8px; left: 12px; font-size: 1.2rem; opacity: 0.8; }
     .partner-stage.bg-cool::after { content: '⭐⚡'; position: absolute; bottom: 8px; right: 12px; font-size: 1.2rem; opacity: 0.8; }
@@ -53,10 +43,8 @@
     .partner-image { width: 130px; height: 130px; object-fit: contain; filter: drop-shadow(0 8px 6px rgba(0,0,0,0.2)); animation: float 3s ease-in-out infinite; transition: transform 0.3s; z-index: 5; position: relative; }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     .partner-name { font-size: 1.5rem; color: var(--text-main); margin: 5px 0 0 0; pointer-events: none; font-weight: 900; }
-    
     .poke-comment { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #FFF; border: 3px solid var(--primary); border-radius: 20px; padding: 6px 14px; font-size: 1rem; font-weight: 900; color: var(--text-main); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 20; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
     .poke-comment::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-width: 8px 8px 0; border-style: solid; border-color: var(--primary) transparent transparent transparent; }
-    
     @keyframes jumpPoke { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
     .anim-jump { animation: jumpPoke 0.4s ease !important; }
     @keyframes spinPoke { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
@@ -65,7 +53,6 @@
     .anim-shake { animation: shakePoke 0.4s ease !important; }
     @keyframes chew { 0% { transform: scale(1); } 25% { transform: scale(1.15) rotate(-5deg); } 50% { transform: scale(0.95) rotate(5deg); } 75% { transform: scale(1.1) rotate(-3deg); } 100% { transform: scale(1); } }
     .anim-chew { animation: chew 0.5s ease-in-out !important; }
-    
     .eating-msg { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 1.4rem; color: #FF5722; font-weight: 900; opacity: 0; pointer-events: none; text-shadow: 2px 2px 0 #FFF; transition: all 0.3s; z-index: 30; white-space: nowrap; }
     .flying-food { position: fixed; font-size: 2.2rem; z-index: 1000; transition: all 0.5s cubic-bezier(0.5, -0.5, 1, 1); pointer-events: none; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
     .effect-anim { position: absolute; font-size: 2rem; bottom: 40%; opacity: 0; animation: floatUpEffect 1s ease-out; pointer-events: none; z-index: 15; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
@@ -78,7 +65,6 @@
     .exp-bar-bg { background-color: rgba(0,0,0,0.1); border-radius: 15px; height: 24px; overflow: hidden; border: 3px solid #FFF; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
     .exp-bar-fill { background: var(--primary); height: 100%; width: 0%; border-radius: 10px; transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     
-    /* ごはんボックス */
     .food-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 15px; }
     .food-header h3 { margin: 0 0 5px 0; font-size: 1.2rem; text-align: center; color: var(--primary-shadow); }
     .food-header p { margin: 0; font-size: 0.85rem; color: var(--text-main); text-align: center; }
@@ -95,7 +81,7 @@
     .btn-mode { background: #E1F5FE; border: 3px solid var(--primary); color: var(--primary-shadow); border-radius: 15px; padding: 10px; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: 0.1s; }
     .btn-mode.active { background: var(--primary); color: white; box-shadow: 0 4px 0 var(--primary-shadow); }
     
-    .action-buttons { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+    .action-buttons { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
     .btn { border: none; border-radius: 20px; font-weight: 900; cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; text-align: center; outline: none; display: inline-flex; justify-content: center; align-items: center; }
     .btn-large { width: 100%; padding: 16px; font-size: 1.4rem; }
     .btn-primary { background: var(--secondary); color: white; box-shadow: 0 8px 0 var(--secondary-shadow); }
@@ -110,12 +96,11 @@
     
     .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
     
-    /* 見切れ防止・引き算枠表示スタイル */
-    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 90px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .fruit-box-frame { display: inline-block; border: 3px solid #FFA000; border-radius: 16px; padding: 8px; background: #FFF; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
-    .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; justify-items: center; align-items: center; font-size: 1.6rem; }
-    .fruit-minus { position: relative; display: inline-flex; justify-content: center; align-items: center; }
-    .fruit-minus::after { content: '❌'; position: absolute; font-size: 1.4rem; opacity: 0.85; text-shadow: 0 0 3px #FFF; }
+    /* きのみグリッド */
+    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 90px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px; overflow: visible; }
+    .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; justify-items: center; align-items: center; font-size: 1.6rem; width: 100%; max-width: 170px; }
+    .fruit-minus { opacity: 0.3; position: relative; }
+    .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1rem; opacity: 1; }
     
     /* CSS時計 */
     .clock-face { width: 120px; height: 120px; border: 6px solid #1A237E; border-radius: 50%; background: #FFF; position: relative; margin: 10px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
@@ -124,22 +109,15 @@
     .hand-minute { width: 4px; height: 48px; background: #1976D2; margin-left: -2px; z-index: 1; }
     .clock-center { width: 10px; height: 10px; background: #333; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
 
-    /* CSSコイン（全硬貨対応） */
+    /* CSSコイン */
     .coin-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 10px 0; }
-    .coin { border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; font-weight: 900; box-shadow: 0 3px 6px rgba(0,0,0,0.2); position: relative; }
-    .coin-1 { width: 36px; height: 36px; background: radial-gradient(circle, #FFFFFF 0%, #B0BEC5 100%); border: 2px solid #78909C; color: #37474F; font-size: 0.9rem; }
-    .coin-5 { width: 40px; height: 40px; background: radial-gradient(circle, #FFF59D 0%, #FBC02D 100%); border: 2px solid #F57F17; color: #5D4037; font-size: 1rem; }
-    .coin-5::after { content: ''; position: absolute; width: 8px; height: 8px; background: #FFF; border-radius: 50%; border: 1px solid #F57F17; }
-    .coin-10 { width: 45px; height: 45px; background: radial-gradient(circle, #D7CCC8 0%, #8D6E63 100%); border: 3px solid #5D4037; color: #FFF; font-size: 1.1rem; text-shadow: 1px 1px 2px #000; }
-    .coin-50 { width: 42px; height: 42px; background: radial-gradient(circle, #ECEFF1 0%, #90A4AE 100%); border: 2px solid #455A64; color: #263238; font-size: 1rem; }
-    .coin-50::after { content: ''; position: absolute; width: 8px; height: 8px; background: #FFF; border-radius: 50%; border: 1px solid #455A64; }
-    .coin-100 { width: 48px; height: 48px; background: radial-gradient(circle, #FFFFFF 0%, #CFD8DC 100%); border: 3px solid #607D8B; color: #263238; font-size: 1.1rem; }
-    .coin-500 { width: 54px; height: 54px; background: radial-gradient(circle, #FFF9C4 0%, #FBC02D 100%); border: 3px solid #E65100; color: #E65100; font-size: 1.2rem; }
+    .coin-10 { width: 45px; height: 45px; background: radial-gradient(circle, #D7CCC8 0%, #8D6E63 100%); border: 3px solid #5D4037; border-radius: 50%; color: #FFF; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; text-shadow: 1px 1px 2px #000; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+    .coin-1 { width: 35px; height: 35px; background: radial-gradient(circle, #FFFFFF 0%, #B0BEC5 100%); border: 2px solid #78909C; border-radius: 50%; color: #37474F; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
     /* バー比較表示 */
     .bar-compare-box { display: flex; flex-direction: column; gap: 12px; margin: 15px 0; padding: 12px; background: #FFF; border-radius: 16px; border: 2px solid #E0E0E0; }
     .bar-item { display: flex; align-items: center; gap: 10px; }
-    .bar-label { font-size: 1.2rem; font-weight: 900; width: 50px; text-align: center; }
+    .bar-label { font-size: 1.5rem; font-weight: 900; width: 30px; text-align: center; }
     .bar-track { flex: 1; height: 28px; background: #F5F5F5; border-radius: 14px; overflow: hidden; border: 2px solid #DDD; }
     .bar-fill { height: 100%; border-radius: 12px; transition: width 0.3s; }
     .bar-fill.color-a { background: linear-gradient(90deg, #FF7043, #FF9800); }
@@ -195,9 +173,9 @@
     <div id="mode-select-section" class="mode-select-section">
       <h3>けいさんモードを えらんでね</h3>
       <div class="mode-buttons">
-        <button id="mode-btn-1" class="btn-mode active" onclick="setCalcMode(1)">1. かんたん (10までの たし・ひき)</button>
-        <button id="mode-btn-2" class="btn-mode" onclick="setCalcMode(2)">2. ふつう (20までの たし・ひき)</button>
-        <button id="mode-btn-3" class="btn-mode" onclick="setCalcMode(3)">3. チャレンジ (2のだん・3のだん)</button>
+        <button class="btn-mode active" onclick="setMode(1)">1. かんたん (10までの たし・ひき)</button>
+        <button class="btn-mode" onclick="setMode(2)">2. ふつう (20までの たし・ひき)</button>
+        <button class="btn-mode" onclick="setMode(3)">3. チャレンジ (2のだん・3のだん)</button>
       </div>
     </div>
 
@@ -237,44 +215,123 @@
 </div>
 
 <script>
-const gonbeFamily = {
-  stage0: { id: 446, name: "ゴンベ" },
-  stage1: { id: 143, name: "カビゴン" }
-};
+// 計算クイズ専用：ゴンベ(446) -> カビゴン(143)
+const gonbeFamily = { stage0: {id: 446, name: "ゴンベ"}, stage1: {id: 143, name: "カビゴン"} };
 
-// 生活モード用1段階進化ポケモンファミリー（11種）
-const pokemonFamilies = [
-  { stage0: {id: 79, name: "ヤドン"}, stage1: {id: 199, name: "ヤドキング"} },
-  { stage0: {id: 54, name: "コダック"}, stage1: {id: 55, name: "ゴルダック"} },
-  { stage0: {id: 90, name: "シェルダー"}, stage1: {id: 91, name: "パルシェン"} },
-  { stage0: {id: 877, name: "モルペコ"}, stage1: {id: 877, name: "モルペコ(まんぷく)"} },
-  { stage0: {id: 109, name: "ドガース"}, stage1: {id: 110, name: "マタドガス"} },
-  { stage0: {id: 23, name: "アーボ"}, stage1: {id: 24, name: "アーボック"} },
-  { stage0: {id: 360, name: "ソーナノ"}, stage1: {id: 202, name: "ソーナンス"} },
-  { stage0: {id: 52, name: "ニャース"}, stage1: {id: 53, name: "ペルシアン"} },
-  { stage0: {id: 439, name: "マネネ"}, stage1: {id: 122, name: "バリヤード"} },
-  { stage0: {id: 300, name: "エネコ"}, stage1: {id: 301, name: "エネコロロ"} },
-  { stage0: {id: 447, name: "リオル"}, stage1: {id: 448, name: "ルカリオ"} }
+// 生活クイズ専用：イーブイ(133)進化系
+const eeveeEvolutions = [
+  { id: 134, name: "シャワーズ" }, { id: 135, name: "サンダース" }, { id: 136, name: "ブースター" },
+  { id: 196, name: "エーフィ" }, { id: 197, name: "ブラッキー" }, { id: 470, name: "リーフィア" },
+  { id: 471, name: "グレイシア" }, { id: 700, name: "ニンフィア" }
 ];
 
 const allFoods = [
   { name: "ハンバーガー", emoji: "🍔" }, { name: "おすし", emoji: "🍣" }, { name: "ラーメン", emoji: "🍜" }, { name: "おにぎり", emoji: "🍙" }, 
-  { name: "カレー", emoji: "🍛" }, { name: "ピザ", emoji: "🍕" }, { name: "アイス", emoji: "🍦" }, { name: "ドーナツ", emoji: "🍩" }
+  { name: "カレー", emoji: "🍛" }, { name: "ピザ", emoji: "🍕" }, { name: "アイス", emoji: "🍦" }, { name: "ドーナツ", emoji: "🍩" }, 
+  { name: "パンケーキ", emoji: "🥞" }, { name: "ステーキ", emoji: "🥩" }, { name: "サンドイッチ", emoji: "🥪" }, { name: "たこやき", emoji: "🐙" }
 ];
 
-const berryEmojis = ["🍎", "🍓", "🍊", "🍇", "🍒", "🍑"];
-const pokeComments = ["たのしいね！", "だーいすき！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "すごいすごい！", "えらいね！"];
+const berryEmojis = ["🍒", "🍎", "🍇", "🍓", "🍊", "🍑"];
+const pokeComments = ["たのしいね！", "おなかすいたー！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "すごーい！", "えらいね！"];
 const effectEmojis = ["💖", "✨", "⭐", "🎵"];
 
 const correctTexts = ["せいかい！すごい！", "かんぺき！", "すばらしい！", "やったね！", "さすが！"];
 const incorrectTexts = ["おしい！もういちど！", "どんまい！", "つぎは がんばろう！", "ファイト！", "ざんねん！"];
 
+const correctVoices = ["やったー！", "せいかい！", "Great!", "Good job!"];
+const incorrectVoices = ["おしい！", "もういっかい！", "Oh no!", "Almost!"];
+
+const kukuSpeechMap = {
+  "2x1": "にいちがいち", "2x2": "ににんがし", "2x3": "にさんがろく", "2x4": "にしがはち", "2x5": "にごじゅう", "2x6": "にろくじゅうに", "2x7": "にしちじゅうし", "2x8": "にはちじゅうろく", "2x9": "にくじゅうはち",
+  "3x1": "さんいちがさん", "3x2": "さんにがろく", "3x3": "さざんがく", "3x4": "さんしじゅうに", "3x5": "さんごじゅうご", "3x6": "さぶろくじゅうはち", "3x7": "さんしちにじゅういち", "3x8": "さんぱにじゅうし", "3x9": "さんくにじゅうなな"
+};
+
+const clockData = [
+  { hour: 3, minute: 0, ans: "3じ", options: ["3じ", "2じ", "4じ", "3じはん"] },
+  { hour: 7, minute: 0, ans: "7じ", options: ["7じ", "6じ", "8じ", "7じはん"] },
+  { hour: 12, minute: 0, ans: "12じ", options: ["12じ", "11じ", "1じ", "12じはん"] },
+  { hour: 1, minute: 30, ans: "1じはん", options: ["1じはん", "1じ", "2じ", "2じはん"] },
+  { hour: 4, minute: 30, ans: "4じはん", options: ["4じはん", "4じ", "5じはん", "3じはん"] },
+  { hour: 9, minute: 0, ans: "9じ", options: ["9じ", "8じ", "10じ", "9じはん"] }
+];
+
+const shapeData = [
+  { text: "さんかく は どれかな？", ans: "🔺", options: ["🔺", "🔴", "🟦", "⭐"] },
+  { text: "しかく は どれかな？", ans: "🟦", options: ["🟦", "🔴", "🔺", "💎"] },
+  { text: "まる は どれかな？", ans: "🔴", options: ["🔴", "🟦", "🔺", "⭐"] },
+  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦<br>📦📦</div>", ans: "4こ", options: ["4こ", "3こ", "5こ", "6こ"] },
+  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦</div>", ans: "3こ", options: ["3こ", "2こ", "4こ", "5こ"] }
+];
+
+const compareData = [
+  { text: "ながい 方は どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 85%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 40%;'></div></div></div></div>", ans: "A", options: ["A", "B"] },
+  { text: "ながい 方は どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 30%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 90%;'></div></div></div></div>", ans: "B", options: ["A", "B"] },
+  { text: "おおい 方は どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 75%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 25%;'></div></div></div></div>", ans: "A", options: ["A", "B"] }
+];
+
+const moneyData = [
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-1'>1</div><div class='coin-1'>1</div><div class='coin-1'>1</div></div>", ans: "23えん", options: ["23えん", "32えん", "15えん", "5えん"] },
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-1'>1</div><div class='coin-1'>1</div></div>", ans: "12えん", options: ["12えん", "21えん", "3えん", "30えん"] },
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div></div>", ans: "30えん", options: ["30えん", "3えん", "13えん", "300えん"] },
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-1'>1</div></div>", ans: "41えん", options: ["41えん", "14えん", "5えん", "50えん"] }
+];
+
+let currentCalcMode = 1;
+function setMode(modeNum) {
+  currentCalcMode = modeNum;
+  document.querySelectorAll('.btn-mode').forEach((btn, idx) => {
+    if(idx + 1 === modeNum) btn.classList.add('active');
+    else btn.classList.remove('active');
+  });
+}
+
+function generateCalcQuestion() {
+  let num1, num2, op, ans, speechText = "";
+  if (currentCalcMode === 1) {
+    op = Math.random() > 0.5 ? '+' : '-';
+    if (op === '+') {
+      num1 = Math.floor(Math.random() * 8) + 1;
+      num2 = Math.floor(Math.random() * (10 - num1)) + 1;
+      ans = num1 + num2;
+    } else {
+      num1 = Math.floor(Math.random() * 9) + 2;
+      num2 = Math.floor(Math.random() * (num1 - 1)) + 1;
+      ans = num1 - num2;
+    }
+  } else if (currentCalcMode === 2) {
+    op = Math.random() > 0.5 ? '+' : '-';
+    if (op === '+') {
+      num1 = Math.floor(Math.random() * 10) + 5;
+      num2 = Math.floor(Math.random() * (20 - num1)) + 1;
+      ans = num1 + num2;
+    } else {
+      num1 = Math.floor(Math.random() * 10) + 11;
+      num2 = Math.floor(Math.random() * (num1 - 2)) + 1;
+      ans = num1 - num2;
+    }
+  } else {
+    op = '×';
+    num1 = Math.random() > 0.5 ? 2 : 3;
+    num2 = Math.floor(Math.random() * 9) + 1;
+    ans = num1 * num2;
+    const key = `${num1}x${num2}`;
+    speechText = kukuSpeechMap[key] || `${num1} かける ${num2} は ${ans}`;
+  }
+
+  let options = [ans];
+  while(options.length < 4) {
+    let dummy = ans + (Math.floor(Math.random() * 7) - 3);
+    if(dummy > 0 && !options.includes(dummy)) options.push(dummy);
+  }
+  options.sort(() => 0.5 - Math.random());
+  return { num1, num2, op, ans, options, speechText };
+}
+
 function getPokemonImageUrl(id) { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`; }
 
-let isLifeMode = false; // false: けいさん (ゴンベ), true: せいかつ (1段階進化ポケモン)
-let currentCalcLevel = 1; // 1: 10まで, 2: 20まで, 3: 九九(2・3の段)
+let isLifeMode = false;
 let calcState = { totalBerries: 0, isEvolved: false };
-let lifeState = { exp: 0, keys: 0, isEvolved: false, familyIdx: 0, foods: [] };
+let lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
 let currentQuestionBerryEmoji = "🍎";
 
 let synthVoices = [];
@@ -287,35 +344,15 @@ const resetGameBtn = document.getElementById('reset-game-btn');
 const partnerStage = document.getElementById('partner-stage');
 const quizPartnerStage = document.getElementById('quiz-partner-stage');
 
-function initCalcGame() {
-  calcState = { totalBerries: 0, isEvolved: false };
-}
-
+function initCalcGame() { calcState = { totalBerries: 0, isEvolved: false }; }
 function initLifeGame() {
-  lifeState = { 
-    exp: 0, 
-    keys: 0, 
-    isEvolved: false, 
-    familyIdx: Math.floor(Math.random() * pokemonFamilies.length), 
-    foods: [] 
-  };
+  lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
   lifeState.foods = [...allFoods].sort(() => 0.5 - Math.random()).slice(0, 4).map(f => ({ ...f, isEaten: false }));
 }
 
-function setCalcMode(level) {
-  currentCalcLevel = level;
-  document.querySelectorAll('.btn-mode').forEach((btn, idx) => {
-    btn.classList.toggle('active', idx + 1 === level);
-  });
-}
-
 function getCurrentPoke() {
-  if (!isLifeMode) {
-    return calcState.isEvolved ? gonbeFamily.stage1 : gonbeFamily.stage0;
-  } else {
-    const family = pokemonFamilies[lifeState.familyIdx];
-    return lifeState.isEvolved ? family.stage1 : family.stage0;
-  }
+  if (!isLifeMode) { return calcState.isEvolved ? gonbeFamily.stage1 : gonbeFamily.stage0; }
+  else { return { id: lifeState.partnerId, name: lifeState.partnerName }; }
 }
 
 function updateStageBackground() {
@@ -323,15 +360,8 @@ function updateStageBackground() {
   quizPartnerStage.classList.remove('bg-grass', 'bg-lovely', 'bg-cool');
   
   let targetBg = 'bg-grass';
-  if (!isLifeMode) {
-    targetBg = 'bg-grass';
-  } else {
-    if (lifeState.isEvolved) {
-      targetBg = 'bg-cool';
-    } else {
-      targetBg = 'bg-lovely';
-    }
-  }
+  if (!isLifeMode) { targetBg = 'bg-grass'; }
+  else { targetBg = lifeState.isEvolved ? 'bg-cool' : 'bg-lovely'; }
   partnerStage.classList.add(targetBg);
   quizPartnerStage.classList.add(targetBg);
 }
@@ -355,18 +385,14 @@ function renderRoom() {
     expText.innerText = calcState.totalBerries;
     expBar.style.width = Math.min(100, calcState.totalBerries) + "%";
     foodSection.style.display = "none";
-    
-    if (calcState.isEvolved) resetGameBtn.style.display = 'inline-flex';
-    else resetGameBtn.style.display = 'none';
+    resetGameBtn.style.display = calcState.isEvolved ? 'inline-flex' : 'none';
   } else {
     document.getElementById('exp-label').innerText = "なかよし度";
     document.getElementById('exp-unit').innerText = "%";
     expText.innerText = lifeState.exp;
     expBar.style.width = lifeState.exp + "%";
     foodSection.style.display = "block";
-    
-    if (lifeState.isEvolved) resetGameBtn.style.display = 'inline-flex';
-    else resetGameBtn.style.display = 'none';
+    resetGameBtn.style.display = lifeState.isEvolved ? 'inline-flex' : 'none';
 
     lifeState.foods.forEach((food, index) => {
       const isUnlocked = lifeState.keys > index;
@@ -375,9 +401,7 @@ function renderRoom() {
       else if (!isUnlocked) { foodEl.className = 'food-item locked'; foodEl.innerText = food.emoji; }
       else { 
         foodEl.className = 'food-item'; foodEl.innerText = food.emoji; 
-        if (!lifeState.isEvolved) {
-          foodEl.onclick = () => feedLifePartner(index, foodEl); 
-        }
+        if (!lifeState.isEvolved) { foodEl.onclick = () => feedLifePartner(index, foodEl); }
       }
       foodListEl.appendChild(foodEl);
     });
@@ -410,8 +434,9 @@ function feedLifePartner(index, element) {
       
       if (lifeState.exp === 100 && !lifeState.isEvolved) {
         lifeState.isEvolved = true;
-        const family = pokemonFamilies[lifeState.familyIdx];
-        evolvePoke(family.stage1);
+        const evo = eeveeEvolutions[Math.floor(Math.random() * eeveeEvolutions.length)];
+        lifeState.partnerId = evo.id; lifeState.partnerName = evo.name;
+        evolvePoke(evo);
       } else { renderRoom(); }
     }, 1000);
   }, 550);
@@ -512,26 +537,23 @@ document.getElementById('mode-toggle-btn').onclick = () => {
     resetGameBtn.innerText = "ゴンベともういちどあそぶ🔄";
   } else {
     document.body.classList.add('mode-life');
-    if (lifeState.familyIdx === undefined) initLifeGame();
     document.getElementById('main-title').innerText = "さんすう せいかつクイズ";
     document.getElementById('start-quiz-btn').innerText = "せいかつクイズ (4もん)";
     document.getElementById('mode-toggle-btn').innerHTML = "🔄 けいさんモードにきりかえ";
     document.getElementById('mode-select-section').style.display = "none";
-    resetGameBtn.innerText = "あたらしいポケモンとあそぶ🔄";
+    resetGameBtn.innerText = "イーブイにもどる🔄";
   }
   renderRoom();
 };
 
 let currentQIndex = 0;
+let currentQuestionData = null;
 
 document.getElementById('start-quiz-btn').onclick = () => {
   roomView.classList.add('hidden'); quizView.classList.remove('hidden'); currentQIndex = 0;
   
-  if (isLifeMode) {
-    quizPartnerStage.style.display = "none";
-  } else {
-    quizPartnerStage.style.display = "block";
-  }
+  if (isLifeMode) { quizPartnerStage.style.display = "none"; }
+  else { quizPartnerStage.style.display = "block"; }
   
   renderRoom();
   showNextQuestion();
@@ -540,7 +562,6 @@ document.getElementById('start-quiz-btn').onclick = () => {
 function showNextQuestion() {
   if (currentQIndex >= 4) {
     quizView.classList.add('hidden'); roomView.classList.remove('hidden'); 
-    
     if (!isLifeMode) {
       if (calcState.totalBerries >= 100 && !calcState.isEvolved) {
         calcState.isEvolved = true;
@@ -557,73 +578,41 @@ function showNextQuestion() {
   const contentEl = document.getElementById('quiz-content'); contentEl.innerHTML = "";
   
   if (!isLifeMode) {
-    const qData = generateMathQuestionData();
-    renderMathCalcQuestion(contentEl, qData);
+    currentQuestionData = generateCalcQuestion();
+    renderMathCalcQuestion(contentEl, currentQuestionData);
   } else {
-    generateLifeQuestion(contentEl);
+    if (currentQIndex === 0) renderClockQuestion(contentEl);
+    else if (currentQIndex === 1) renderLifeCardQuestion(contentEl, shapeData, "かたちクイズ！");
+    else if (currentQIndex === 2) renderLifeCardQuestion(contentEl, compareData, "くらべてみよう！");
+    else renderLifeCardQuestion(contentEl, moneyData, "いくらかな？");
   }
 }
 
-/* 計算問題データ生成 (モード選択対応) */
-function generateMathQuestionData() {
-  let num1, num2, op, ans, options = [], speechText = "";
-  
-  if (currentCalcLevel === 1) { // 10までのたし・ひき
-    op = Math.random() > 0.5 ? '+' : '-';
-    if (op === '+') {
-      num1 = Math.floor(Math.random() * 5) + 1;
-      num2 = Math.floor(Math.random() * 5) + 1;
-      ans = num1 + num2;
-    } else {
-      num1 = Math.floor(Math.random() * 5) + 4;
-      num2 = Math.floor(Math.random() * 3) + 1;
-      ans = num1 - num2;
-    }
-  } else if (currentCalcLevel === 2) { // 20までのたし・ひき
-    op = Math.random() > 0.5 ? '+' : '-';
-    if (op === '+') {
-      num1 = Math.floor(Math.random() * 8) + 5;
-      num2 = Math.floor(Math.random() * 7) + 3;
-      ans = num1 + num2;
-    } else {
-      num1 = Math.floor(Math.random() * 10) + 10;
-      num2 = Math.floor(Math.random() * 8) + 2;
-      ans = num1 - num2;
-    }
-  } else { // 2・3の段の九九
-    op = '×';
-    num1 = Math.random() > 0.5 ? 2 : 3;
-    num2 = Math.floor(Math.random() * 9) + 1;
-    ans = num1 * num2;
-    speechText = `${num1} かける ${num2} は？`;
+function generateBerryGridHtml(count, isMinus = false) {
+  let html = '<div class="fruit-grid-5">';
+  for (let i = 0; i < count; i++) {
+    if (isMinus) html += `<span class="fruit-minus">${currentQuestionBerryEmoji}</span>`;
+    else html += `<span>${currentQuestionBerryEmoji}</span>`;
   }
-  
-  options = [ans, ans + 1, ans - 1, ans + 2].filter(v => v >= 0);
-  options = [...new Set(options)].slice(0, 4).sort(() => 0.5 - Math.random());
-  
-  return { num1, num2, op, ans, options, speechText };
+  html += '</div>';
+  return html;
 }
 
-/* 計算問題ヒント描画（引き算：枠内に引かれる数全体＋引く数ぶん❌） */
 function renderMathCalcQuestion(container, q) {
   currentQuestionBerryEmoji = berryEmojis[Math.floor(Math.random() * berryEmojis.length)];
   let hintHtml = "";
 
   if (q.op === '+') {
-    let group1 = `<div class="fruit-grid-5">${currentQuestionBerryEmoji.repeat(q.num1).split('').map(e=>`<span>${e}</span>`).join('')}</div>`;
-    let group2 = `<div class="fruit-grid-5">${currentQuestionBerryEmoji.repeat(q.num2).split('').map(e=>`<span>${e}</span>`).join('')}</div>`;
-    hintHtml = `${group1} <span style="font-size:1.8rem; font-weight:900; color:var(--primary-shadow); margin:0 6px;">＋</span> ${group2}`;
+    let group1 = generateBerryGridHtml(q.num1); let group2 = generateBerryGridHtml(q.num2);
+    hintHtml = `${group1} <span style="font-size:1.3rem; font-weight:900; margin:4px 0;">＋</span> ${group2}`;
   } else if (q.op === '-') {
     let stayCount = q.num1 - q.num2;
-    let berriesHtml = "";
-    for(let i = 0; i < stayCount; i++) berriesHtml += `<span>${currentQuestionBerryEmoji}</span>`;
-    for(let i = 0; i < q.num2; i++) berriesHtml += `<span class="fruit-minus">${currentQuestionBerryEmoji}</span>`;
-    
-    hintHtml = `<div class="fruit-box-frame"><div class="fruit-grid-5">${berriesHtml}</div></div>`;
+    let normalGroup = generateBerryGridHtml(stayCount); let minusGroup = generateBerryGridHtml(q.num2, true);
+    hintHtml = `${normalGroup} ${minusGroup}`;
   } else {
     let groupsHtml = "";
     for(let i=0; i<q.num2; i++) {
-      groupsHtml += `<div style="display:inline-block; border:2px dashed #FFB300; border-radius:12px; padding:4px 8px; margin:3px; background:rgba(255,255,255,0.9); font-size:1.5rem;">${currentQuestionBerryEmoji.repeat(q.num1)}</div>`;
+      groupsHtml += `<div style="display:inline-block; border:2px dashed #FFB300; border-radius:12px; padding:2px 6px; margin:3px; background:rgba(255,255,255,0.9);">${currentQuestionBerryEmoji.repeat(q.num1)}</div>`;
     }
     hintHtml = `<div style="text-align:center;">${groupsHtml}</div>`;
   }
@@ -638,8 +627,10 @@ function renderMathCalcQuestion(container, q) {
     <div class="options-grid" id="math-opts"></div>
   `;
 
-  const voiceText = q.op === '×' ? q.speechText : `${q.num1} ${q.op === '+' ? 'たす' : 'ひく'} ${q.num2} は？`;
-  document.getElementById('math-voice-btn').onclick = () => speakJapaneseVoice(voiceText);
+  document.getElementById('math-voice-btn').onclick = () => {
+    if (q.op === '×' && q.speechText) speakJapaneseVoice(q.speechText);
+    else speakJapaneseVoice(`${q.num1} ${q.op === '+' ? 'たす' : 'ひく'} ${q.num2} は？`);
+  };
 
   const optsGrid = document.getElementById('math-opts');
   q.options.forEach(opt => {
@@ -651,109 +642,80 @@ function renderMathCalcQuestion(container, q) {
   setTimeout(() => { document.getElementById('math-voice-btn').click(); }, 300);
 }
 
-/* 生活クイズ生成（時計・お金・バー比較） */
-function generateLifeQuestion(container) {
-  const types = ['clock', 'money', 'bar'];
-  const type = types[currentQIndex % types.length];
-  
-  if (type === 'clock') {
-    const hour = Math.floor(Math.random() * 12) + 1;
-    const deg = hour * 30;
-    container.innerHTML = `
-      <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-        <p style="font-size:1.1rem; font-weight:800; margin:0;">なんじ かな？</p>
-        <button class="voice-btn" onclick="speakJapaneseVoice('${hour}じ')">🔊</button>
-      </div>
-      <div class="clock-face">
-        <div class="clock-center"></div>
-        <div class="clock-hand hand-hour" style="transform: rotate(${deg}deg);"></div>
-        <div class="clock-hand hand-minute" style="transform: rotate(0deg);"></div>
-      </div>
-      <div class="options-grid" id="q-opts"></div>
-    `;
-    renderOptions(container, `${hour}じ`, [`${hour}じ`, `${(hour%12)+1}じ`, `${hour===1?12:hour-1}じ`, `${(hour+2)%12||12}じ`]);
-    speakJapaneseVoice(`${hour}じ`);
-  } 
-  else if (type === 'money') {
-    const coinTypes = [
-      { val: 1, class: 'coin-1', label: '1' },
-      { val: 5, class: 'coin-5', label: '5' },
-      { val: 10, class: 'coin-10', label: '10' },
-      { val: 50, class: 'coin-50', label: '50' },
-      { val: 100, class: 'coin-100', label: '100' },
-      { val: 500, class: 'coin-500', label: '500' }
-    ];
-    
-    const selectedCoins = [];
-    const count = Math.floor(Math.random() * 3) + 2;
-    let total = 0;
-    for(let i=0; i<count; i++) {
-      const coin = coinTypes[Math.floor(Math.random() * coinTypes.length)];
-      selectedCoins.push(coin);
-      total += coin.val;
-    }
-    
-    let coinsHtml = '<div class="coin-container">';
-    selectedCoins.forEach(c => {
-      coinsHtml += `<div class="coin ${c.class}">${c.label}</div>`;
-    });
-    coinsHtml += '</div>';
+function renderClockQuestion(container) {
+  const q = clockData[Math.floor(Math.random() * clockData.length)];
+  const hourDeg = (q.hour % 12) * 30 + (q.minute === 30 ? 15 : 0);
+  const minuteDeg = q.minute * 6;
 
-    container.innerHTML = `
-      <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-        <p style="font-size:1.1rem; font-weight:800; margin:0;">ぜんぶで いくら かな？</p>
-        <button class="voice-btn" onclick="speakJapaneseVoice('ぜんぶで いくらかな')">🔊</button>
-      </div>
-      ${coinsHtml}
-      <div class="options-grid" id="q-opts"></div>
-    `;
-    renderOptions(container, `${total}えん`, [`${total}えん`, `${total+5}えん`, `${total+10}えん`, `${Math.max(1, total-5)}えん`]);
-    speakJapaneseVoice('ぜんぶで いくらかな');
-  }
-  else {
-    const lenA = Math.floor(Math.random() * 60) + 30;
-    const lenB = Math.floor(Math.random() * 60) + 30;
-    if (lenA === lenB) return generateLifeQuestion(container);
-    
-    const isALonger = lenA > lenB;
-    const correctAns = isALonger ? "あかい ほう" : "あおい ほう";
+  container.innerHTML = `
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+      <p style="font-size:1.1rem; font-weight:800; margin:0;">いま なんじかな？</p>
+      <button class="voice-btn" id="clock-voice-btn">🔊</button>
+    </div>
+    <div class="clock-face">
+      <div class="clock-hand hand-hour" style="transform: rotate(${hourDeg}deg);"></div>
+      <div class="clock-hand hand-minute" style="transform: rotate(${minuteDeg}deg);"></div>
+      <div class="clock-center"></div>
+    </div>
+    <div class="options-grid" id="clock-opts"></div>
+  `;
 
-    container.innerHTML = `
-      <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-        <p style="font-size:1.1rem; font-weight:800; margin:0;">ながい ほうは どちらかな？</p>
-        <button class="voice-btn" onclick="speakJapaneseVoice('ながい ほうは どちらかな')">🔊</button>
-      </div>
-      <div class="bar-compare-box">
-        <div class="bar-item"><span class="bar-label">あか:</span><div class="bar-track"><div class="bar-fill color-a" style="width:${lenA}%;"></div></div></div>
-        <div class="bar-item"><span class="bar-label">あお:</span><div class="bar-track"><div class="bar-fill color-b" style="width:${lenB}%;"></div></div></div>
-      </div>
-      <div class="options-grid" id="q-opts"></div>
-    `;
-    renderOptions(container, correctAns, ["あかい ほう", "あおい ほう"]);
-    speakJapaneseVoice('ながい ほうは どちらかな');
-  }
-}
+  document.getElementById('clock-voice-btn').onclick = () => speakJapaneseVoice("いま なんじかな？");
 
-function renderOptions(container, correctAns, options) {
-  const optsGrid = container.querySelector('#q-opts');
-  options.sort(() => 0.5 - Math.random()).forEach(opt => {
-    const btn = document.createElement('div');
-    btn.className = 'option-btn';
-    btn.innerText = opt;
-    btn.onclick = () => checkAnswer(String(opt) === String(correctAns), correctAns, false);
+  const optsGrid = document.getElementById('clock-opts');
+  q.options.slice().sort(() => 0.5 - Math.random()).forEach(opt => {
+    const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
+    btn.onclick = () => checkAnswer(opt === q.ans, q.ans, false);
     optsGrid.appendChild(btn);
   });
+
+  setTimeout(() => { document.getElementById('clock-voice-btn').click(); }, 300);
+}
+
+function renderLifeCardQuestion(container, dataList, titleText) {
+  const q = dataList[Math.floor(Math.random() * dataList.length)];
+
+  container.innerHTML = `
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+      <p style="font-size:1.1rem; font-weight:800; margin:0;">${titleText}</p>
+      <button class="voice-btn" id="life-voice-btn">🔊</button>
+    </div>
+    <p style="font-size:1.3rem; font-weight:900; margin:10px 0;">${q.text}</p>
+    ${q.html ? q.html : ''}
+    <div class="options-grid" id="life-opts"></div>
+  `;
+
+  document.getElementById('life-voice-btn').onclick = () => {
+    let cleanText = q.text.replace(/（[^）]*）/g, '').replace(/[\u1F600-\u1F64F\u1F300-\u1F5FF\u1F680-\u1F6FF\u2600-\u26FF\u2700-\u27BF]/g, '');
+    speakJapaneseVoice(cleanText);
+  };
+
+  const optsGrid = document.getElementById('life-opts');
+  q.options.slice().sort(() => 0.5 - Math.random()).forEach(opt => {
+    const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
+    btn.onclick = () => checkAnswer(opt === q.ans, q.ans, false);
+    optsGrid.appendChild(btn);
+  });
+
+  setTimeout(() => { document.getElementById('life-voice-btn').click(); }, 300);
 }
 
 function speakJapaneseVoice(text) {
   if (!text) return;
-  window.speechSynthesis.cancel();
-  const msg = new SpeechSynthesisUtterance(text);
-  msg.lang = 'ja-JP';
+  const msg = new SpeechSynthesisUtterance(text); msg.lang = 'ja-JP';
   if (synthVoices.length === 0) synthVoices = window.speechSynthesis.getVoices();
   const jaVoice = synthVoices.find(v => v.lang.startsWith('ja'));
   if (jaVoice) msg.voice = jaVoice;
-  msg.pitch = 1.1; msg.rate = 0.85;
+  msg.pitch = 1.1; msg.rate = 0.9;
+  window.speechSynthesis.speak(msg);
+}
+
+function speakEnglishVoice(text) {
+  const msg = new SpeechSynthesisUtterance(text); msg.lang = 'en-US';
+  if (synthVoices.length === 0) synthVoices = window.speechSynthesis.getVoices();
+  const enVoice = synthVoices.find(v => v.lang.startsWith('en'));
+  if (enVoice) msg.voice = enVoice;
+  msg.pitch = 1.1; msg.rate = 0.8;
   window.speechSynthesis.speak(msg);
 }
 
@@ -762,14 +724,18 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
   
   if (isCorrect) {
     icon.innerText = "⭕"; icon.style.color = "var(--correct)";
-    text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span style="font-size:1.8rem; color:var(--primary-shadow); display:block; margin-top:10px;">せいかい：${ansText}</span>`;
+    text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span style="font-size:1.4rem; color:var(--primary-shadow); display:block; margin-top:10px;">せいかい：${ansText}</span>`;
     text.style.color = "var(--correct)";
-    speakJapaneseVoice("せいかい！やったね！");
+    
+    const voice = correctVoices[Math.floor(Math.random() * correctVoices.length)];
+    if (/[a-zA-Z]/.test(voice)) speakEnglishVoice(voice); else speakJapaneseVoice(voice);
   } else {
     icon.innerText = "❌"; icon.style.color = "var(--incorrect)";
-    text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.4rem; color:#666; display:block; margin-top:10px;">せいかいは：</span><span style="font-size:1.8rem; color:var(--primary-shadow); display:block;">${ansText}</span>`;
+    text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.2rem; color:#666; display:block; margin-top:10px;">せいかいは：${ansText}</span>`;
     text.style.color = "var(--incorrect)";
-    speakJapaneseVoice("ざんねん！つぎはがんばろう！");
+    
+    const voice = incorrectVoices[Math.floor(Math.random() * incorrectVoices.length)];
+    if (/[a-zA-Z]/.test(voice)) speakEnglishVoice(voice); else speakJapaneseVoice(voice);
   }
   
   overlay.classList.add('show');
@@ -779,12 +745,10 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     if (isCorrect) {
       if (isCalc) {
         feedBerriesInQuiz(parseInt(ansText) || 5, () => {
-          currentQIndex++;
-          showNextQuestion();
+          currentQIndex++; showNextQuestion();
         });
       } else {
-        currentQIndex++;
-        showNextQuestion();
+        currentQIndex++; showNextQuestion();
       }
     }
   }, 1800); 
