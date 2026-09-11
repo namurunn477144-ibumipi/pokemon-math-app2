@@ -15,7 +15,7 @@
       --bg-dot: #B3E5FC;
     }
     
-    /* せいかつモード（濃いめのディープネイビー・色味の差を強調！） */
+    /* せいかつモード（ディープネイビー） */
     body.mode-life {
       --primary: #1A237E; --primary-shadow: #0D47A1;
       --secondary: #FFC107; --secondary-shadow: #FFA000;
@@ -34,7 +34,7 @@
     .app-header { text-align: center; margin-bottom: 10px; }
     #main-title { font-size: 2rem; color: var(--primary-shadow); line-height: 1.2; text-shadow: 2px 2px 0px #FFF; margin: 10px 0; transition: color 0.5s; }
     
-    /* ステージ背景の設定 */
+    /* ステージ背景 */
     .partner-stage { position: relative; width: 100%; border-radius: 24px; padding: 30px 20px 15px; border: 4px solid #FFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center; margin-bottom: 10px; cursor: pointer; overflow: hidden; transition: background 0.5s; }
     
     .partner-stage.bg-grass { background: linear-gradient(180deg, #E8F5E9 0%, #C8E6C9 100%); }
@@ -78,6 +78,17 @@
     .exp-bar-bg { background-color: rgba(0,0,0,0.1); border-radius: 15px; height: 24px; overflow: hidden; border: 3px solid #FFF; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
     .exp-bar-fill { background: var(--primary); height: 100%; width: 0%; border-radius: 10px; transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     
+    /* ごはんボックス (生活モード用) */
+    .food-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 15px; }
+    .food-header h3 { margin: 0 0 5px 0; font-size: 1.2rem; text-align: center; color: var(--primary-shadow); }
+    .food-header p { margin: 0; font-size: 0.85rem; color: var(--text-main); text-align: center; }
+    .food-list { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
+    .food-item { width: 70px; height: 70px; font-size: 2.5rem; background: #FFF9C4; border: 3px solid #FFF59D; border-radius: 16px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; box-shadow: 0 6px 0 #FBC02D; transition: transform 0.1s, box-shadow 0.1s; }
+    .food-item:active:not(.locked):not(.eaten) { transform: translateY(6px); box-shadow: 0 0 0 #FBC02D; }
+    .food-item.locked { background: #E0E0E0; border-color: #F5F5F5; box-shadow: 0 6px 0 #BDBDBD; filter: grayscale(100%); pointer-events: none; }
+    .food-item.locked::after { content: '🔒'; position: absolute; font-size: 1.2rem; bottom: -5px; right: -5px; text-shadow: none; }
+    .food-item.eaten { background: #E8F5E9; border-color: #C8E6C9; box-shadow: 0 4px 0 #A5D6A7; transform: scale(0.95); pointer-events: none; filter: grayscale(100%) opacity(0.5); }
+
     .mode-select-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 15px; text-align: center; }
     .mode-select-section h3 { margin: 0 0 10px 0; font-size: 1.2rem; color: var(--primary-shadow); }
     .mode-buttons { display: flex; flex-direction: column; gap: 8px; }
@@ -105,19 +116,19 @@
     .fruit-minus { opacity: 0.3; position: relative; }
     .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.1rem; opacity: 1; }
     
-    /* --- CSS時計描画 --- */
+    /* CSS時計描画 */
     .clock-face { width: 120px; height: 120px; border: 6px solid #1A237E; border-radius: 50%; background: #FFF; position: relative; margin: 10px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
     .clock-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; }
     .hand-hour { width: 6px; height: 35px; background: #F44336; margin-left: -3px; z-index: 2; }
     .hand-minute { width: 4px; height: 48px; background: #1976D2; margin-left: -2px; z-index: 1; }
     .clock-center { width: 10px; height: 10px; background: #333; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
 
-    /* --- CSSコイン（お金）描画 --- */
+    /* CSSコイン（お金）描画 */
     .coin-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 10px 0; }
     .coin-10 { width: 45px; height: 45px; background: radial-gradient(circle, #D7CCC8 0%, #8D6E63 100%); border: 3px solid #5D4037; border-radius: 50%; color: #FFF; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; text-shadow: 1px 1px 2px #000; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
     .coin-1 { width: 35px; height: 35px; background: radial-gradient(circle, #FFFFFF 0%, #B0BEC5 100%); border: 2px solid #78909C; border-radius: 50%; color: #37474F; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-    /* --- 方眼グリッド（比較用） --- */
+    /* 方眼グリッド */
     .grid-paper { background-size: 20px 20px; background-image: linear-gradient(to right, #E0E0E0 1px, transparent 1px), linear-gradient(to bottom, #E0E0E0 1px, transparent 1px); border: 2px solid #9E9E9E; border-radius: 12px; padding: 10px; margin: 10px 0; background-color: #FFF; }
 
     .math-expr { font-size: 2.5rem; font-weight: 900; color: #2E7D32; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
@@ -160,6 +171,12 @@
       <div class="exp-header"><span id="exp-label" class="exp-label">たべた きのみ</span><span class="exp-value"><span id="exp-text">0</span><span id="exp-unit"> / 100こ</span></span></div>
       <div class="exp-bar-bg"><div id="exp-bar" class="exp-bar-fill"></div></div>
     </div>
+
+    <!-- ごはんボックス（生活モード用） -->
+    <div id="food-section" class="food-section" style="display:none;">
+      <div class="food-header"><h3>ごはんボックス</h3><p>4もんせいかいで、ごはんが1つひらくよ！</p></div>
+      <div id="food-list" class="food-list"></div>
+    </div>
     
     <div id="mode-select-section" class="mode-select-section">
       <h3>けいさんモードを えらんでね</h3>
@@ -180,6 +197,7 @@
   <div id="quiz-view" class="view hidden">
     <div class="quiz-header-bar"><span id="quiz-progress-text" class="badge">だい 1 もん！</span></div>
     
+    <!-- 計算クイズ用パートナー表示 -->
     <div id="quiz-partner-stage" class="partner-stage bg-grass" style="padding:20px 10px 10px; margin-bottom:8px;" onclick="interactPokemon('quiz')">
       <div id="poke-comment-quiz" class="poke-comment">がんばれー！</div>
       <img id="partner-image-quiz" class="partner-image" style="width:100px; height:100px;" src="" alt="パートナー">
@@ -203,7 +221,9 @@
   <h2 id="evolve-text" class="evolve-text">おめでとう！<br>しんかした！</h2>
   <button id="close-evolve-btn" class="btn btn-primary btn-large" style="width:80%; max-width:300px;">いっしょにあそぶ！</button>
 </div>
-// けいさんモード用：12種類のポケモン
+
+<script>
+  // けいさんモード用：12種類のポケモン
 const calcPokemonFamilies = [
   { stage0: {id: 446, name: "ゴンベ"}, stage1: {id: 143, name: "カビゴン"} },
   { stage0: {id: 79, name: "ヤドン"}, stage1: {id: 199, name: "ヤドキング"} },
@@ -226,6 +246,12 @@ const eeveeEvolutions = [
   { id: 471, name: "グレイシア" }, { id: 700, name: "ニンフィア" }
 ];
 
+const allFoods = [
+  { name: "ハンバーガー", emoji: "🍔" }, { name: "おすし", emoji: "🍣" }, { name: "ラーメン", emoji: "🍜" }, { name: "おにぎり", emoji: "🍙" }, 
+  { name: "カレー", emoji: "🍛" }, { name: "ピザ", emoji: "🍕" }, { name: "アイス", emoji: "🍦" }, { name: "ドーナツ", emoji: "🍩" }, 
+  { name: "パンケーキ", emoji: "🥞" }, { name: "ステーキ", emoji: "🥩" }, { name: "サンドイッチ", emoji: "🥪" }, { name: "たこやき", emoji: "🐙" }
+];
+
 const berryEmojis = ["🍒", "🍎", "🍇", "🍓", "🍊", "🍑"];
 
 const pokeComments = ["たのしいね！", "おなかすいたー！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "すごーい！", "えらいね！"];
@@ -242,22 +268,16 @@ const kukuSpeechMap = {
   "3x1": "さんいちがさん", "3x2": "さんにがろく", "3x3": "さざんがく", "3x4": "さんしじゅうに", "3x5": "さんごじゅうご", "3x6": "さぶろくじゅうはち", "3x7": "さんしちにじゅういち", "3x8": "さんぱにじゅうし", "3x9": "さんくにじゅうなな"
 };
 
-// ==========================================
 // せいかつモード問題データ
-// ==========================================
-
-// 第1問：とけい（時間の読み方）
 const clockData = [
   { hour: 3, minute: 0, ans: "3じ", options: ["3じ", "2じ", "4じ", "3じはん"] },
-  { textSpeech: "さんじ", hour: 3, minute: 0 },
-  { hour: 7, minute: 0, ans: "7じ", options: ["7じ", "6じ", "8じ", "7じはん"], textSpeech: "しちじ" },
-  { hour: 12, minute: 0, ans: "12じ", options: ["12じ", "11じ", "1じ", "12じはん"], textSpeech: "じゅうにじ" },
-  { hour: 1, minute: 30, ans: "1じはん", options: ["1じはん", "1じ", "2じ", "2じはん"], textSpeech: "いちじはん" },
-  { hour: 4, minute: 30, ans: "4じはん", options: ["4じはん", "4じ", "5じはん", "3じはん"], textSpeech: "よじはん" },
-  { hour: 9, minute: 0, ans: "9じ", options: ["9じ", "8じ", "10じ", "9じはん"], textSpeech: "くじ" }
+  { hour: 7, minute: 0, ans: "7じ", options: ["7じ", "6じ", "8じ", "7じはん"] },
+  { hour: 12, minute: 0, ans: "12じ", options: ["12じ", "11じ", "1じ", "12じはん"] },
+  { hour: 1, minute: 30, ans: "1じはん", options: ["1じはん", "1じ", "2じ", "2じはん"] },
+  { hour: 4, minute: 30, ans: "4じはん", options: ["4じはん", "4じ", "5じはん", "3じはん"] },
+  { hour: 9, minute: 0, ans: "9じ", options: ["9じ", "8じ", "10じ", "9じはん"] }
 ];
 
-// 第2問：かたち・ずけい
 const shapeData = [
   { text: "さんかく（🔺）は どれかな？", ans: "🔺", options: ["🔺", "🔴", "🟦", "⭐"] },
   { text: "しかく（🟦）は どれかな？", ans: "🟦", options: ["🟦", "🔴", "🔺", "💎"] },
@@ -266,22 +286,18 @@ const shapeData = [
   { text: "つみき（📦）は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦</div>", ans: "3こ", options: ["3こ", "2こ", "4こ", "5こ"] }
 ];
 
-// 第3問：くらべてみよう（長さ・広さ）
 const compareData = [
   { text: "ながい えんぴつは どちらかな？", html: "<div class='grid-paper'><div style='text-align:left; font-size:1.5rem;'>A: ✏️✏️✏️✏️</div><div style='text-align:left; font-size:1.5rem; margin-top:5px;'>B: ✏️✏️</div></div>", ans: "A", options: ["A", "B"] },
   { text: "ひろい おへやは どちらかな？", html: "<div class='grid-paper'><div style='text-align:left; font-size:1.5rem;'>A: 🟩🟩🟩</div><div style='text-align:left; font-size:1.5rem; margin-top:5px;'>B: 🟩🟩🟩🟩🟩</div></div>", ans: "B", options: ["A", "B"] },
   { text: "みずが たくさん はいっているのは？", html: "<div style='display:flex; justify-content:center; gap:20px; font-size:2.5rem;'><div>A 🥛</div><div>B 🥛🥛🥛</div></div>", ans: "B", options: ["A", "B"] }
 ];
 
-// 第4問：おかね（いくらかな？）
 const moneyData = [
   { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-1'>1</div><div class='coin-1'>1</div><div class='coin-1'>1</div></div>", ans: "23えん", options: ["23えん", "32えん", "15えん", "5えん"] },
   { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-1'>1</div><div class='coin-1'>1</div></div>", ans: "12えん", options: ["12えん", "21えん", "3えん", "30えん"] },
   { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div></div>", ans: "30えん", options: ["30えん", "3えん", "13えん", "300えん"] },
   { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-1'>1</div></div>", ans: "41えん", options: ["41えん", "14えん", "5えん", "50えん"] }
 ];
-  
-<script>
   let currentCalcMode = 1;
 
 function setMode(modeNum) {
@@ -340,13 +356,14 @@ function generateCalcQuestion() {
 
 let isLifeMode = false; // false: けいさん, true: せいかつ
 let calcState = { totalBerries: 0, isEvolved: false, familyIdx: 0 };
-let lifeState = { exp: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ" };
+let lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
 let currentQuestionBerryEmoji = "🍎";
 
 let synthVoices = [];
 window.speechSynthesis.onvoiceschanged = () => { synthVoices = window.speechSynthesis.getVoices(); };
 
 const roomView = document.getElementById('room-view'), quizView = document.getElementById('quiz-view');
+const foodListEl = document.getElementById('food-list'), foodSection = document.getElementById('food-section');
 const expText = document.getElementById('exp-text'), expBar = document.getElementById('exp-bar');
 const resetGameBtn = document.getElementById('reset-game-btn');
 const partnerStage = document.getElementById('partner-stage');
@@ -356,7 +373,8 @@ function initCalcGame() {
   calcState = { totalBerries: 0, isEvolved: false, familyIdx: Math.floor(Math.random() * calcPokemonFamilies.length) };
 }
 function initLifeGame() {
-  lifeState = { exp: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ" };
+  lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
+  lifeState.foods = [...allFoods].sort(() => 0.5 - Math.random()).slice(0, 4).map(f => ({ ...f, isEaten: false }));
 }
 
 function getCurrentPoke() {
@@ -387,10 +405,15 @@ function updateStageBackground() {
 }
 
 function renderRoom() {
+  foodListEl.innerHTML = "";
   const currentPoke = getCurrentPoke();
-  document.getElementById('partner-image-room').src = getPokemonImageUrl(currentPoke.id);
+  
+  const roomPokeImg = document.getElementById('partner-image-room');
+  if (roomPokeImg) roomPokeImg.src = getPokemonImageUrl(currentPoke.id);
   document.getElementById('partner-name-room').innerText = currentPoke.name;
-  document.getElementById('partner-image-quiz').src = getPokemonImageUrl(currentPoke.id);
+  
+  const quizPokeImg = document.getElementById('partner-image-quiz');
+  if (quizPokeImg) quizPokeImg.src = getPokemonImageUrl(currentPoke.id);
   
   updateStageBackground();
   
@@ -399,6 +422,7 @@ function renderRoom() {
     document.getElementById('exp-unit').innerText = " / 100こ";
     expText.innerText = calcState.totalBerries;
     expBar.style.width = Math.min(100, calcState.totalBerries) + "%";
+    foodSection.style.display = "none";
     
     if (calcState.isEvolved) resetGameBtn.style.display = 'inline-flex';
     else resetGameBtn.style.display = 'none';
@@ -407,16 +431,66 @@ function renderRoom() {
     document.getElementById('exp-unit').innerText = "%";
     expText.innerText = lifeState.exp;
     expBar.style.width = lifeState.exp + "%";
+    foodSection.style.display = "block";
     
     if (lifeState.isEvolved) resetGameBtn.style.display = 'inline-flex';
     else resetGameBtn.style.display = 'none';
+
+    lifeState.foods.forEach((food, index) => {
+      const isUnlocked = lifeState.keys > index;
+      const foodEl = document.createElement('div');
+      if (food.isEaten) { foodEl.className = 'food-item eaten'; foodEl.innerText = food.emoji; }
+      else if (!isUnlocked) { foodEl.className = 'food-item locked'; foodEl.innerText = food.emoji; }
+      else { 
+        foodEl.className = 'food-item'; foodEl.innerText = food.emoji; 
+        if (!lifeState.isEvolved) {
+          foodEl.onclick = () => feedLifePartner(index, foodEl); 
+        }
+      }
+      foodListEl.appendChild(foodEl);
+    });
   }
+}
+
+function feedLifePartner(index, element) {
+  if (lifeState.foods[index].isEaten) return;
+  const roomPokeImg = document.getElementById('partner-image-room');
+  
+  const flying = document.createElement('div'); flying.innerText = element.innerText; flying.className = 'flying-food';
+  const rect = element.getBoundingClientRect(); flying.style.left = rect.left + 'px'; flying.style.top = rect.top + 'px';
+  document.body.appendChild(flying);
+  element.classList.add('eaten'); lifeState.foods[index].isEaten = true;
+  
+  setTimeout(() => {
+    const pRect = roomPokeImg.getBoundingClientRect();
+    flying.style.left = (pRect.left + pRect.width/2 - 20) + 'px'; flying.style.top = (pRect.top + pRect.height/2 - 20) + 'px';
+    flying.style.transform = 'scale(0.5) rotate(360deg)'; flying.style.opacity = '0';
+  }, 50);
+
+  setTimeout(() => {
+    flying.remove();
+    const msg = document.getElementById('eating-msg-room'); msg.style.opacity = 1; msg.style.transform = "translate(-50%, -20px)"; roomPokeImg.classList.add("anim-chew");
+    spawnEffects('room');
+    
+    setTimeout(() => {
+      msg.style.opacity = 0; msg.style.transform = "translate(-50%, 0)"; roomPokeImg.classList.remove("anim-chew");
+      lifeState.exp = Math.min(100, lifeState.exp + 25);
+      
+      if (lifeState.exp === 100 && !lifeState.isEvolved) {
+        lifeState.isEvolved = true;
+        const evo = eeveeEvolutions[Math.floor(Math.random() * eeveeEvolutions.length)];
+        lifeState.partnerId = evo.id; lifeState.partnerName = evo.name;
+        evolvePoke(evo);
+      } else { renderRoom(); }
+    }, 1000);
+  }, 550);
 }
 
 let commentTimeout = null;
 function interactPokemon(type) {
   const commentBox = document.getElementById(`poke-comment-${type}`);
   const pokeImg = document.getElementById(`partner-image-${type}`);
+  if (!commentBox || !pokeImg) return;
   
   if (commentBox.style.opacity === "1") { commentBox.style.opacity = "0"; clearTimeout(commentTimeout); return; }
   if (pokeImg.classList.contains('anim-jump') || pokeImg.classList.contains('anim-spin') || pokeImg.classList.contains('anim-shake') || pokeImg.classList.contains('anim-chew')) return;
@@ -440,7 +514,8 @@ function interactPokemon(type) {
 
 function spawnEffects(type) {
   const emoji = effectEmojis[Math.floor(Math.random() * effectEmojis.length)];
-  const stage = document.querySelectorAll('.partner-stage')[type === 'room' ? 0 : 1];
+  const stage = type === 'room' ? partnerStage : quizPartnerStage;
+  if (!stage) return;
   for(let i=0; i<4; i++) {
     const h = document.createElement('div'); h.innerText = emoji; h.className = 'effect-anim';
     h.style.left = (35 + Math.random()*30) + '%'; h.style.animationDelay = (Math.random()*0.2) + 's';
@@ -503,12 +578,14 @@ document.getElementById('mode-toggle-btn').onclick = () => {
     document.getElementById('start-quiz-btn').innerText = "けいさんクイズ (4もん)";
     document.getElementById('mode-toggle-btn').innerHTML = "🔄 せいかつモードにきりかえ";
     document.getElementById('mode-select-section').style.display = "block";
+    resetGameBtn.innerText = "あたらしいポケモンとあそぶ🔄";
   } else {
     document.body.classList.add('mode-life');
     document.getElementById('main-title').innerText = "さんすう せいかつクイズ";
     document.getElementById('start-quiz-btn').innerText = "せいかつクイズ (4もん)";
     document.getElementById('mode-toggle-btn').innerHTML = "🔄 けいさんモードにきりかえ";
     document.getElementById('mode-select-section').style.display = "none";
+    resetGameBtn.innerText = "イーブイにもどる🔄";
   }
   renderRoom();
 };
@@ -518,6 +595,14 @@ let currentQuestionData = null;
 
 document.getElementById('start-quiz-btn').onclick = () => {
   roomView.classList.add('hidden'); quizView.classList.remove('hidden'); currentQIndex = 0;
+  
+  // 生活モードでは問題画面のポケモンを非表示にしてスッキリ！
+  if (isLifeMode) {
+    quizPartnerStage.style.display = "none";
+  } else {
+    quizPartnerStage.style.display = "block";
+  }
+  
   renderRoom();
   showNextQuestion();
 };
@@ -533,13 +618,7 @@ function showNextQuestion() {
         setTimeout(() => evolvePoke(targetPoke), 300);
       }
     } else {
-      lifeState.exp = Math.min(100, lifeState.exp + 25);
-      if (lifeState.exp >= 100 && !lifeState.isEvolved) {
-        lifeState.isEvolved = true;
-        const evo = eeveeEvolutions[Math.floor(Math.random() * eeveeEvolutions.length)];
-        lifeState.partnerId = evo.id; lifeState.partnerName = evo.name;
-        setTimeout(() => evolvePoke(evo), 300);
-      }
+      lifeState.keys++;
     }
     renderRoom();
     return;
@@ -613,7 +692,6 @@ function renderMathCalcQuestion(container, q) {
   setTimeout(() => { document.getElementById('math-voice-btn').click(); }, 300);
 }
 
-// 時計問題描画（CSS時計）
 function renderClockQuestion(container) {
   const q = clockData[Math.floor(Math.random() * clockData.length)];
   const hourDeg = (q.hour % 12) * 30 + (q.minute === 30 ? 15 : 0);
@@ -644,7 +722,6 @@ function renderClockQuestion(container) {
   setTimeout(() => { document.getElementById('clock-voice-btn').click(); }, 300);
 }
 
-// 生活汎用問題描画
 function renderLifeCardQuestion(container, dataList, titleText) {
   const q = dataList[Math.floor(Math.random() * dataList.length)];
 
