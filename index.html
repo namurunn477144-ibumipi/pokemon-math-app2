@@ -75,11 +75,11 @@
     
     .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
     
-    /* きのみエリアを1列ぴったり5個（5列グリッド）に強力修正 */
-    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 85px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; }
-    .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; justify-items: center; align-items: center; font-size: 1.6rem; width: 100%; max-width: 220px; }
+    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 85px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; font-size: 1.8rem; }
+    .fruit-line-5 { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 200px; }
+    .fruit-break { flex-basis: 100%; height: 0; }
     .fruit-minus { opacity: 0.3; position: relative; }
-    .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.1rem; opacity: 1; }
+    .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.2rem; opacity: 1; }
     
     .math-expr { font-size: 2.5rem; font-weight: 900; color: #2E7D32; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
     
@@ -116,7 +116,7 @@
       <div id="poke-comment-room" class="poke-comment">がんばろうね！</div>
       <img id="partner-image-room" class="partner-image" src="" alt="パートナー">
       <div id="eating-msg-room" class="eating-msg">もぐもぐ♪</div>
-      <h2 id="partner-name-room" class="partner-name">ゴンベ</h2>
+      <h2 id="partner-name-room" class="partner-name">ポケモン</h2>
     </div>
     <div class="status-board">
       <div class="exp-header"><span class="exp-label">たべた きのみ</span><span class="exp-value"><span id="exp-text">0</span> / 100こ</span></div>
@@ -134,7 +134,7 @@
 
     <div class="action-buttons">
       <button id="start-quiz-btn" class="btn btn-primary btn-large">さんすうクイズ (4もん)</button>
-      <button id="reset-game-btn" class="btn btn-danger btn-large" style="margin-top:5px; display:none;">ゴンベにもどる🔄</button>
+      <button id="reset-game-btn" class="btn btn-danger btn-large" style="margin-top:5px; display:none;">あたらしいポケモンとあそぶ🔄</button>
     </div>
   </div>
 
@@ -161,24 +161,39 @@
 <div id="evolve-overlay" class="overlay" style="background: rgba(255,255,255,0.9);">
   <div class="evo-rings"><div class="evo-ring"></div><div class="evo-ring"></div><div class="evo-ring"></div></div>
   <img id="evolve-image" src="" alt="しんか！">
-  <h2 id="evolve-text" class="evolve-text">おめでとう！<br>カビゴンにしんかした！</h2>
+  <h2 id="evolve-text" class="evolve-text">おめでとう！<br>しんかした！</h2>
   <button id="close-evolve-btn" class="btn btn-primary btn-large" style="width:80%; max-width:300px;">いっしょにあそぶ！</button>
 </div>
 
 <script>
-  const munchlaxData = { id: 446, name: "ゴンベ" };
-const snorlaxData = { id: 143, name: "カビゴン" };
+  // 全12パターンの進化ポケモンのデータ
+const pokemonFamilies = [
+  { stage0: {id: 446, name: "ゴンベ"}, stage1: {id: 143, name: "カビゴン"} },
+  { stage0: {id: 79, name: "ヤドン"}, stage1: {id: 199, name: "ヤドキング"} },
+  { stage0: {id: 54, name: "コダック"}, stage1: {id: 55, name: "ゴルダック"} },
+  { stage0: {id: 90, name: "シェルダー"}, stage1: {id: 91, name: "パルシェン"} },
+  { stage0: {id: 877, name: "モルペコ"}, stage1: {id: 877, name: "モルペコ(まんぷく)"} }, // モルペコ
+  { stage0: {id: 109, name: "ドガース"}, stage1: {id: 110, name: "マタドガス"} },
+  { stage0: {id: 23, name: "アーボ"}, stage1: {id: 24, name: "アーボック"} },
+  { stage0: {id: 360, name: "ソーナノ"}, stage1: {id: 202, name: "ソーナンス"} },
+  { stage0: {id: 52, name: "ニャース"}, stage1: {id: 53, name: "ペルシアン"} },
+  { stage0: {id: 439, name: "マネネ"}, stage1: {id: 122, name: "バリヤード"} },
+  { stage0: {id: 300, name: "エネコ"}, stage1: {id: 301, name: "エネコロロ"} },
+  { stage0: {id: 447, name: "リオル"}, stage1: {id: 448, name: "ルカリオ"} }
+];
 
 const berryEmojis = ["🍒", "🍎", "🍇", "🍓", "🍊", "🍑"];
 
 const pokeComments = ["たのしいね！", "おなかすいたー！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "きのみ たべたいな！", "すごいすごい！", "えらいね！"];
 const effectEmojis = ["💖", "✨", "⭐", "🎵"];
 
+// 表示テキスト
 const correctTexts = ["せいかい！すごい！", "かんぺき！", "すばらしい！", "やったね！", "さすが！"];
 const incorrectTexts = ["おしい！もういちど！", "どんまい！", "つぎは がんばろう！", "ファイト！", "ざんねん！"];
 
-const correctVoices = ["やったー！せいかい！", "すごい！大せいかい！", "かんぺき！さすがだね！", "やったね！その調子！", "すばらしい！天才！"];
-const incorrectVoices = ["おしい！もう一回！", "ざんねん！どんまい！", "おしい！あとすこし！", "つぎはがんばろう！"];
+// 【修正】指定された正解・不正解の音声バリエーション（各4種）
+const correctVoices = ["やったー！", "せいかい！", "Great!", "Good job!"];
+const incorrectVoices = ["おしい！", "もういっかい！", "Oh no!", "Almost!"];
 
 const kukuSpeechMap = {
   "2x1": "にいちがいち",
@@ -256,6 +271,7 @@ function generateQuestion() {
 }
   function getPokemonImageUrl(id) { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`; }
 
+let currentFamilyIdx = 0;
 let totalBerryCount = 0;
 let isEvolved = false;
 let currentQuestionBerryEmoji = "🍎";
@@ -267,8 +283,20 @@ const roomView = document.getElementById('room-view'), quizView = document.getEl
 const expText = document.getElementById('exp-text'), expBar = document.getElementById('exp-bar');
 const resetGameBtn = document.getElementById('reset-game-btn');
 
+function initNewGame() {
+  currentFamilyIdx = Math.floor(Math.random() * pokemonFamilies.length);
+  totalBerryCount = 0;
+  isEvolved = false;
+  renderRoom();
+}
+
+function getCurrentPoke() {
+  const family = pokemonFamilies[currentFamilyIdx];
+  return isEvolved ? family.stage1 : family.stage0;
+}
+
 function renderRoom() {
-  const currentPoke = isEvolved ? snorlaxData : munchlaxData;
+  const currentPoke = getCurrentPoke();
   document.getElementById('partner-image-room').src = getPokemonImageUrl(currentPoke.id);
   document.getElementById('partner-name-room').innerText = currentPoke.name;
   document.getElementById('partner-image-quiz').src = getPokemonImageUrl(currentPoke.id);
@@ -301,7 +329,7 @@ function interactPokemon(type) {
   else if (rand === 2) { pokeImg.classList.add('anim-shake'); setTimeout(() => pokeImg.classList.remove('anim-shake'), 400); }
   else if (rand === 3) { spawnEffects(type); pokeImg.classList.add('anim-jump'); setTimeout(() => pokeImg.classList.remove('anim-jump'), 400); }
   else {
-    const pokeId = isEvolved ? snorlaxData.id : munchlaxData.id;
+    const pokeId = getCurrentPoke().id;
     const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pokeId}.ogg`);
     audio.volume = 0.5; audio.play().catch(e => console.log(e));
     pokeImg.classList.add('anim-shake'); setTimeout(() => pokeImg.classList.remove('anim-shake'), 400);
@@ -355,12 +383,13 @@ function feedBerriesInQuiz(berryCount, callback) {
   }, 500);
 }
 
-function evolveToSnorlax() {
-  document.getElementById('evolve-image').src = getPokemonImageUrl(snorlaxData.id);
-  document.getElementById('evolve-text').innerHTML = `おめでとう！<br>カビゴン に しんかした！`;
+function evolvePoke() {
+  const targetPoke = pokemonFamilies[currentFamilyIdx].stage1;
+  document.getElementById('evolve-image').src = getPokemonImageUrl(targetPoke.id);
+  document.getElementById('evolve-text').innerHTML = `おめでとう！<br>${targetPoke.name} に しんかした！`;
   document.getElementById('evolve-overlay').classList.add('show');
   
-  const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${snorlaxData.id}.ogg`);
+  const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${targetPoke.id}.ogg`);
   audio.volume = 0.5; audio.play().catch(e => console.log(e));
   
   renderRoom();
@@ -368,10 +397,9 @@ function evolveToSnorlax() {
 
 document.getElementById('close-evolve-btn').onclick = () => document.getElementById('evolve-overlay').classList.remove('show');
 
+// 進化後：新しいポケモンとあそぶボタン
 resetGameBtn.onclick = () => {
-  totalBerryCount = 0;
-  isEvolved = false;
-  renderRoom();
+  initNewGame();
 };
 
 let currentQIndex = 0;
@@ -390,7 +418,7 @@ function showNextQuestion() {
     
     if (totalBerryCount >= 100 && !isEvolved) {
       isEvolved = true;
-      setTimeout(() => evolveToSnorlax(), 300);
+      setTimeout(() => evolvePoke(), 300);
     }
     return;
   }
@@ -400,7 +428,6 @@ function showNextQuestion() {
   renderMathQuestion(document.getElementById('quiz-content'), currentQuestionData);
 }
 
-// 【完全修正】1列にぴったり5個並ぶグリッド用HTML
 function generateBerryGridHtml(count, isMinus = false) {
   let html = '<div class="fruit-grid-5">';
   for (let i = 0; i < count; i++) {
@@ -427,7 +454,7 @@ function renderMathQuestion(container, q) {
     let normalGroup = generateBerryGridHtml(stayCount);
     let minusGroup = generateBerryGridHtml(q.num2, true);
     hintHtml = `${normalGroup} ${minusGroup}`;
-  } else { // 掛け算
+  } else {
     let groupsHtml = "";
     for(let i=0; i<q.num2; i++) {
       groupsHtml += `<div style="display:inline-block; border:2px dashed #FFB300; border-radius:12px; padding:2px 6px; margin:3px; background:rgba(255,255,255,0.9);">${currentQuestionBerryEmoji.repeat(q.num1)}</div>`;
@@ -447,9 +474,9 @@ function renderMathQuestion(container, q) {
 
   document.getElementById('math-voice-btn').onclick = () => {
     if (q.op === '×' && q.speechText) {
-      speakJapaneseVoice(q.speechText);
+      speakVoice(q.speechText);
     } else {
-      speakJapaneseVoice(`${q.num1} ${q.op === '+' ? 'たす' : 'ひく'} ${q.num2} は？`);
+      speakVoice(`${q.num1} ${q.op === '+' ? 'たす' : 'ひく'} ${q.num2} は？`);
     }
   };
 
@@ -466,12 +493,16 @@ function renderMathQuestion(container, q) {
   }, 300);
 }
 
-function speakJapaneseVoice(text) {
+// 読み上げ処理（英語フレーズ判定付き）
+function speakVoice(text) {
   const msg = new SpeechSynthesisUtterance(text);
-  msg.lang = 'ja-JP';
+  const isEnglish = /[a-zA-Z]/.test(text); // 英語文字が含まれているか判定
+  msg.lang = isEnglish ? 'en-US' : 'ja-JP';
+  
   if (synthVoices.length === 0) synthVoices = window.speechSynthesis.getVoices();
-  const jaVoice = synthVoices.find(v => v.lang.startsWith('ja'));
-  if (jaVoice) msg.voice = jaVoice;
+  const matchedVoice = synthVoices.find(v => v.lang.startsWith(isEnglish ? 'en' : 'ja'));
+  if (matchedVoice) msg.voice = matchedVoice;
+  
   msg.pitch = 1.1; msg.rate = 0.9;
   window.speechSynthesis.speak(msg);
 }
@@ -483,12 +514,12 @@ function checkMathAnswer(isCorrect, ansNum) {
     icon.innerText = "⭕"; icon.style.color = "var(--correct)";
     text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span style="font-size:1.4rem; color:var(--primary-shadow); display:block; margin-top:10px;">きのみ ${ansNum}こ ゲット！</span>`;
     text.style.color = "var(--correct)";
-    speakJapaneseVoice(correctVoices[Math.floor(Math.random() * correctVoices.length)]);
+    speakVoice(correctVoices[Math.floor(Math.random() * correctVoices.length)]);
   } else {
     icon.innerText = "❌"; icon.style.color = "var(--incorrect)";
     text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.2rem; color:#666; display:block; margin-top:10px;">せいかいは：${ansNum}</span>`;
     text.style.color = "var(--incorrect)";
-    speakJapaneseVoice(incorrectVoices[Math.floor(Math.random() * incorrectVoices.length)]);
+    speakVoice(incorrectVoices[Math.floor(Math.random() * incorrectVoices.length)]);
   }
   
   overlay.classList.add('show');
@@ -504,7 +535,7 @@ function checkMathAnswer(isCorrect, ansNum) {
   }, 1800); 
 }
 
-window.onload = () => { renderRoom(); };
+window.onload = () => { initNewGame(); };
 </script>
 </body>
 </html>
