@@ -24,10 +24,14 @@
     .app-header { text-align: center; margin-bottom: 10px; }
     #main-title { font-size: 2rem; color: var(--primary-shadow); line-height: 1.2; text-shadow: 2px 2px 0px #FFF; margin: 10px 0; }
     
-    .partner-stage { position: relative; background: var(--card-bg); width: 100%; border-radius: 24px; padding: 30px 20px 15px; border: 4px solid #FFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center; margin-bottom: 10px; cursor: pointer; }
+    /* ステージ背景（くさむら風） */
+    .partner-stage { position: relative; background: linear-gradient(180deg, #E8F5E9 0%, #C8E6C9 100%); width: 100%; border-radius: 24px; padding: 30px 20px 15px; border: 4px solid #FFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center; margin-bottom: 10px; cursor: pointer; overflow: hidden; }
+    .partner-stage::before { content: '🌱☘️🍀'; position: absolute; bottom: 5px; left: 10px; font-size: 1.2rem; opacity: 0.6; }
+    .partner-stage::after { content: '🍀☘️🌱'; position: absolute; bottom: 5px; right: 10px; font-size: 1.2rem; opacity: 0.6; }
+
     .partner-image { width: 130px; height: 130px; object-fit: contain; filter: drop-shadow(0 8px 6px rgba(0,0,0,0.2)); animation: float 3s ease-in-out infinite; transition: transform 0.3s; z-index: 5; position: relative; }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    .partner-name { font-size: 1.5rem; color: var(--text-main); margin: 5px 0 0 0; pointer-events: none; }
+    .partner-name { font-size: 1.5rem; color: #2E7D32; margin: 5px 0 0 0; pointer-events: none; font-weight: 900; }
     
     .poke-comment { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #FFF; border: 3px solid var(--primary); border-radius: 20px; padding: 6px 14px; font-size: 1rem; font-weight: 900; color: var(--text-main); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 20; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
     .poke-comment::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-width: 8px 8px 0; border-style: solid; border-color: var(--primary) transparent transparent transparent; }
@@ -69,18 +73,22 @@
     
     .quiz-header-bar { margin-bottom: 8px; }
     .badge { background: var(--primary); color: #FFF; padding: 6px 18px; border-radius: 20px; font-size: 1.1rem; font-weight: 900; box-shadow: 0 4px 0 var(--primary-shadow); }
-    .quiz-card { background: var(--card-bg); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #FFF; text-align: center; position: relative; }
     
-    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 75px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px; font-size: 1.8rem; }
-    .fruit-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+    /* クイズカード背景（くさむら＋ナチュラルな緑の枠線） */
+    .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
+    
+    /* きのみヒントエリア（5個ずつのかたまり用スタイル） */
+    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 85px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; font-size: 1.8rem; }
+    .fruit-block-5 { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; max-width: 170px; background: rgba(255,255,255,0.6); padding: 4px 8px; border-radius: 12px; border: 1px solid #FFE082; }
+    .fruit-group-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; align-items: center; }
     .fruit-minus { opacity: 0.3; position: relative; }
     .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.2rem; opacity: 1; }
     
-    .math-expr { font-size: 2.5rem; font-weight: 900; color: #333; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .math-expr { font-size: 2.5rem; font-weight: 900; color: #2E7D32; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
     
     .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-    .option-btn { background: #FFF; border: 4px solid var(--primary); border-radius: 16px; padding: 12px; font-size: 2rem; font-weight: 900; color: var(--text-main); display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 0 var(--primary); cursor: pointer; transition: 0.1s; }
-    .option-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--primary); }
+    .option-btn { background: #FFF; border: 4px solid #81C784; border-radius: 16px; padding: 12px; font-size: 2rem; font-weight: 900; color: #2E7D32; display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 0 #66BB6A; cursor: pointer; transition: 0.1s; }
+    .option-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #66BB6A; }
     
     .voice-btn { background: var(--secondary); box-shadow: 0 6px 0 var(--secondary-shadow); border-radius: 50%; border: none; color: white; cursor: pointer; display:inline-flex; justify-content:center; align-items:center; transition: 0.1s; width: 45px; height: 45px; font-size: 1.3rem;}
     .voice-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--secondary-shadow); }
@@ -136,7 +144,6 @@
   <div id="quiz-view" class="view hidden">
     <div class="quiz-header-bar"><span id="quiz-progress-text" class="badge">だい 1 もん！</span></div>
     
-    <!-- クイズ画面内のゴンベステージ -->
     <div class="partner-stage" style="padding:20px 10px 10px; margin-bottom:8px;" onclick="interactPokemon('quiz')">
       <div id="poke-comment-quiz" class="poke-comment">がんばれー！</div>
       <img id="partner-image-quiz" class="partner-image" style="width:100px; height:100px;" src="" alt="パートナー">
@@ -173,7 +180,7 @@ const effectEmojis = ["💖", "✨", "⭐", "🎵"];
 const correctTexts = ["せいかい！すごい！", "かんぺき！", "すばらしい！", "やったね！", "さすが！"];
 const incorrectTexts = ["おしい！もういちど！", "どんまい！", "つぎは がんばろう！", "ファイト！", "ざんねん！"];
 
-// 【修正完了】九九の正確な日本語読み上げテーブル（2の段・3の段すべて精査済み）
+// 【修正完了】ご指定いただいた3×3, 3×6, 3×9の読み上げを完璧に修正！
 const kukuSpeechMap = {
   "2x1": "にいちがいち",
   "2x2": "ににんがし",
@@ -186,15 +193,15 @@ const kukuSpeechMap = {
   "2x9": "にくじゅうはち",
   "3x1": "さんいちがさん",
   "3x2": "さんにがろく",
-  "3x3": "さんさがく",
+  "3x3": "さざんがく",           // 修正: さざんがく
   "3x4": "さんしじゅうに",
   "3x5": "さんごじゅうご",
-  "3x6": "さんろくじゅうはち",
+  "3x6": "さぶろくじゅうはち",    // 修正: さぶろくじゅうはち
   "3x7": "さんしちにじゅういち",
   "3x8": "さんぱにじゅうし",
-  "3x9": "さんくにじゅうしち"
+  "3x9": "さんくにじゅうなな"     // 修正: さんくにじゅうなな
 };
- let currentMode = 1;
+  let currentMode = 1;
 
 function setMode(modeNum) {
   currentMode = modeNum;
@@ -252,7 +259,7 @@ function generateQuestion() {
 
 let totalBerryCount = 0;
 let isEvolved = false;
-let currentQuestionBerryEmoji = "🍎"; // 今回の問題で使うきのみを記憶
+let currentQuestionBerryEmoji = "🍎";
 
 let synthVoices = [];
 window.speechSynthesis.onvoiceschanged = () => { synthVoices = window.speechSynthesis.getVoices(); };
@@ -277,7 +284,6 @@ function renderRoom() {
   }
 }
 
-// ポケモンタップアクション（ルーム／クイズどちらにも対応）
 let commentTimeout = null;
 function interactPokemon(type) {
   const commentBox = document.getElementById(`poke-comment-${type}`);
@@ -313,14 +319,13 @@ function spawnEffects(type) {
   }
 }
 
-// 【修正】画面上のゴンベの口元へ、問題で表示中のきのみが飛んでいく演出
 function feedBerriesInQuiz(berryCount, callback) {
   const quizPokeImg = document.getElementById('partner-image-quiz');
   
   for(let i=0; i<Math.min(10, berryCount); i++) {
     setTimeout(() => {
       const flying = document.createElement('div');
-      flying.innerText = currentQuestionBerryEmoji; // 問題のきのみと同じ種類！
+      flying.innerText = currentQuestionBerryEmoji;
       flying.className = 'flying-food';
       flying.style.left = (30 + Math.random()*40) + 'vw';
       flying.style.top = '70vh';
@@ -380,12 +385,10 @@ document.getElementById('start-quiz-btn').onclick = () => {
 };
 
 function showNextQuestion() {
-  // 4問（1セット）終了時チェック
   if (currentQIndex >= 4) {
     quizView.classList.add('hidden'); roomView.classList.remove('hidden'); 
     renderRoom(); 
     
-    // 【修正】1セットクリア後に100個を超えていれば進化！
     if (totalBerryCount >= 100 && !isEvolved) {
       isEvolved = true;
       setTimeout(() => evolveToSnorlax(), 300);
@@ -398,31 +401,44 @@ function showNextQuestion() {
   renderMathQuestion(document.getElementById('quiz-content'), currentQuestionData);
 }
 
-function renderMathQuestion(container, q) {
-  // 今回の問題で使うきのみを決定
-  currentQuestionBerryEmoji = berryEmojis[Math.floor(Math.random() * berryEmojis.length)];
-  let hintHtml = "";
-
-  if (q.op === '+') {
-    let group1 = currentQuestionBerryEmoji.repeat(q.num1);
-    let group2 = currentQuestionBerryEmoji.repeat(q.num2);
-    hintHtml = `<div class="fruit-group">${group1}</div> <span style="font-size:1.3rem; font-weight:900;">＋</span> <div class="fruit-group">${group2}</div>`;
-  } else if (q.op === '-') {
-    let html = "";
-    for(let i=0; i<q.num1; i++) {
-      if (i >= q.num1 - q.num2) {
+// きのみを「5個のかたまり」にするHTMLヘルパー
+function generateBerryBlockHtml(count, isMinus = false) {
+  let html = '<div class="fruit-group-wrapper">';
+  for (let i = 0; i < count; i += 5) {
+    let blockCount = Math.min(5, count - i);
+    html += '<div class="fruit-block-5">';
+    for (let j = 0; j < blockCount; j++) {
+      if (isMinus) {
         html += `<span class="fruit-minus">${currentQuestionBerryEmoji}</span>`;
       } else {
         html += `<span>${currentQuestionBerryEmoji}</span>`;
       }
     }
-    hintHtml = `<div class="fruit-group">${html}</div>`;
-  } else {
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderMathQuestion(container, q) {
+  currentQuestionBerryEmoji = berryEmojis[Math.floor(Math.random() * berryEmojis.length)];
+  let hintHtml = "";
+
+  if (q.op === '+') {
+    let group1 = generateBerryBlockHtml(q.num1);
+    let group2 = generateBerryBlockHtml(q.num2);
+    hintHtml = `${group1} <span style="font-size:1.3rem; font-weight:900;">＋</span> ${group2}`;
+  } else if (q.op === '-') {
+    let stayCount = q.num1 - q.num2;
+    let normalGroup = generateBerryBlockHtml(stayCount);
+    let minusGroup = generateBerryBlockHtml(q.num2, true);
+    hintHtml = `${normalGroup} ${minusGroup}`;
+  } else { // 掛け算
     let groupsHtml = "";
     for(let i=0; i<q.num2; i++) {
-      groupsHtml += `<div style="border:2px dashed #FFD54F; border-radius:10px; padding:2px 4px; margin:2px;">${currentQuestionBerryEmoji.repeat(q.num1)}</div>`;
+      groupsHtml += `<div style="border:2px dashed #FFD54F; border-radius:12px; padding:4px 6px; margin:2px; background:rgba(255,255,255,0.8);">${currentQuestionBerryEmoji.repeat(q.num1)}</div>`;
     }
-    hintHtml = `<div class="fruit-group" style="gap:4px;">${groupsHtml}</div>`;
+    hintHtml = `<div class="fruit-group" style="gap:6px;">${groupsHtml}</div>`;
   }
 
   container.innerHTML = `
