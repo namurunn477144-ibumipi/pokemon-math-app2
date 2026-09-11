@@ -24,7 +24,6 @@
     .app-header { text-align: center; margin-bottom: 10px; }
     #main-title { font-size: 2rem; color: var(--primary-shadow); line-height: 1.2; text-shadow: 2px 2px 0px #FFF; margin: 10px 0; }
     
-    /* ステージ背景（くさむら風） */
     .partner-stage { position: relative; background: linear-gradient(180deg, #E8F5E9 0%, #C8E6C9 100%); width: 100%; border-radius: 24px; padding: 30px 20px 15px; border: 4px solid #FFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center; margin-bottom: 10px; cursor: pointer; overflow: hidden; }
     .partner-stage::before { content: '🌱☘️🍀'; position: absolute; bottom: 5px; left: 10px; font-size: 1.2rem; opacity: 0.6; }
     .partner-stage::after { content: '🍀☘️🌱'; position: absolute; bottom: 5px; right: 10px; font-size: 1.2rem; opacity: 0.6; }
@@ -76,12 +75,11 @@
     
     .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
     
-    /* きのみヒントエリア（5個ずつスッキリ並ぶスタイル） */
-    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 12px; margin: 10px 0; min-height: 85px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; font-size: 1.8rem; }
-    .fruit-line-5 { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 200px; }
-    .fruit-break { flex-basis: 100%; height: 0; } /* 5個ごとにきれい改行 */
+    /* きのみエリアを1列ぴったり5個（5列グリッド）に強力修正 */
+    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 85px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; }
+    .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; justify-items: center; align-items: center; font-size: 1.6rem; width: 100%; max-width: 220px; }
     .fruit-minus { opacity: 0.3; position: relative; }
-    .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.2rem; opacity: 1; }
+    .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.1rem; opacity: 1; }
     
     .math-expr { font-size: 2.5rem; font-weight: 900; color: #2E7D32; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
     
@@ -176,15 +174,12 @@ const berryEmojis = ["🍒", "🍎", "🍇", "🍓", "🍊", "🍑"];
 const pokeComments = ["たのしいね！", "おなかすいたー！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "きのみ たべたいな！", "すごいすごい！", "えらいね！"];
 const effectEmojis = ["💖", "✨", "⭐", "🎵"];
 
-// 正解・不正解画面テキスト
 const correctTexts = ["せいかい！すごい！", "かんぺき！", "すばらしい！", "やったね！", "さすが！"];
 const incorrectTexts = ["おしい！もういちど！", "どんまい！", "つぎは がんばろう！", "ファイト！", "ざんねん！"];
 
-// 【追加】正解・不正解時の日本語ボイスバリエーション
 const correctVoices = ["やったー！せいかい！", "すごい！大せいかい！", "かんぺき！さすがだね！", "やったね！その調子！", "すばらしい！天才！"];
 const incorrectVoices = ["おしい！もう一回！", "ざんねん！どんまい！", "おしい！あとすこし！", "つぎはがんばろう！"];
 
-// 九九の正確な日本語読み上げテーブル
 const kukuSpeechMap = {
   "2x1": "にいちがいち",
   "2x2": "ににんがし",
@@ -405,13 +400,10 @@ function showNextQuestion() {
   renderMathQuestion(document.getElementById('quiz-content'), currentQuestionData);
 }
 
-// 【修正】枠線なし・5個ごとにスッキリ改行する自然なきのみ配置
-function generateBerryBlockHtml(count, isMinus = false) {
-  let html = '<div class="fruit-line-5">';
+// 【完全修正】1列にぴったり5個並ぶグリッド用HTML
+function generateBerryGridHtml(count, isMinus = false) {
+  let html = '<div class="fruit-grid-5">';
   for (let i = 0; i < count; i++) {
-    if (i > 0 && i % 5 === 0) {
-      html += '<div class="fruit-break"></div>'; // 5個ごとに改行
-    }
     if (isMinus) {
       html += `<span class="fruit-minus">${currentQuestionBerryEmoji}</span>`;
     } else {
@@ -427,13 +419,13 @@ function renderMathQuestion(container, q) {
   let hintHtml = "";
 
   if (q.op === '+') {
-    let group1 = generateBerryBlockHtml(q.num1);
-    let group2 = generateBerryBlockHtml(q.num2);
-    hintHtml = `${group1} <span style="font-size:1.3rem; font-weight:900; margin:0 6px;">＋</span> ${group2}`;
+    let group1 = generateBerryGridHtml(q.num1);
+    let group2 = generateBerryGridHtml(q.num2);
+    hintHtml = `${group1} <span style="font-size:1.3rem; font-weight:900; margin:4px 0;">＋</span> ${group2}`;
   } else if (q.op === '-') {
     let stayCount = q.num1 - q.num2;
-    let normalGroup = generateBerryBlockHtml(stayCount);
-    let minusGroup = generateBerryBlockHtml(q.num2, true);
+    let normalGroup = generateBerryGridHtml(stayCount);
+    let minusGroup = generateBerryGridHtml(q.num2, true);
     hintHtml = `${normalGroup} ${minusGroup}`;
   } else { // 掛け算
     let groupsHtml = "";
