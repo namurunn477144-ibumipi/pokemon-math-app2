@@ -96,22 +96,31 @@
     
     .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
     
-    /* きのみグリッド */
-    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 90px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px; overflow: visible; }
+    /* きのみグリッド（改行対応でスッキリ！） */
+    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 90px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; overflow: visible; }
     .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; justify-items: center; align-items: center; font-size: 1.6rem; width: 100%; max-width: 170px; }
     .fruit-minus { opacity: 0.3; position: relative; }
     .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1rem; opacity: 1; }
     
-    /* CSS時計 */
-    .clock-face { width: 120px; height: 120px; border: 6px solid #1A237E; border-radius: 50%; background: #FFF; position: relative; margin: 10px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+    /* CSS時計（サイズアップ＆数字入り！） */
+    .clock-face { width: 160px; height: 160px; border: 6px solid #1A237E; border-radius: 50%; background: #FFF; position: relative; margin: 15px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
     .clock-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; }
-    .hand-hour { width: 6px; height: 35px; background: #F44336; margin-left: -3px; z-index: 2; }
-    .hand-minute { width: 4px; height: 48px; background: #1976D2; margin-left: -2px; z-index: 1; }
-    .clock-center { width: 10px; height: 10px; background: #333; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
+    .hand-hour { width: 6px; height: 45px; background: #F44336; margin-left: -3px; z-index: 2; }
+    .hand-minute { width: 4px; height: 60px; background: #1976D2; margin-left: -2px; z-index: 1; }
+    .clock-center { width: 12px; height: 12px; background: #333; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
+    .clock-number { position: absolute; font-size: 1.2rem; font-weight: 900; color: #1A237E; transform: translate(-50%, -50%); }
 
-    /* CSSコイン */
-    .coin-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 10px 0; }
+    /* CSSコイン（500円・100円・50円・5円追加！） */
+    .coin-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 15px 0; }
+    .coin-500 { width: 60px; height: 60px; background: radial-gradient(circle, #FFFDE7 0%, #D7CCC8 100%); border: 3px solid #8D6E63; border-radius: 50%; color: #5D4037; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+    .coin-100 { width: 50px; height: 50px; background: radial-gradient(circle, #FFFFFF 0%, #CFD8DC 100%); border: 3px solid #90A4AE; border-radius: 50%; color: #455A64; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+    .coin-50 { width: 45px; height: 45px; background: radial-gradient(circle, #FFFFFF 0%, #CFD8DC 100%); border: 3px solid #90A4AE; border-radius: 50%; color: transparent; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; box-shadow: 0 3px 6px rgba(0,0,0,0.2); position: relative; }
+    .coin-50::before { content: '50'; color: #455A64; position: absolute; z-index: 2; }
+    .coin-50::after { content: ''; width: 10px; height: 10px; background: var(--card-bg); border: 2px solid #90A4AE; border-radius: 50%; position: absolute; z-index: 1; }
     .coin-10 { width: 45px; height: 45px; background: radial-gradient(circle, #D7CCC8 0%, #8D6E63 100%); border: 3px solid #5D4037; border-radius: 50%; color: #FFF; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; text-shadow: 1px 1px 2px #000; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+    .coin-5 { width: 45px; height: 45px; background: radial-gradient(circle, #FFF9C4 0%, #FBC02D 100%); border: 3px solid #F57F17; border-radius: 50%; color: transparent; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; box-shadow: 0 3px 6px rgba(0,0,0,0.2); position: relative;}
+    .coin-5::before { content: '5'; color: #E65100; position: absolute; z-index: 2; }
+    .coin-5::after { content: ''; width: 10px; height: 10px; background: var(--card-bg); border: 2px solid #F57F17; border-radius: 50%; position: absolute; z-index: 1; }
     .coin-1 { width: 35px; height: 35px; background: radial-gradient(circle, #FFFFFF 0%, #B0BEC5 100%); border: 2px solid #78909C; border-radius: 50%; color: #37474F; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
     /* バー比較表示 */
@@ -215,7 +224,7 @@
 </div>
 
 <script>
-// 計算クイズ専用：ゴンベ(446) -> カビゴン(143)
+  // 計算クイズ専用：ゴンベ(446) -> カビゴン(143)
 const gonbeFamily = { stage0: {id: 446, name: "ゴンベ"}, stage1: {id: 143, name: "カビゴン"} };
 
 // 生活クイズ専用：イーブイ(133)進化系
@@ -238,6 +247,7 @@ const effectEmojis = ["💖", "✨", "⭐", "🎵"];
 const correctTexts = ["せいかい！すごい！", "かんぺき！", "すばらしい！", "やったね！", "さすが！"];
 const incorrectTexts = ["おしい！もういちど！", "どんまい！", "つぎは がんばろう！", "ファイト！", "ざんねん！"];
 
+// 英語正解・不正解ボイス
 const correctVoices = ["やったー！", "せいかい！", "Great!", "Good job!"];
 const incorrectVoices = ["おしい！", "もういっかい！", "Oh no!", "Almost!"];
 
@@ -263,20 +273,24 @@ const shapeData = [
   { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦</div>", ans: "3こ", options: ["3こ", "2こ", "4こ", "5こ"] }
 ];
 
+// 「ほう」とひらがなで記載！
 const compareData = [
-  { text: "ながい 方は どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 85%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 40%;'></div></div></div></div>", ans: "A", options: ["A", "B"] },
-  { text: "ながい 方は どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 30%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 90%;'></div></div></div></div>", ans: "B", options: ["A", "B"] },
-  { text: "おおい 方は どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 75%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 25%;'></div></div></div></div>", ans: "A", options: ["A", "B"] }
+  { text: "ながい ほうは どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 85%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 40%;'></div></div></div></div>", ans: "A", options: ["A", "B"] },
+  { text: "ながい ほうは どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 30%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 90%;'></div></div></div></div>", ans: "B", options: ["A", "B"] },
+  { text: "おおい ほうは どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 75%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 25%;'></div></div></div></div>", ans: "A", options: ["A", "B"] }
 ];
 
+// 500円玉・100円・50円・10円・5円・1円のバリエーション追加
 const moneyData = [
   { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-1'>1</div><div class='coin-1'>1</div><div class='coin-1'>1</div></div>", ans: "23えん", options: ["23えん", "32えん", "15えん", "5えん"] },
-  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-1'>1</div><div class='coin-1'>1</div></div>", ans: "12えん", options: ["12えん", "21えん", "3えん", "30えん"] },
-  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div></div>", ans: "30えん", options: ["30えん", "3えん", "13えん", "300えん"] },
-  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-1'>1</div></div>", ans: "41えん", options: ["41えん", "14えん", "5えん", "50えん"] }
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-100'>100</div><div class='coin-50'></div><div class='coin-10'>10</div></div>", ans: "160えん", options: ["160えん", "150えん", "110えん", "60えん"] },
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-100'>100</div><div class='coin-100'>100</div><div class='coin-50'></div></div>", ans: "250えん", options: ["250えん", "150えん", "200えん", "300えん"] },
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-500'>500</div><div class='coin-100'>100</div></div>", ans: "600えん", options: ["600えん", "510えん", "150えん", "500えん"] },
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-50'></div><div class='coin-10'>10</div><div class='coin-5'></div><div class='coin-1'>1</div></div>", ans: "66えん", options: ["66えん", "56えん", "65えん", "16えん"] },
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-100'>100</div><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-5'></div></div>", ans: "125えん", options: ["125えん", "150えん", "115えん", "135えん"] }
 ];
+  let currentCalcMode = 1;
 
-let currentCalcMode = 1;
 function setMode(modeNum) {
   currentCalcMode = modeNum;
   document.querySelectorAll('.btn-mode').forEach((btn, idx) => {
@@ -287,6 +301,7 @@ function setMode(modeNum) {
 
 function generateCalcQuestion() {
   let num1, num2, op, ans, speechText = "";
+  
   if (currentCalcMode === 1) {
     op = Math.random() > 0.5 ? '+' : '-';
     if (op === '+') {
@@ -314,6 +329,7 @@ function generateCalcQuestion() {
     num1 = Math.random() > 0.5 ? 2 : 3;
     num2 = Math.floor(Math.random() * 9) + 1;
     ans = num1 * num2;
+    
     const key = `${num1}x${num2}`;
     speechText = kukuSpeechMap[key] || `${num1} かける ${num2} は ${ans}`;
   }
@@ -324,10 +340,10 @@ function generateCalcQuestion() {
     if(dummy > 0 && !options.includes(dummy)) options.push(dummy);
   }
   options.sort(() => 0.5 - Math.random());
+
   return { num1, num2, op, ans, options, speechText };
 }
-
-function getPokemonImageUrl(id) { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`; }
+  function getPokemonImageUrl(id) { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`; }
 
 let isLifeMode = false;
 let calcState = { totalBerries: 0, isEvolved: false };
@@ -604,11 +620,18 @@ function renderMathCalcQuestion(container, q) {
 
   if (q.op === '+') {
     let group1 = generateBerryGridHtml(q.num1); let group2 = generateBerryGridHtml(q.num2);
-    hintHtml = `${group1} <span style="font-size:1.3rem; font-weight:900; margin:4px 0;">＋</span> ${group2}`;
+    hintHtml = `<div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+                  ${group1}
+                  <span style="font-size:1.6rem; font-weight:900; margin:2px 0;">＋</span>
+                  ${group2}
+                </div>`;
   } else if (q.op === '-') {
     let stayCount = q.num1 - q.num2;
     let normalGroup = generateBerryGridHtml(stayCount); let minusGroup = generateBerryGridHtml(q.num2, true);
-    hintHtml = `${normalGroup} ${minusGroup}`;
+    hintHtml = `<div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+                  ${normalGroup}
+                  ${minusGroup}
+                </div>`;
   } else {
     let groupsHtml = "";
     for(let i=0; i<q.num2; i++) {
@@ -647,12 +670,22 @@ function renderClockQuestion(container) {
   const hourDeg = (q.hour % 12) * 30 + (q.minute === 30 ? 15 : 0);
   const minuteDeg = q.minute * 6;
 
+  let numbersHtml = '';
+  for(let i=1; i<=12; i++) {
+    let angle = (i * 30 - 90) * (Math.PI / 180);
+    let r = 58; 
+    let x = 74 + r * Math.cos(angle);
+    let y = 74 + r * Math.sin(angle);
+    numbersHtml += `<div class="clock-number" style="left:${x}px; top:${y}px;">${i}</div>`;
+  }
+
   container.innerHTML = `
     <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
       <p style="font-size:1.1rem; font-weight:800; margin:0;">いま なんじかな？</p>
       <button class="voice-btn" id="clock-voice-btn">🔊</button>
     </div>
     <div class="clock-face">
+      ${numbersHtml}
       <div class="clock-hand hand-hour" style="transform: rotate(${hourDeg}deg);"></div>
       <div class="clock-hand hand-minute" style="transform: rotate(${minuteDeg}deg);"></div>
       <div class="clock-center"></div>
@@ -685,6 +718,7 @@ function renderLifeCardQuestion(container, dataList, titleText) {
     <div class="options-grid" id="life-opts"></div>
   `;
 
+  // 読み上げ前にカッコや絵文字を自動除去
   document.getElementById('life-voice-btn').onclick = () => {
     let cleanText = q.text.replace(/（[^）]*）/g, '').replace(/[\u1F600-\u1F64F\u1F300-\u1F5FF\u1F680-\u1F6FF\u2600-\u26FF\u2700-\u27BF]/g, '');
     speakJapaneseVoice(cleanText);
@@ -727,6 +761,7 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span style="font-size:1.4rem; color:var(--primary-shadow); display:block; margin-top:10px;">せいかい：${ansText}</span>`;
     text.style.color = "var(--correct)";
     
+    // 正解時に英語ボイス再生
     const voice = correctVoices[Math.floor(Math.random() * correctVoices.length)];
     if (/[a-zA-Z]/.test(voice)) speakEnglishVoice(voice); else speakJapaneseVoice(voice);
   } else {
@@ -734,6 +769,7 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.2rem; color:#666; display:block; margin-top:10px;">せいかいは：${ansText}</span>`;
     text.style.color = "var(--incorrect)";
     
+    // 不正解時に英語ボイス再生
     const voice = incorrectVoices[Math.floor(Math.random() * incorrectVoices.length)];
     if (/[a-zA-Z]/.test(voice)) speakEnglishVoice(voice); else speakJapaneseVoice(voice);
   }
