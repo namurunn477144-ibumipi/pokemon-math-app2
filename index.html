@@ -6,7 +6,7 @@
   <title>さんすうクイズ - いぶちゃん＆みーちゃん</title>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
-    /* ベース：けいさんモード（明るいスカイブルー） */
+    /* ベース：けいさんモード（スカイブルー） */
     :root {
       --primary: #03A9F4; --primary-shadow: #0288D1;
       --secondary: #FFB300; --secondary-shadow: #FF8F00;
@@ -110,7 +110,7 @@
     
     .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
     
-    /* 見切れ防止・引き算枠表示用スタイル */
+    /* 見切れ防止・引き算枠表示スタイル */
     .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 90px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; }
     .fruit-box-frame { display: inline-block; border: 3px solid #FFA000; border-radius: 16px; padding: 8px; background: #FFF; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
     .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; justify-items: center; align-items: center; font-size: 1.6rem; }
@@ -186,6 +186,7 @@
       <div class="exp-bar-bg"><div id="exp-bar" class="exp-bar-fill"></div></div>
     </div>
 
+    <!-- ごはんボックス（生活モード用） -->
     <div id="food-section" class="food-section" style="display:none;">
       <div class="food-header"><h3>ごはんボックス</h3><p>4もんせいかいで、ごはんが1つひらくよ！</p></div>
       <div id="food-list" class="food-list"></div>
@@ -210,6 +211,7 @@
   <div id="quiz-view" class="view hidden">
     <div class="quiz-header-bar"><span id="quiz-progress-text" class="badge">だい 1 もん！</span></div>
     
+    <!-- 計算クイズ用パートナー表示 -->
     <div id="quiz-partner-stage" class="partner-stage bg-grass" style="padding:20px 10px 10px; margin-bottom:8px;" onclick="interactPokemon('quiz')">
       <div id="poke-comment-quiz" class="poke-comment">がんばれー！</div>
       <img id="partner-image-quiz" class="partner-image" style="width:100px; height:100px;" src="" alt="パートナー">
@@ -240,10 +242,19 @@ const gonbeFamily = {
   stage1: { id: 143, name: "カビゴン" }
 };
 
-const eeveeEvolutions = [
-  { id: 134, name: "シャワーズ" }, { id: 135, name: "サンダース" }, { id: 136, name: "ブースター" },
-  { id: 196, name: "エーフィ" }, { id: 197, name: "ブラッキー" }, { id: 470, name: "リーフィア" },
-  { id: 471, name: "グレイシア" }, { id: 700, name: "ニンフィア" }
+// 生活モード用1段階進化ポケモンファミリー（11種）
+const pokemonFamilies = [
+  { stage0: {id: 79, name: "ヤドン"}, stage1: {id: 199, name: "ヤドキング"} },
+  { stage0: {id: 54, name: "コダック"}, stage1: {id: 55, name: "ゴルダック"} },
+  { stage0: {id: 90, name: "シェルダー"}, stage1: {id: 91, name: "パルシェン"} },
+  { stage0: {id: 877, name: "モルペコ"}, stage1: {id: 877, name: "モルペコ(まんぷく)"} },
+  { stage0: {id: 109, name: "ドガース"}, stage1: {id: 110, name: "マタドガス"} },
+  { stage0: {id: 23, name: "アーボ"}, stage1: {id: 24, name: "アーボック"} },
+  { stage0: {id: 360, name: "ソーナノ"}, stage1: {id: 202, name: "ソーナンス"} },
+  { stage0: {id: 52, name: "ニャース"}, stage1: {id: 53, name: "ペルシアン"} },
+  { stage0: {id: 439, name: "マネネ"}, stage1: {id: 122, name: "バリヤード"} },
+  { stage0: {id: 300, name: "エネコ"}, stage1: {id: 301, name: "エネコロロ"} },
+  { stage0: {id: 447, name: "リオル"}, stage1: {id: 448, name: "ルカリオ"} }
 ];
 
 const allFoods = [
@@ -260,10 +271,10 @@ const incorrectTexts = ["おしい！もういちど！", "どんまい！", "�
 
 function getPokemonImageUrl(id) { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`; }
 
-let isLifeMode = false; // false: けいさん (ゴンベ), true: せいかつ (イーブイ)
+let isLifeMode = false; // false: けいさん (ゴンベ), true: せいかつ (1段階進化ポケモン)
 let currentCalcLevel = 1; // 1: 10まで, 2: 20まで, 3: 九九(2・3の段)
 let calcState = { totalBerries: 0, isEvolved: false };
-let lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
+let lifeState = { exp: 0, keys: 0, isEvolved: false, familyIdx: 0, foods: [] };
 let currentQuestionBerryEmoji = "🍎";
 
 let synthVoices = [];
@@ -279,8 +290,15 @@ const quizPartnerStage = document.getElementById('quiz-partner-stage');
 function initCalcGame() {
   calcState = { totalBerries: 0, isEvolved: false };
 }
+
 function initLifeGame() {
-  lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
+  lifeState = { 
+    exp: 0, 
+    keys: 0, 
+    isEvolved: false, 
+    familyIdx: Math.floor(Math.random() * pokemonFamilies.length), 
+    foods: [] 
+  };
   lifeState.foods = [...allFoods].sort(() => 0.5 - Math.random()).slice(0, 4).map(f => ({ ...f, isEaten: false }));
 }
 
@@ -295,7 +313,8 @@ function getCurrentPoke() {
   if (!isLifeMode) {
     return calcState.isEvolved ? gonbeFamily.stage1 : gonbeFamily.stage0;
   } else {
-    return { id: lifeState.partnerId, name: lifeState.partnerName };
+    const family = pokemonFamilies[lifeState.familyIdx];
+    return lifeState.isEvolved ? family.stage1 : family.stage0;
   }
 }
 
@@ -391,9 +410,8 @@ function feedLifePartner(index, element) {
       
       if (lifeState.exp === 100 && !lifeState.isEvolved) {
         lifeState.isEvolved = true;
-        const evo = eeveeEvolutions[Math.floor(Math.random() * eeveeEvolutions.length)];
-        lifeState.partnerId = evo.id; lifeState.partnerName = evo.name;
-        evolvePoke(evo);
+        const family = pokemonFamilies[lifeState.familyIdx];
+        evolvePoke(family.stage1);
       } else { renderRoom(); }
     }, 1000);
   }, 550);
@@ -494,11 +512,12 @@ document.getElementById('mode-toggle-btn').onclick = () => {
     resetGameBtn.innerText = "ゴンベともういちどあそぶ🔄";
   } else {
     document.body.classList.add('mode-life');
+    if (lifeState.familyIdx === undefined) initLifeGame();
     document.getElementById('main-title').innerText = "さんすう せいかつクイズ";
     document.getElementById('start-quiz-btn').innerText = "せいかつクイズ (4もん)";
     document.getElementById('mode-toggle-btn').innerHTML = "🔄 けいさんモードにきりかえ";
     document.getElementById('mode-select-section').style.display = "none";
-    resetGameBtn.innerText = "イーブイにもどる🔄";
+    resetGameBtn.innerText = "あたらしいポケモンとあそぶ🔄";
   }
   renderRoom();
 };
@@ -585,7 +604,7 @@ function generateMathQuestionData() {
   return { num1, num2, op, ans, options, speechText };
 }
 
-/* ①＆② 計算問題のヒント構造（引き算：四角枠内に引かれる数全体＋引く数ぶん❌） */
+/* 計算問題ヒント描画（引き算：枠内に引かれる数全体＋引く数ぶん❌） */
 function renderMathCalcQuestion(container, q) {
   currentQuestionBerryEmoji = berryEmojis[Math.floor(Math.random() * berryEmojis.length)];
   let hintHtml = "";
@@ -726,7 +745,6 @@ function renderOptions(container, correctAns, options) {
   });
 }
 
-/* 確実な日本語音声読み上げ */
 function speakJapaneseVoice(text) {
   if (!text) return;
   window.speechSynthesis.cancel();
@@ -739,7 +757,6 @@ function speakJapaneseVoice(text) {
   window.speechSynthesis.speak(msg);
 }
 
-/* ③ 正解画面での数値・文字列明記 */
 function checkAnswer(isCorrect, ansText, isCalc = false) {
   const overlay = document.getElementById('feedback-overlay'), icon = document.getElementById('feedback-icon'), text = document.getElementById('feedback-text');
   
@@ -752,4 +769,32 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     icon.innerText = "❌"; icon.style.color = "var(--incorrect)";
     text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.4rem; color:#666; display:block; margin-top:10px;">せいかいは：</span><span style="font-size:1.8rem; color:var(--primary-shadow); display:block;">${ansText}</span>`;
     text.style.color = "var(--incorrect)";
-    speakJapaneseVoice("ざんね
+    speakJapaneseVoice("ざんねん！つぎはがんばろう！");
+  }
+  
+  overlay.classList.add('show');
+  
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    if (isCorrect) {
+      if (isCalc) {
+        feedBerriesInQuiz(parseInt(ansText) || 5, () => {
+          currentQIndex++;
+          showNextQuestion();
+        });
+      } else {
+        currentQIndex++;
+        showNextQuestion();
+      }
+    }
+  }, 1800); 
+}
+
+window.onload = () => { 
+  initCalcGame(); 
+  initLifeGame(); 
+  renderRoom(); 
+};
+</script>
+</body>
+</html>
