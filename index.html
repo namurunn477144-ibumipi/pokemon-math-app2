@@ -6,6 +6,7 @@
   <title>さんすうクイズ - いぶちゃん＆みーちゃん</title>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
+    /* ベース：けいさんモード（明るいスカイブルー） */
     :root {
       --primary: #03A9F4; --primary-shadow: #0288D1;
       --secondary: #FFB300; --secondary-shadow: #FF8F00;
@@ -13,24 +14,45 @@
       --text-main: #0277BD; --correct: #4CAF50; --incorrect: #F44336;
       --bg-dot: #B3E5FC;
     }
+    
+    /* せいかつモード（濃いめのディープネイビー・色味の差を強調！） */
+    body.mode-life {
+      --primary: #1A237E; --primary-shadow: #0D47A1;
+      --secondary: #FFC107; --secondary-shadow: #FFA000;
+      --bg-color: #E8EAF6; --card-bg: #FFFFFF;
+      --text-main: #1A237E;
+      --bg-dot: #C5CAE9;
+    }
 
     * { box-sizing: border-box; font-family: 'M PLUS Rounded 1c', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
-    body { margin: 0; padding: 0; background-color: var(--bg-color); background-image: radial-gradient(var(--bg-dot) 2px, transparent 2px); background-size: 20px 20px; color: var(--text-main); overflow-x: hidden; touch-action: manipulation; }
+    body { margin: 0; padding: 0; background-color: var(--bg-color); background-image: radial-gradient(var(--bg-dot) 2px, transparent 2px); background-size: 20px 20px; color: var(--text-main); overflow-x: hidden; touch-action: manipulation; transition: background-color 0.5s; }
     
     #app { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; }
     .view { display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; transition: opacity 0.3s ease; }
     .view.hidden { display: none !important; opacity: 0; }
     
     .app-header { text-align: center; margin-bottom: 10px; }
-    #main-title { font-size: 2rem; color: var(--primary-shadow); line-height: 1.2; text-shadow: 2px 2px 0px #FFF; margin: 10px 0; }
+    #main-title { font-size: 2rem; color: var(--primary-shadow); line-height: 1.2; text-shadow: 2px 2px 0px #FFF; margin: 10px 0; transition: color 0.5s; }
     
-    .partner-stage { position: relative; background: linear-gradient(180deg, #E8F5E9 0%, #C8E6C9 100%); width: 100%; border-radius: 24px; padding: 30px 20px 15px; border: 4px solid #FFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center; margin-bottom: 10px; cursor: pointer; overflow: hidden; }
-    .partner-stage::before { content: '🌱☘️🍀'; position: absolute; bottom: 5px; left: 10px; font-size: 1.2rem; opacity: 0.6; }
-    .partner-stage::after { content: '🍀☘️🌱'; position: absolute; bottom: 5px; right: 10px; font-size: 1.2rem; opacity: 0.6; }
+    /* ステージ背景の設定 */
+    .partner-stage { position: relative; width: 100%; border-radius: 24px; padding: 30px 20px 15px; border: 4px solid #FFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center; margin-bottom: 10px; cursor: pointer; overflow: hidden; transition: background 0.5s; }
+    
+    .partner-stage.bg-grass { background: linear-gradient(180deg, #E8F5E9 0%, #C8E6C9 100%); }
+    .partner-stage.bg-grass::before { content: '🌱☘️🍀'; position: absolute; bottom: 5px; left: 10px; font-size: 1.2rem; opacity: 0.6; }
+    .partner-stage.bg-grass::after { content: '🍀☘️🌱'; position: absolute; bottom: 5px; right: 10px; font-size: 1.2rem; opacity: 0.6; }
+
+    .partner-stage.bg-lovely { background: linear-gradient(180deg, #FFF0F5 0%, #FFD1DC 100%); }
+    .partner-stage.bg-lovely::before { content: '💖✨'; position: absolute; bottom: 8px; left: 12px; font-size: 1.2rem; opacity: 0.7; }
+    .partner-stage.bg-lovely::after { content: '✨💖'; position: absolute; bottom: 8px; right: 12px; font-size: 1.2rem; opacity: 0.7; }
+
+    .partner-stage.bg-cool { background: linear-gradient(180deg, #2A0845 0%, #6441A5 100%); border-color: #FFD700; }
+    .partner-stage.bg-cool::before { content: '⚡⭐'; position: absolute; bottom: 8px; left: 12px; font-size: 1.2rem; opacity: 0.8; }
+    .partner-stage.bg-cool::after { content: '⭐⚡'; position: absolute; bottom: 8px; right: 12px; font-size: 1.2rem; opacity: 0.8; }
+    .partner-stage.bg-cool #partner-name-room { color: #FFD700; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
     .partner-image { width: 130px; height: 130px; object-fit: contain; filter: drop-shadow(0 8px 6px rgba(0,0,0,0.2)); animation: float 3s ease-in-out infinite; transition: transform 0.3s; z-index: 5; position: relative; }
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    .partner-name { font-size: 1.5rem; color: #2E7D32; margin: 5px 0 0 0; pointer-events: none; font-weight: 900; }
+    .partner-name { font-size: 1.5rem; color: var(--text-main); margin: 5px 0 0 0; pointer-events: none; font-weight: 900; }
     
     .poke-comment { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #FFF; border: 3px solid var(--primary); border-radius: 20px; padding: 6px 14px; font-size: 1rem; font-weight: 900; color: var(--text-main); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 20; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
     .poke-comment::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-width: 8px 8px 0; border-style: solid; border-color: var(--primary) transparent transparent transparent; }
@@ -49,14 +71,14 @@
     .effect-anim { position: absolute; font-size: 2rem; bottom: 40%; opacity: 0; animation: floatUpEffect 1s ease-out; pointer-events: none; z-index: 15; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
     @keyframes floatUpEffect { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-60px) scale(1.5) rotate(15deg); opacity: 0; } }
     
-    .status-board { width: 100%; background: #E0F7FA; padding: 12px 20px; border-radius: 16px; margin-bottom: 15px; }
+    .status-board { width: 100%; background: rgba(255,255,255,0.7); padding: 12px 20px; border-radius: 16px; margin-bottom: 15px; }
     .exp-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px; }
     .exp-label { font-size: 1.1rem; font-weight: 800; }
     .exp-value { font-size: 1.4rem; font-weight: 900; color: var(--primary-shadow); }
-    .exp-bar-bg { background-color: #B2EBF2; border-radius: 15px; height: 24px; overflow: hidden; border: 3px solid #FFF; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+    .exp-bar-bg { background-color: rgba(0,0,0,0.1); border-radius: 15px; height: 24px; overflow: hidden; border: 3px solid #FFF; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
     .exp-bar-fill { background: var(--primary); height: 100%; width: 0%; border-radius: 10px; transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     
-    .mode-select-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 20px; text-align: center; }
+    .mode-select-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 15px; text-align: center; }
     .mode-select-section h3 { margin: 0 0 10px 0; font-size: 1.2rem; color: var(--primary-shadow); }
     .mode-buttons { display: flex; flex-direction: column; gap: 8px; }
     .btn-mode { background: #E1F5FE; border: 3px solid var(--primary); color: var(--primary-shadow); border-radius: 15px; padding: 10px; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: 0.1s; }
@@ -69,22 +91,38 @@
     .btn-primary:active { transform: translateY(8px); box-shadow: 0 0 0 var(--secondary-shadow); }
     .btn-danger { background: #E91E63; color: white; box-shadow: 0 8px 0 #C2185B; } 
     .btn-danger:active { transform: translateY(8px); box-shadow: 0 0 0 #C2185B; }
+    .btn-outline { background: #FFF; color: var(--primary-shadow); border: 3px solid var(--primary); box-shadow: 0 6px 0 var(--primary); }
+    .btn-outline:active { transform: translateY(6px); box-shadow: 0 0 0 var(--primary); }
     
     .quiz-header-bar { margin-bottom: 8px; }
     .badge { background: var(--primary); color: #FFF; padding: 6px 18px; border-radius: 20px; font-size: 1.1rem; font-weight: 900; box-shadow: 0 4px 0 var(--primary-shadow); }
     
     .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
     
-    /* 5個ずつピッタリ並べる強力なGridレイアウト */
+    /* きのみ・グリッドレイアウト */
     .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 12px; margin: 10px 0; min-height: 85px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 15px; }
     .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; justify-items: center; align-items: center; font-size: 1.8rem; width: 100%; max-width: 180px; }
     .fruit-minus { opacity: 0.3; position: relative; }
     .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.1rem; opacity: 1; }
     
+    /* --- CSS時計描画 --- */
+    .clock-face { width: 120px; height: 120px; border: 6px solid #1A237E; border-radius: 50%; background: #FFF; position: relative; margin: 10px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+    .clock-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; }
+    .hand-hour { width: 6px; height: 35px; background: #F44336; margin-left: -3px; z-index: 2; }
+    .hand-minute { width: 4px; height: 48px; background: #1976D2; margin-left: -2px; z-index: 1; }
+    .clock-center { width: 10px; height: 10px; background: #333; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
+
+    /* --- CSSコイン（お金）描画 --- */
+    .coin-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 10px 0; }
+    .coin-10 { width: 45px; height: 45px; background: radial-gradient(circle, #D7CCC8 0%, #8D6E63 100%); border: 3px solid #5D4037; border-radius: 50%; color: #FFF; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; text-shadow: 1px 1px 2px #000; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+    .coin-1 { width: 35px; height: 35px; background: radial-gradient(circle, #FFFFFF 0%, #B0BEC5 100%); border: 2px solid #78909C; border-radius: 50%; color: #37474F; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+    /* --- 方眼グリッド（比較用） --- */
+    .grid-paper { background-size: 20px 20px; background-image: linear-gradient(to right, #E0E0E0 1px, transparent 1px), linear-gradient(to bottom, #E0E0E0 1px, transparent 1px); border: 2px solid #9E9E9E; border-radius: 12px; padding: 10px; margin: 10px 0; background-color: #FFF; }
+
     .math-expr { font-size: 2.5rem; font-weight: 900; color: #2E7D32; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
-    
     .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-    .option-btn { background: #FFF; border: 4px solid #81C784; border-radius: 16px; padding: 12px; font-size: 2rem; font-weight: 900; color: #2E7D32; display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 0 #66BB6A; cursor: pointer; transition: 0.1s; }
+    .option-btn { background: #FFF; border: 4px solid #81C784; border-radius: 16px; padding: 12px; font-size: 1.8rem; font-weight: 900; color: #2E7D32; display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 0 #66BB6A; cursor: pointer; transition: 0.1s; }
     .option-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #66BB6A; }
     
     .voice-btn { background: var(--secondary); box-shadow: 0 6px 0 var(--secondary-shadow); border-radius: 50%; border: none; color: white; cursor: pointer; display:inline-flex; justify-content:center; align-items:center; transition: 0.1s; width: 45px; height: 45px; font-size: 1.3rem;}
@@ -111,20 +149,20 @@
 
 <div id="app">
   <div id="room-view" class="view active">
-    <header class="app-header"><h1 id="main-title">さんすうクイズ</h1></header>
-    <div class="partner-stage" onclick="interactPokemon('room')">
+    <header class="app-header"><h1 id="main-title">さんすう けいさんクイズ</h1></header>
+    <div id="partner-stage" class="partner-stage bg-grass" onclick="interactPokemon('room')">
       <div id="poke-comment-room" class="poke-comment">がんばろうね！</div>
       <img id="partner-image-room" class="partner-image" src="" alt="パートナー">
       <div id="eating-msg-room" class="eating-msg">もぐもぐ♪</div>
       <h2 id="partner-name-room" class="partner-name">ポケモン</h2>
     </div>
     <div class="status-board">
-      <div class="exp-header"><span class="exp-label">たべた きのみ</span><span class="exp-value"><span id="exp-text">0</span> / 100こ</span></div>
+      <div class="exp-header"><span id="exp-label" class="exp-label">たべた きのみ</span><span class="exp-value"><span id="exp-text">0</span><span id="exp-unit"> / 100こ</span></span></div>
       <div class="exp-bar-bg"><div id="exp-bar" class="exp-bar-fill"></div></div>
     </div>
     
-    <div class="mode-select-section">
-      <h3>モードを えらんでね</h3>
+    <div id="mode-select-section" class="mode-select-section">
+      <h3>けいさんモードを えらんでね</h3>
       <div class="mode-buttons">
         <button class="btn-mode active" onclick="setMode(1)">1. かんたん (10までの たし・ひき)</button>
         <button class="btn-mode" onclick="setMode(2)">2. ふつう (20までの たし・ひき)</button>
@@ -133,7 +171,8 @@
     </div>
 
     <div class="action-buttons">
-      <button id="start-quiz-btn" class="btn btn-primary btn-large">さんすうクイズ (4もん)</button>
+      <button id="start-quiz-btn" class="btn btn-primary btn-large">けいさんクイズ (4もん)</button>
+      <button id="mode-toggle-btn" class="btn btn-outline btn-large" style="margin-top:5px;">🔄 せいかつモードにきりかえ</button>
       <button id="reset-game-btn" class="btn btn-danger btn-large" style="margin-top:5px; display:none;">あたらしいポケモンとあそぶ🔄</button>
     </div>
   </div>
@@ -141,7 +180,7 @@
   <div id="quiz-view" class="view hidden">
     <div class="quiz-header-bar"><span id="quiz-progress-text" class="badge">だい 1 もん！</span></div>
     
-    <div class="partner-stage" style="padding:20px 10px 10px; margin-bottom:8px;" onclick="interactPokemon('quiz')">
+    <div id="quiz-partner-stage" class="partner-stage bg-grass" style="padding:20px 10px 10px; margin-bottom:8px;" onclick="interactPokemon('quiz')">
       <div id="poke-comment-quiz" class="poke-comment">がんばれー！</div>
       <img id="partner-image-quiz" class="partner-image" style="width:100px; height:100px;" src="" alt="パートナー">
       <div id="eating-msg-quiz" class="eating-msg">もぐもぐ♪</div>
@@ -164,9 +203,8 @@
   <h2 id="evolve-text" class="evolve-text">おめでとう！<br>しんかした！</h2>
   <button id="close-evolve-btn" class="btn btn-primary btn-large" style="width:80%; max-width:300px;">いっしょにあそぶ！</button>
 </div>
-
-<script>
-  const pokemonFamilies = [
+// けいさんモード用：12種類のポケモン
+const calcPokemonFamilies = [
   { stage0: {id: 446, name: "ゴンベ"}, stage1: {id: 143, name: "カビゴン"} },
   { stage0: {id: 79, name: "ヤドン"}, stage1: {id: 199, name: "ヤドキング"} },
   { stage0: {id: 54, name: "コダック"}, stage1: {id: 55, name: "ゴルダック"} },
@@ -181,9 +219,16 @@
   { stage0: {id: 447, name: "リオル"}, stage1: {id: 448, name: "ルカリオ"} }
 ];
 
+// せいかつモード用：イーブイ（133）とその進化系
+const eeveeEvolutions = [
+  { id: 134, name: "シャワーズ" }, { id: 135, name: "サンダース" }, { id: 136, name: "ブースター" },
+  { id: 196, name: "エーフィ" }, { id: 197, name: "ブラッキー" }, { id: 470, name: "リーフィア" },
+  { id: 471, name: "グレイシア" }, { id: 700, name: "ニンフィア" }
+];
+
 const berryEmojis = ["🍒", "🍎", "🍇", "🍓", "🍊", "🍑"];
 
-const pokeComments = ["たのしいね！", "おなかすいたー！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "きのみ たべたいな！", "すごいすごい！", "えらいね！"];
+const pokeComments = ["たのしいね！", "おなかすいたー！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "すごーい！", "えらいね！"];
 const effectEmojis = ["💖", "✨", "⭐", "🎵"];
 
 const correctTexts = ["せいかい！すごい！", "かんぺき！", "すばらしい！", "やったね！", "さすが！"];
@@ -193,39 +238,64 @@ const correctVoices = ["やったー！", "せいかい！", "Great!", "Good job
 const incorrectVoices = ["おしい！", "もういっかい！", "Oh no!", "Almost!"];
 
 const kukuSpeechMap = {
-  "2x1": "にいちがいち",
-  "2x2": "ににんがし",
-  "2x3": "にさんがろく",
-  "2x4": "にしがはち",
-  "2x5": "にごじゅう",
-  "2x6": "にろくじゅうに",
-  "2x7": "にしちじゅうし",
-  "2x8": "にはちじゅうろく",
-  "2x9": "にくじゅうはち",
-  "3x1": "さんいちがさん",
-  "3x2": "さんにがろく",
-  "3x3": "さざんがく",
-  "3x4": "さんしじゅうに",
-  "3x5": "さんごじゅうご",
-  "3x6": "さぶろくじゅうはち",
-  "3x7": "さんしちにじゅういち",
-  "3x8": "さんぱにじゅうし",
-  "3x9": "さんくにじゅうなな"
+  "2x1": "にいちがいち", "2x2": "ににんがし", "2x3": "にさんがろく", "2x4": "にしがはち", "2x5": "にごじゅう", "2x6": "にろくじゅうに", "2x7": "にしちじゅうし", "2x8": "にはちじゅうろく", "2x9": "にくじゅうはち",
+  "3x1": "さんいちがさん", "3x2": "さんにがろく", "3x3": "さざんがく", "3x4": "さんしじゅうに", "3x5": "さんごじゅうご", "3x6": "さぶろくじゅうはち", "3x7": "さんしちにじゅういち", "3x8": "さんぱにじゅうし", "3x9": "さんくにじゅうなな"
 };
-  let currentMode = 1;
+
+// ==========================================
+// せいかつモード問題データ
+// ==========================================
+
+// 第1問：とけい（時間の読み方）
+const clockData = [
+  { hour: 3, minute: 0, ans: "3じ", options: ["3じ", "2じ", "4じ", "3じはん"] },
+  { textSpeech: "さんじ", hour: 3, minute: 0 },
+  { hour: 7, minute: 0, ans: "7じ", options: ["7じ", "6じ", "8じ", "7じはん"], textSpeech: "しちじ" },
+  { hour: 12, minute: 0, ans: "12じ", options: ["12じ", "11じ", "1じ", "12じはん"], textSpeech: "じゅうにじ" },
+  { hour: 1, minute: 30, ans: "1じはん", options: ["1じはん", "1じ", "2じ", "2じはん"], textSpeech: "いちじはん" },
+  { hour: 4, minute: 30, ans: "4じはん", options: ["4じはん", "4じ", "5じはん", "3じはん"], textSpeech: "よじはん" },
+  { hour: 9, minute: 0, ans: "9じ", options: ["9じ", "8じ", "10じ", "9じはん"], textSpeech: "くじ" }
+];
+
+// 第2問：かたち・ずけい
+const shapeData = [
+  { text: "さんかく（🔺）は どれかな？", ans: "🔺", options: ["🔺", "🔴", "🟦", "⭐"] },
+  { text: "しかく（🟦）は どれかな？", ans: "🟦", options: ["🟦", "🔴", "🔺", "💎"] },
+  { text: "まる（🔴）は どれかな？", ans: "🔴", options: ["🔴", "🟦", "🔺", "⭐"] },
+  { text: "つみき（📦）は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦<br>📦📦</div>", ans: "4こ", options: ["4こ", "3こ", "5こ", "6こ"] },
+  { text: "つみき（📦）は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦</div>", ans: "3こ", options: ["3こ", "2こ", "4こ", "5こ"] }
+];
+
+// 第3問：くらべてみよう（長さ・広さ）
+const compareData = [
+  { text: "ながい えんぴつは どちらかな？", html: "<div class='grid-paper'><div style='text-align:left; font-size:1.5rem;'>A: ✏️✏️✏️✏️</div><div style='text-align:left; font-size:1.5rem; margin-top:5px;'>B: ✏️✏️</div></div>", ans: "A", options: ["A", "B"] },
+  { text: "ひろい おへやは どちらかな？", html: "<div class='grid-paper'><div style='text-align:left; font-size:1.5rem;'>A: 🟩🟩🟩</div><div style='text-align:left; font-size:1.5rem; margin-top:5px;'>B: 🟩🟩🟩🟩🟩</div></div>", ans: "B", options: ["A", "B"] },
+  { text: "みずが たくさん はいっているのは？", html: "<div style='display:flex; justify-content:center; gap:20px; font-size:2.5rem;'><div>A 🥛</div><div>B 🥛🥛🥛</div></div>", ans: "B", options: ["A", "B"] }
+];
+
+// 第4問：おかね（いくらかな？）
+const moneyData = [
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-1'>1</div><div class='coin-1'>1</div><div class='coin-1'>1</div></div>", ans: "23えん", options: ["23えん", "32えん", "15えん", "5えん"] },
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-1'>1</div><div class='coin-1'>1</div></div>", ans: "12えん", options: ["12えん", "21えん", "3えん", "30えん"] },
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div></div>", ans: "30えん", options: ["30えん", "3えん", "13えん", "300えん"] },
+  { text: "ぜんぶで いくらかな？", html: "<div class='coin-container'><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-10'>10</div><div class='coin-1'>1</div></div>", ans: "41えん", options: ["41えん", "14えん", "5えん", "50えん"] }
+];
+  
+<script>
+  let currentCalcMode = 1;
 
 function setMode(modeNum) {
-  currentMode = modeNum;
+  currentCalcMode = modeNum;
   document.querySelectorAll('.btn-mode').forEach((btn, idx) => {
     if(idx + 1 === modeNum) btn.classList.add('active');
     else btn.classList.remove('active');
   });
 }
 
-function generateQuestion() {
+function generateCalcQuestion() {
   let num1, num2, op, ans, speechText = "";
   
-  if (currentMode === 1) {
+  if (currentCalcMode === 1) {
     op = Math.random() > 0.5 ? '+' : '-';
     if (op === '+') {
       num1 = Math.floor(Math.random() * 8) + 1;
@@ -236,7 +306,7 @@ function generateQuestion() {
       num2 = Math.floor(Math.random() * (num1 - 1)) + 1;
       ans = num1 - num2;
     }
-  } else if (currentMode === 2) {
+  } else if (currentCalcMode === 2) {
     op = Math.random() > 0.5 ? '+' : '-';
     if (op === '+') {
       num1 = Math.floor(Math.random() * 10) + 5;
@@ -268,9 +338,9 @@ function generateQuestion() {
 }
   function getPokemonImageUrl(id) { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`; }
 
-let currentFamilyIdx = 0;
-let totalBerryCount = 0;
-let isEvolved = false;
+let isLifeMode = false; // false: けいさん, true: せいかつ
+let calcState = { totalBerries: 0, isEvolved: false, familyIdx: 0 };
+let lifeState = { exp: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ" };
 let currentQuestionBerryEmoji = "🍎";
 
 let synthVoices = [];
@@ -279,17 +349,41 @@ window.speechSynthesis.onvoiceschanged = () => { synthVoices = window.speechSynt
 const roomView = document.getElementById('room-view'), quizView = document.getElementById('quiz-view');
 const expText = document.getElementById('exp-text'), expBar = document.getElementById('exp-bar');
 const resetGameBtn = document.getElementById('reset-game-btn');
+const partnerStage = document.getElementById('partner-stage');
+const quizPartnerStage = document.getElementById('quiz-partner-stage');
 
-function initNewGame() {
-  currentFamilyIdx = Math.floor(Math.random() * pokemonFamilies.length);
-  totalBerryCount = 0;
-  isEvolved = false;
-  renderRoom();
+function initCalcGame() {
+  calcState = { totalBerries: 0, isEvolved: false, familyIdx: Math.floor(Math.random() * calcPokemonFamilies.length) };
+}
+function initLifeGame() {
+  lifeState = { exp: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ" };
 }
 
 function getCurrentPoke() {
-  const family = pokemonFamilies[currentFamilyIdx];
-  return isEvolved ? family.stage1 : family.stage0;
+  if (!isLifeMode) {
+    const family = calcPokemonFamilies[calcState.familyIdx];
+    return calcState.isEvolved ? family.stage1 : family.stage0;
+  } else {
+    return { id: lifeState.partnerId, name: lifeState.partnerName };
+  }
+}
+
+function updateStageBackground() {
+  partnerStage.classList.remove('bg-grass', 'bg-lovely', 'bg-cool');
+  quizPartnerStage.classList.remove('bg-grass', 'bg-lovely', 'bg-cool');
+  
+  let targetBg = 'bg-grass';
+  if (!isLifeMode) {
+    targetBg = 'bg-grass';
+  } else {
+    if (lifeState.isEvolved) {
+      targetBg = 'bg-cool';
+    } else {
+      targetBg = 'bg-lovely';
+    }
+  }
+  partnerStage.classList.add(targetBg);
+  quizPartnerStage.classList.add(targetBg);
 }
 
 function renderRoom() {
@@ -298,13 +392,24 @@ function renderRoom() {
   document.getElementById('partner-name-room').innerText = currentPoke.name;
   document.getElementById('partner-image-quiz').src = getPokemonImageUrl(currentPoke.id);
   
-  expText.innerText = totalBerryCount;
-  expBar.style.width = Math.min(100, totalBerryCount) + "%";
+  updateStageBackground();
   
-  if (isEvolved) {
-    resetGameBtn.style.display = 'inline-flex';
+  if (!isLifeMode) {
+    document.getElementById('exp-label').innerText = "たべた きのみ";
+    document.getElementById('exp-unit').innerText = " / 100こ";
+    expText.innerText = calcState.totalBerries;
+    expBar.style.width = Math.min(100, calcState.totalBerries) + "%";
+    
+    if (calcState.isEvolved) resetGameBtn.style.display = 'inline-flex';
+    else resetGameBtn.style.display = 'none';
   } else {
-    resetGameBtn.style.display = 'none';
+    document.getElementById('exp-label').innerText = "なかよし度";
+    document.getElementById('exp-unit').innerText = "%";
+    expText.innerText = lifeState.exp;
+    expBar.style.width = lifeState.exp + "%";
+    
+    if (lifeState.isEvolved) resetGameBtn.style.display = 'inline-flex';
+    else resetGameBtn.style.display = 'none';
   }
 }
 
@@ -348,21 +453,14 @@ function feedBerriesInQuiz(berryCount, callback) {
   
   for(let i=0; i<Math.min(10, berryCount); i++) {
     setTimeout(() => {
-      const flying = document.createElement('div');
-      flying.innerText = currentQuestionBerryEmoji;
-      flying.className = 'flying-food';
-      flying.style.left = (30 + Math.random()*40) + 'vw';
-      flying.style.top = '70vh';
-      document.body.appendChild(flying);
+      const flying = document.createElement('div'); flying.innerText = currentQuestionBerryEmoji; flying.className = 'flying-food';
+      flying.style.left = (30 + Math.random()*40) + 'vw'; flying.style.top = '70vh'; document.body.appendChild(flying);
 
       setTimeout(() => {
         const pRect = quizPokeImg.getBoundingClientRect();
-        flying.style.left = (pRect.left + pRect.width/2 - 15) + 'px';
-        flying.style.top = (pRect.top + pRect.height/2 - 15) + 'px';
-        flying.style.transform = 'scale(0.4) rotate(360deg)';
-        flying.style.opacity = '0';
+        flying.style.left = (pRect.left + pRect.width/2 - 15) + 'px'; flying.style.top = (pRect.top + pRect.height/2 - 15) + 'px';
+        flying.style.transform = 'scale(0.4) rotate(360deg)'; flying.style.opacity = '0';
       }, 50);
-      
       setTimeout(() => flying.remove(), 550);
     }, i * 90);
   }
@@ -374,27 +472,46 @@ function feedBerriesInQuiz(berryCount, callback) {
     
     setTimeout(() => {
       msg.style.opacity = 0; msg.style.transform = "translate(-50%, 0)"; quizPokeImg.classList.remove("anim-chew");
-      totalBerryCount += berryCount;
+      if(!isLifeMode) calcState.totalBerries += berryCount;
       if(callback) callback();
     }, 900);
   }, 500);
 }
 
-function evolvePoke() {
-  const targetPoke = pokemonFamilies[currentFamilyIdx].stage1;
+function evolvePoke(targetPoke) {
   document.getElementById('evolve-image').src = getPokemonImageUrl(targetPoke.id);
   document.getElementById('evolve-text').innerHTML = `おめでとう！<br>${targetPoke.name} に しんかした！`;
   document.getElementById('evolve-overlay').classList.add('show');
   
   const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${targetPoke.id}.ogg`);
   audio.volume = 0.5; audio.play().catch(e => console.log(e));
-  
   renderRoom();
 }
 
 document.getElementById('close-evolve-btn').onclick = () => document.getElementById('evolve-overlay').classList.remove('show');
 
-resetGameBtn.onclick = () => { initNewGame(); };
+resetGameBtn.onclick = () => {
+  if (!isLifeMode) initCalcGame(); else initLifeGame();
+  renderRoom();
+};
+
+document.getElementById('mode-toggle-btn').onclick = () => {
+  isLifeMode = !isLifeMode;
+  if (!isLifeMode) {
+    document.body.classList.remove('mode-life');
+    document.getElementById('main-title').innerText = "さんすう けいさんクイズ";
+    document.getElementById('start-quiz-btn').innerText = "けいさんクイズ (4もん)";
+    document.getElementById('mode-toggle-btn').innerHTML = "🔄 せいかつモードにきりかえ";
+    document.getElementById('mode-select-section').style.display = "block";
+  } else {
+    document.body.classList.add('mode-life');
+    document.getElementById('main-title').innerText = "さんすう せいかつクイズ";
+    document.getElementById('start-quiz-btn').innerText = "せいかつクイズ (4もん)";
+    document.getElementById('mode-toggle-btn').innerHTML = "🔄 けいさんモードにきりかえ";
+    document.getElementById('mode-select-section').style.display = "none";
+  }
+  renderRoom();
+};
 
 let currentQIndex = 0;
 let currentQuestionData = null;
@@ -408,46 +525,60 @@ document.getElementById('start-quiz-btn').onclick = () => {
 function showNextQuestion() {
   if (currentQIndex >= 4) {
     quizView.classList.add('hidden'); roomView.classList.remove('hidden'); 
-    renderRoom(); 
     
-    if (totalBerryCount >= 100 && !isEvolved) {
-      isEvolved = true;
-      setTimeout(() => evolvePoke(), 300);
+    if (!isLifeMode) {
+      if (calcState.totalBerries >= 100 && !calcState.isEvolved) {
+        calcState.isEvolved = true;
+        const targetPoke = calcPokemonFamilies[calcState.familyIdx].stage1;
+        setTimeout(() => evolvePoke(targetPoke), 300);
+      }
+    } else {
+      lifeState.exp = Math.min(100, lifeState.exp + 25);
+      if (lifeState.exp >= 100 && !lifeState.isEvolved) {
+        lifeState.isEvolved = true;
+        const evo = eeveeEvolutions[Math.floor(Math.random() * eeveeEvolutions.length)];
+        lifeState.partnerId = evo.id; lifeState.partnerName = evo.name;
+        setTimeout(() => evolvePoke(evo), 300);
+      }
     }
+    renderRoom();
     return;
   }
   
   document.getElementById('quiz-progress-text').innerText = `だい ${currentQIndex + 1} もん！`;
-  currentQuestionData = generateQuestion();
-  renderMathQuestion(document.getElementById('quiz-content'), currentQuestionData);
+  const contentEl = document.getElementById('quiz-content'); contentEl.innerHTML = "";
+  
+  if (!isLifeMode) {
+    currentQuestionData = generateCalcQuestion();
+    renderMathCalcQuestion(contentEl, currentQuestionData);
+  } else {
+    if (currentQIndex === 0) renderClockQuestion(contentEl);
+    else if (currentQIndex === 1) renderLifeCardQuestion(contentEl, shapeData, "かたちクイズ！");
+    else if (currentQIndex === 2) renderLifeCardQuestion(contentEl, compareData, "くらべてみよう！");
+    else renderLifeCardQuestion(contentEl, moneyData, "いくらかな？");
+  }
 }
 
-// 【5個固定のGrid生成関数】
 function generateBerryGridHtml(count, isMinus = false) {
   let html = '<div class="fruit-grid-5">';
   for (let i = 0; i < count; i++) {
-    if (isMinus) {
-      html += `<span class="fruit-minus">${currentQuestionBerryEmoji}</span>`;
-    } else {
-      html += `<span>${currentQuestionBerryEmoji}</span>`;
-    }
+    if (isMinus) html += `<span class="fruit-minus">${currentQuestionBerryEmoji}</span>`;
+    else html += `<span>${currentQuestionBerryEmoji}</span>`;
   }
   html += '</div>';
   return html;
 }
 
-function renderMathQuestion(container, q) {
+function renderMathCalcQuestion(container, q) {
   currentQuestionBerryEmoji = berryEmojis[Math.floor(Math.random() * berryEmojis.length)];
   let hintHtml = "";
 
   if (q.op === '+') {
-    let group1 = generateBerryGridHtml(q.num1);
-    let group2 = generateBerryGridHtml(q.num2);
+    let group1 = generateBerryGridHtml(q.num1); let group2 = generateBerryGridHtml(q.num2);
     hintHtml = `${group1} <span style="font-size:1.3rem; font-weight:900; margin:4px 0;">＋</span> ${group2}`;
   } else if (q.op === '-') {
     let stayCount = q.num1 - q.num2;
-    let normalGroup = generateBerryGridHtml(stayCount);
-    let minusGroup = generateBerryGridHtml(q.num2, true);
+    let normalGroup = generateBerryGridHtml(stayCount); let minusGroup = generateBerryGridHtml(q.num2, true);
     hintHtml = `${normalGroup} ${minusGroup}`;
   } else {
     let groupsHtml = "";
@@ -468,52 +599,99 @@ function renderMathQuestion(container, q) {
   `;
 
   document.getElementById('math-voice-btn').onclick = () => {
-    if (q.op === '×' && q.speechText) {
-      speakVoice(q.speechText);
-    } else {
-      speakVoice(`${q.num1} ${q.op === '+' ? 'たす' : 'ひく'} ${q.num2} は？`);
-    }
+    if (q.op === '×' && q.speechText) speakJapaneseVoice(q.speechText);
+    else speakJapaneseVoice(`${q.num1} ${q.op === '+' ? 'たす' : 'ひく'} ${q.num2} は？`);
   };
 
   const optsGrid = document.getElementById('math-opts');
   q.options.forEach(opt => {
-    const btn = document.createElement('div');
-    btn.className = 'option-btn'; btn.innerText = opt;
-    btn.onclick = () => checkMathAnswer(opt === q.ans, q.ans);
+    const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
+    btn.onclick = () => checkAnswer(opt === q.ans, q.ans, true);
     optsGrid.appendChild(btn);
   });
 
-  setTimeout(() => {
-    document.getElementById('math-voice-btn').click();
-  }, 300);
+  setTimeout(() => { document.getElementById('math-voice-btn').click(); }, 300);
 }
 
-function speakVoice(text) {
-  const msg = new SpeechSynthesisUtterance(text);
-  const isEnglish = /[a-zA-Z]/.test(text);
-  msg.lang = isEnglish ? 'en-US' : 'ja-JP';
-  
+// 時計問題描画（CSS時計）
+function renderClockQuestion(container) {
+  const q = clockData[Math.floor(Math.random() * clockData.length)];
+  const hourDeg = (q.hour % 12) * 30 + (q.minute === 30 ? 15 : 0);
+  const minuteDeg = q.minute * 6;
+
+  container.innerHTML = `
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+      <p style="font-size:1.1rem; font-weight:800; margin:0;">いま なんじかな？</p>
+      <button class="voice-btn" id="clock-voice-btn">🔊</button>
+    </div>
+    <div class="clock-face">
+      <div class="clock-hand hand-hour" style="transform: rotate(${hourDeg}deg);"></div>
+      <div class="clock-hand hand-minute" style="transform: rotate(${minuteDeg}deg);"></div>
+      <div class="clock-center"></div>
+    </div>
+    <div class="options-grid" id="clock-opts"></div>
+  `;
+
+  document.getElementById('clock-voice-btn').onclick = () => speakJapaneseVoice("いま なんじかな？");
+
+  const optsGrid = document.getElementById('clock-opts');
+  q.options.slice().sort(() => 0.5 - Math.random()).forEach(opt => {
+    const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
+    btn.onclick = () => checkAnswer(opt === q.ans, q.ans, false);
+    optsGrid.appendChild(btn);
+  });
+
+  setTimeout(() => { document.getElementById('clock-voice-btn').click(); }, 300);
+}
+
+// 生活汎用問題描画
+function renderLifeCardQuestion(container, dataList, titleText) {
+  const q = dataList[Math.floor(Math.random() * dataList.length)];
+
+  container.innerHTML = `
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+      <p style="font-size:1.1rem; font-weight:800; margin:0;">${titleText}</p>
+      <button class="voice-btn" id="life-voice-btn">🔊</button>
+    </div>
+    <p style="font-size:1.3rem; font-weight:900; margin:10px 0;">${q.text}</p>
+    ${q.html ? q.html : ''}
+    <div class="options-grid" id="life-opts"></div>
+  `;
+
+  document.getElementById('life-voice-btn').onclick = () => speakJapaneseVoice(q.text);
+
+  const optsGrid = document.getElementById('life-opts');
+  q.options.slice().sort(() => 0.5 - Math.random()).forEach(opt => {
+    const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
+    btn.onclick = () => checkAnswer(opt === q.ans, q.ans, false);
+    optsGrid.appendChild(btn);
+  });
+
+  setTimeout(() => { document.getElementById('life-voice-btn').click(); }, 300);
+}
+
+function speakJapaneseVoice(text) {
+  const msg = new SpeechSynthesisUtterance(text); msg.lang = 'ja-JP';
   if (synthVoices.length === 0) synthVoices = window.speechSynthesis.getVoices();
-  const matchedVoice = synthVoices.find(v => v.lang.startsWith(isEnglish ? 'en' : 'ja'));
-  if (matchedVoice) msg.voice = matchedVoice;
-  
+  const jaVoice = synthVoices.find(v => v.lang.startsWith('ja'));
+  if (jaVoice) msg.voice = jaVoice;
   msg.pitch = 1.1; msg.rate = 0.9;
   window.speechSynthesis.speak(msg);
 }
 
-function checkMathAnswer(isCorrect, ansNum) {
+function checkAnswer(isCorrect, ansText, isCalc = false) {
   const overlay = document.getElementById('feedback-overlay'), icon = document.getElementById('feedback-icon'), text = document.getElementById('feedback-text');
   
   if (isCorrect) {
     icon.innerText = "⭕"; icon.style.color = "var(--correct)";
-    text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span style="font-size:1.4rem; color:var(--primary-shadow); display:block; margin-top:10px;">きのみ ${ansNum}こ ゲット！</span>`;
+    text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span style="font-size:1.4rem; color:var(--primary-shadow); display:block; margin-top:10px;">せいかい：${ansText}</span>`;
     text.style.color = "var(--correct)";
-    speakVoice(correctVoices[Math.floor(Math.random() * correctVoices.length)]);
+    speakJapaneseVoice(correctVoices[Math.floor(Math.random() * correctVoices.length)]);
   } else {
     icon.innerText = "❌"; icon.style.color = "var(--incorrect)";
-    text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.2rem; color:#666; display:block; margin-top:10px;">せいかいは：${ansNum}</span>`;
+    text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.2rem; color:#666; display:block; margin-top:10px;">せいかいは：${ansText}</span>`;
     text.style.color = "var(--incorrect)";
-    speakVoice(incorrectVoices[Math.floor(Math.random() * incorrectVoices.length)]);
+    speakJapaneseVoice(incorrectVoices[Math.floor(Math.random() * incorrectVoices.length)]);
   }
   
   overlay.classList.add('show');
@@ -521,15 +699,24 @@ function checkMathAnswer(isCorrect, ansNum) {
   setTimeout(() => {
     overlay.classList.remove('show');
     if (isCorrect) {
-      feedBerriesInQuiz(ansNum, () => {
+      if (isCalc) {
+        feedBerriesInQuiz(parseInt(ansText) || 5, () => {
+          currentQIndex++;
+          showNextQuestion();
+        });
+      } else {
         currentQIndex++;
         showNextQuestion();
-      });
+      }
     }
   }, 1800); 
 }
 
-window.onload = () => { initNewGame(); };
+window.onload = () => { 
+  initCalcGame(); 
+  initLifeGame(); 
+  renderRoom(); 
+};
 </script>
 </body>
 </html>
