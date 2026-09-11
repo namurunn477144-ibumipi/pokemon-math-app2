@@ -68,19 +68,18 @@
     .btn-large { width: 100%; padding: 16px; font-size: 1.4rem; }
     .btn-primary { background: var(--secondary); color: white; box-shadow: 0 8px 0 var(--secondary-shadow); }
     .btn-primary:active { transform: translateY(8px); box-shadow: 0 0 0 var(--secondary-shadow); }
-    .btn-danger { background: #4CAF50; color: white; box-shadow: 0 8px 0 #388E3C; } 
-    .btn-danger:active { transform: translateY(8px); box-shadow: 0 0 0 #388E3C; }
+    .btn-danger { background: #E91E63; color: white; box-shadow: 0 8px 0 #C2185B; } 
+    .btn-danger:active { transform: translateY(8px); box-shadow: 0 0 0 #C2185B; }
     
     .quiz-header-bar { margin-bottom: 8px; }
     .badge { background: var(--primary); color: #FFF; padding: 6px 18px; border-radius: 20px; font-size: 1.1rem; font-weight: 900; box-shadow: 0 4px 0 var(--primary-shadow); }
     
-    /* クイズカード背景（くさむら＋ナチュラルな緑の枠線） */
     .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
     
-    /* きのみヒントエリア（5個ずつのかたまり用スタイル） */
-    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 85px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; font-size: 1.8rem; }
-    .fruit-block-5 { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; max-width: 170px; background: rgba(255,255,255,0.6); padding: 4px 8px; border-radius: 12px; border: 1px solid #FFE082; }
-    .fruit-group-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; align-items: center; }
+    /* きのみヒントエリア（5個ずつスッキリ並ぶスタイル） */
+    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 12px; margin: 10px 0; min-height: 85px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; font-size: 1.8rem; }
+    .fruit-line-5 { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 200px; }
+    .fruit-break { flex-basis: 100%; height: 0; } /* 5個ごとにきれい改行 */
     .fruit-minus { opacity: 0.3; position: relative; }
     .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.2rem; opacity: 1; }
     
@@ -137,7 +136,7 @@
 
     <div class="action-buttons">
       <button id="start-quiz-btn" class="btn btn-primary btn-large">さんすうクイズ (4もん)</button>
-      <button id="reset-game-btn" class="btn btn-danger btn-large" style="margin-top:5px; display:none;">あたらしい ゴンベと あそぶ🔄</button>
+      <button id="reset-game-btn" class="btn btn-danger btn-large" style="margin-top:5px; display:none;">ゴンベにもどる🔄</button>
     </div>
   </div>
 
@@ -177,10 +176,15 @@ const berryEmojis = ["🍒", "🍎", "🍇", "🍓", "🍊", "🍑"];
 const pokeComments = ["たのしいね！", "おなかすいたー！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "きのみ たべたいな！", "すごいすごい！", "えらいね！"];
 const effectEmojis = ["💖", "✨", "⭐", "🎵"];
 
+// 正解・不正解画面テキスト
 const correctTexts = ["せいかい！すごい！", "かんぺき！", "すばらしい！", "やったね！", "さすが！"];
 const incorrectTexts = ["おしい！もういちど！", "どんまい！", "つぎは がんばろう！", "ファイト！", "ざんねん！"];
 
-// 【修正完了】ご指定いただいた3×3, 3×6, 3×9の読み上げを完璧に修正！
+// 【追加】正解・不正解時の日本語ボイスバリエーション
+const correctVoices = ["やったー！せいかい！", "すごい！大せいかい！", "かんぺき！さすがだね！", "やったね！その調子！", "すばらしい！天才！"];
+const incorrectVoices = ["おしい！もう一回！", "ざんねん！どんまい！", "おしい！あとすこし！", "つぎはがんばろう！"];
+
+// 九九の正確な日本語読み上げテーブル
 const kukuSpeechMap = {
   "2x1": "にいちがいち",
   "2x2": "ににんがし",
@@ -193,13 +197,13 @@ const kukuSpeechMap = {
   "2x9": "にくじゅうはち",
   "3x1": "さんいちがさん",
   "3x2": "さんにがろく",
-  "3x3": "さざんがく",           // 修正: さざんがく
+  "3x3": "さざんがく",
   "3x4": "さんしじゅうに",
   "3x5": "さんごじゅうご",
-  "3x6": "さぶろくじゅうはち",    // 修正: さぶろくじゅうはち
+  "3x6": "さぶろくじゅうはち",
   "3x7": "さんしちにじゅういち",
   "3x8": "さんぱにじゅうし",
-  "3x9": "さんくにじゅうなな"     // 修正: さんくにじゅうなな
+  "3x9": "さんくにじゅうなな"
 };
   let currentMode = 1;
 
@@ -401,20 +405,18 @@ function showNextQuestion() {
   renderMathQuestion(document.getElementById('quiz-content'), currentQuestionData);
 }
 
-// きのみを「5個のかたまり」にするHTMLヘルパー
+// 【修正】枠線なし・5個ごとにスッキリ改行する自然なきのみ配置
 function generateBerryBlockHtml(count, isMinus = false) {
-  let html = '<div class="fruit-group-wrapper">';
-  for (let i = 0; i < count; i += 5) {
-    let blockCount = Math.min(5, count - i);
-    html += '<div class="fruit-block-5">';
-    for (let j = 0; j < blockCount; j++) {
-      if (isMinus) {
-        html += `<span class="fruit-minus">${currentQuestionBerryEmoji}</span>`;
-      } else {
-        html += `<span>${currentQuestionBerryEmoji}</span>`;
-      }
+  let html = '<div class="fruit-line-5">';
+  for (let i = 0; i < count; i++) {
+    if (i > 0 && i % 5 === 0) {
+      html += '<div class="fruit-break"></div>'; // 5個ごとに改行
     }
-    html += '</div>';
+    if (isMinus) {
+      html += `<span class="fruit-minus">${currentQuestionBerryEmoji}</span>`;
+    } else {
+      html += `<span>${currentQuestionBerryEmoji}</span>`;
+    }
   }
   html += '</div>';
   return html;
@@ -427,7 +429,7 @@ function renderMathQuestion(container, q) {
   if (q.op === '+') {
     let group1 = generateBerryBlockHtml(q.num1);
     let group2 = generateBerryBlockHtml(q.num2);
-    hintHtml = `${group1} <span style="font-size:1.3rem; font-weight:900;">＋</span> ${group2}`;
+    hintHtml = `${group1} <span style="font-size:1.3rem; font-weight:900; margin:0 6px;">＋</span> ${group2}`;
   } else if (q.op === '-') {
     let stayCount = q.num1 - q.num2;
     let normalGroup = generateBerryBlockHtml(stayCount);
@@ -436,9 +438,9 @@ function renderMathQuestion(container, q) {
   } else { // 掛け算
     let groupsHtml = "";
     for(let i=0; i<q.num2; i++) {
-      groupsHtml += `<div style="border:2px dashed #FFD54F; border-radius:12px; padding:4px 6px; margin:2px; background:rgba(255,255,255,0.8);">${currentQuestionBerryEmoji.repeat(q.num1)}</div>`;
+      groupsHtml += `<div style="display:inline-block; border:2px dashed #FFB300; border-radius:12px; padding:2px 6px; margin:3px; background:rgba(255,255,255,0.9);">${currentQuestionBerryEmoji.repeat(q.num1)}</div>`;
     }
-    hintHtml = `<div class="fruit-group" style="gap:6px;">${groupsHtml}</div>`;
+    hintHtml = `<div style="text-align:center;">${groupsHtml}</div>`;
   }
 
   container.innerHTML = `
@@ -489,12 +491,12 @@ function checkMathAnswer(isCorrect, ansNum) {
     icon.innerText = "⭕"; icon.style.color = "var(--correct)";
     text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span style="font-size:1.4rem; color:var(--primary-shadow); display:block; margin-top:10px;">きのみ ${ansNum}こ ゲット！</span>`;
     text.style.color = "var(--correct)";
-    speakJapaneseVoice("せいかい！");
+    speakJapaneseVoice(correctVoices[Math.floor(Math.random() * correctVoices.length)]);
   } else {
     icon.innerText = "❌"; icon.style.color = "var(--incorrect)";
     text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.2rem; color:#666; display:block; margin-top:10px;">せいかいは：${ansNum}</span>`;
     text.style.color = "var(--incorrect)";
-    speakJapaneseVoice("ざんねん！");
+    speakJapaneseVoice(incorrectVoices[Math.floor(Math.random() * incorrectVoices.length)]);
   }
   
   overlay.classList.add('show');
