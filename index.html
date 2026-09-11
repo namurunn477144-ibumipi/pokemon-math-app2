@@ -300,11 +300,10 @@ const shapeData = [
   { text: "しかく は どれかな？", ans: "🟦", options: ["🟦", "🔴", "🔺", "💎"] },
   { text: "まる は どれかな？", ans: "🔴", options: ["🔴", "🟦", "🔺", "⭐"] },
   { text: "ほし は どれかな？", ans: "⭐", options: ["⭐", "🔴", "🟦", "🔺"] },
-  { text: "ダイヤ は どれかな？", ans: "💎", options: ["💎", "🔴", "🟦", "⭐"] },
-  { text: "みどりの しかく は どれかな？", ans: "🟩", options: ["🟩", "🟦", "🔴", "🔺"] },
-  { text: "きいろの まる は どれかな？", ans: "🟡", options: ["🟡", "🔴", "🟦", "⭐"] },
-  { text: "むらさきの まる は どれかな？", ans: "🟣", options: ["🟣", "🔴", "🟦", "🟡"] },
-  { text: "オレンジの しかく は どれかな？", ans: "🟧", options: ["🟧", "🟩", "🟦", "🔺"] },
+  { text: "ひしがた は どれかな？", ans: "🔶", options: ["🔶", "🔴", "🟦", "⭐"] },
+  { text: "スペード は どれかな？", ans: "♠️", options: ["♠️", "🟦", "🔴", "🔺"] },
+  { text: "ダイヤ は どれかな？", ans: "♦️", options: ["🟡", "♦️", "🟦", "⭐"] },
+  { text: "クラブ は どれかな？", ans: "♣️", options: ["🟣", "🔴", "♣️", "🟡"] },
   { text: "ハート は どれかな？", ans: "💖", options: ["💖", "⭐", "🔴", "💎"] },
   { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦</div>", ans: "1こ", options: ["1こ", "2こ", "3こ", "4こ"] },
   { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦</div>", ans: "2こ", options: ["2こ", "1こ", "3こ", "4こ"] },
@@ -317,19 +316,11 @@ const shapeData = [
   { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦<br>📦📦<br>📦📦📦</div>", ans: "6こ", options: ["6こ", "5こ", "7こ", "4こ"] },
   { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦📦</div>", ans: "4こ", options: ["4こ", "3こ", "5こ", "2こ"] },
   { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦📦📦</div>", ans: "5こ", options: ["5こ", "4こ", "6こ", "7こ"] },
-  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦<br>📦📦📦<br>📦📦📦</div>", ans: "9こ", options: ["9こ", "8こ", "7こ", "10こ"] },
-  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦📦<br>📦📦📦📦</div>", ans: "8こ", options: ["8こ", "7こ", "9こ", "6こ"] },
-  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦📦<br>📦📦📦</div>", ans: "7こ", options: ["7こ", "6こ", "8こ", "5こ"] },
-  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦<br>📦</div>", ans: "2こ", options: ["2こ", "1こ", "3こ", "4こ"] },
-  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦<br>📦<br>📦</div>", ans: "3こ", options: ["3こ", "2こ", "4こ", "5こ"] },
-  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦<br>📦<br>📦<br>📦</div>", ans: "4こ", options: ["4こ", "3こ", "5こ", "6こ"] },
-  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦<br>📦</div>", ans: "3こ", options: ["3こ", "2こ", "4こ", "1こ"] },
-  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦<br>📦</div>", ans: "4こ", options: ["4こ", "3こ", "5こ", "2こ"] },
-  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦<br>📦📦<br>📦</div>", ans: "6こ", options: ["6こ", "5こ", "7こ", "8こ"] }
+
 ];
 
 // 3. くらべてみよう（バー比較）（30問）
-// 「ながい」「おおい」「おおきい」「たかい」「つよい」等＋「みじかい」「すくない」「ちいさい」
+// 「ながい」「おおい」「おおきい」「たかい」＋「みじかい」「すくない」「ちいさい」
 const compareData = [
   { text: "ながい ほうは どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 85%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 40%;'></div></div></div></div>", ans: "A", options: ["A", "B"] },
   { text: "ながい ほうは どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 30%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 90%;'></div></div></div></div>", ans: "B", options: ["A", "B"] },
@@ -822,14 +813,22 @@ function renderLifeCardQuestion(container, dataList, titleText) {
     <div class="options-grid" id="life-opts"></div>
   `;
 
-  // 読み上げ前にカッコや絵文字を自動除去
   document.getElementById('life-voice-btn').onclick = () => {
     let cleanText = q.text.replace(/（[^）]*）/g, '').replace(/[\u1F600-\u1F64F\u1F300-\u1F5FF\u1F680-\u1F6FF\u2600-\u26FF\u2700-\u27BF]/g, '');
     speakJapaneseVoice(cleanText);
   };
 
   const optsGrid = document.getElementById('life-opts');
-  q.options.slice().sort(() => 0.5 - Math.random()).forEach(opt => {
+  
+  // ★ここを修正！ AとBの選択肢の時はシャッフルしない！
+  let displayOptions = q.options.slice();
+  if (displayOptions.includes("A") && displayOptions.includes("B")) {
+    displayOptions = ["A", "B"]; // 順番をA→Bに固定
+  } else {
+    displayOptions.sort(() => 0.5 - Math.random()); // お金や形などはランダムに並び替え
+  }
+
+  displayOptions.forEach(opt => {
     const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
     btn.onclick = () => checkAnswer(opt === q.ans, q.ans, false);
     optsGrid.appendChild(btn);
