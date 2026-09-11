@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>さんすうクイズ - いぶちゃん＆みーちゃん</title>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* さんすう用：綺麗なスカイブルー基調 */
+    :root {
+      --primary: #03A9F4; --primary-shadow: #0288D1;
+      --secondary: #FFB300; --secondary-shadow: #FF8F00;
+      --bg-color: #E1F5FE; --card-bg: #FFFFFF;
+      --text-main: #0277BD; --correct: #4CAF50; --incorrect: #F44336;
+      --bg-dot: #B3E5FC;
+    }
+
+    * { box-sizing: border-box; font-family: 'M PLUS Rounded 1c', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; padding: 0; background-color: var(--bg-color); background-image: radial-gradient(var(--bg-dot) 2px, transparent 2px); background-size: 20px 20px; color: var(--text-main); overflow-x: hidden; touch-action: manipulation; }
+    
+    #app { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; }
+    .view { display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; transition: opacity 0.3s ease; }
+    .view.hidden { display: none !important; opacity: 0; }
+    
+    .app-header { text-align: center; margin-bottom: 10px; }
+    #main-title { font-size: 2rem; color: var(--primary-shadow); line-height: 1.2; text-shadow: 2px 2px 0px #FFF; margin: 10px 0; }
+    
+    .partner-stage { position: relative; background: var(--card-bg); width: 100%; border-radius: 24px; padding: 40px 20px 20px; border: 4px solid #FFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center; margin-bottom: 15px; cursor: pointer; }
+    #partner-image { width: 160px; height: 160px; object-fit: contain; filter: drop-shadow(0 8px 6px rgba(0,0,0,0.2)); animation: float 3s ease-in-out infinite; transition: transform 0.3s; z-index: 5; position: relative; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    #partner-name { font-size: 1.8rem; color: var(--text-main); margin: 10px 0 0 0; pointer-events: none; }
+    
+    .poke-comment { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #FFF; border: 3px solid var(--primary); border-radius: 20px; padding: 8px 15px; font-size: 1.1rem; font-weight: 900; color: var(--text-main); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 20; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
+    .poke-comment::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); border-width: 10px 10px 0; border-style: solid; border-color: var(--primary) transparent transparent transparent; }
+    
+    @keyframes jumpPoke { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+    .anim-jump { animation: jumpPoke 0.4s ease !important; }
+    @keyframes spinPoke { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
+    .anim-spin { animation: spinPoke 0.5s ease !important; }
+    @keyframes shakePoke { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-15deg); } 75% { transform: rotate(15deg); } }
+    .anim-shake { animation: shakePoke 0.4s ease !important; }
+    @keyframes chew { 0% { transform: scale(1); } 25% { transform: scale(1.15) rotate(-5deg); } 50% { transform: scale(0.95) rotate(5deg); } 75% { transform: scale(1.1) rotate(-3deg); } 100% { transform: scale(1); } }
+    .anim-chew { animation: chew 0.5s ease-in-out !important; }
+    
+    .eating-msg { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; color: #FF5722; font-weight: 900; opacity: 0; pointer-events: none; text-shadow: 2px 2px 0 #FFF; transition: all 0.3s; z-index: 20; white-space: nowrap; }
+    .flying-food { position: fixed; font-size: 2.5rem; z-index: 1000; transition: all 0.5s cubic-bezier(0.5, -0.5, 1, 1); pointer-events: none; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .effect-anim { position: absolute; font-size: 2rem; bottom: 40%; opacity: 0; animation: floatUpEffect 1s ease-out; pointer-events: none; z-index: 15; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+    @keyframes floatUpEffect { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-70px) scale(1.5) rotate(15deg); opacity: 0; } }
+    
+    .status-board { width: 100%; background: #E0F7FA; padding: 12px 20px; border-radius: 16px; margin-bottom: 15px; }
+    .exp-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px; }
+    .exp-label { font-size: 1.1rem; font-weight: 800; }
+    .exp-value { font-size: 1.4rem; font-weight: 900; color: var(--primary-shadow); }
+    .exp-bar-bg { background-color: #B2EBF2; border-radius: 15px; height: 24px; overflow: hidden; border: 3px solid #FFF; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+    .exp-bar-fill { background: var(--primary); height: 100%; width: 0%; border-radius: 10px; transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    
+    .mode-select-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 20px; text-align: center; }
+    .mode-select-section h3 { margin: 0 0 10px 0; font-size: 1.2rem; color: var(--primary-shadow); }
+    .mode-buttons { display: flex; flex-direction: column; gap: 8px; }
+    .btn-mode { background: #E1F5FE; border: 3px solid var(--primary); color: var(--primary-shadow); border-radius: 15px; padding: 10px; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: 0.1s; }
+    .btn-mode.active { background: var(--primary); color: white; box-shadow: 0 4px 0 var(--primary-shadow); }
+    
+    .action-buttons { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+    .btn { border: none; border-radius: 20px; font-weight: 900; cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; text-align: center; outline: none; display: inline-flex; justify-content: center; align-items: center; }
+    .btn-large { width: 100%; padding: 16px; font-size: 1.4rem; }
+    .btn-primary { background: var(--secondary); color: white; box-shadow: 0 8px 0 var(--secondary-shadow); }
+    .btn-primary:active { transform: translateY(8px); box-shadow: 0 0 0 var(--secondary-shadow); }
+    .btn-danger { background: #4CAF50; color: white; box-shadow: 0 8px 0 #388E3C; } 
+    .btn-danger:active { transform: translateY(8px); box-shadow: 0 0 0 #388E3C; }
+    
+    .quiz-header-bar { margin-bottom: 10px; }
+    .badge { background: var(--primary); color: #FFF; padding: 8px 20px; border-radius: 20px; font-size: 1.2rem; font-weight: 900; box-shadow: 0 4px 0 var(--primary-shadow); }
+    .quiz-card { background: var(--card-bg); width: 100%; padding: 20px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #FFF; text-align: center; position: relative; }
+    
+    /* きのみヒントエリア */
+    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 12px; margin: 10px 0; min-height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; font-size: 1.8rem; }
+    .fruit-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+    .fruit-minus { opacity: 0.3; position: relative; }
+    .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.2rem; opacity: 1; }
+    
+    .math-expr { font-size: 2.8rem; font-weight: 900; color: #333; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+    .option-btn { background: #FFF; border: 4px solid var(--primary); border-radius: 16px; padding: 15px; font-size: 2rem; font-weight: 900; color: var(--text-main); display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 0 var(--primary); cursor: pointer; transition: 0.1s; }
+    .option-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--primary); }
+    
+    .voice-btn { background: var(--secondary); box-shadow: 0 6px 0 var(--secondary-shadow); border-radius: 50%; border: none; color: white; cursor: pointer; display:inline-flex; justify-content:center; align-items:center; transition: 0.1s; width: 50px; height: 50px; font-size: 1.5rem;}
+    .voice-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--secondary-shadow); }
+    
+    .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.95); z-index: 100; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.3s; opacity: 0; pointer-events: none; }
+    .overlay.show { opacity: 1; pointer-events: auto; }
+    .feedback-card { text-align: center; background: #FFF; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 5px solid var(--primary); width: 90%; max-width: 400px; }
+    .feedback-icon { font-size: 7rem; animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .feedback-text { font-size: 1.8rem; font-weight: 900; margin-top: 10px; line-height: 1.4; }
+    @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    
+    .evo-rings { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; z-index: -1; overflow: hidden; }
+    .evo-ring { position: absolute; width: 0; height: 0; border-radius: 50%; border: 15px solid var(--secondary); animation: ringExpand 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite; box-shadow: 0 0 30px var(--secondary), inset 0 0 30px var(--secondary); opacity: 0; }
+    .evo-ring:nth-child(2) { animation-delay: 0.6s; border-color: var(--primary); box-shadow: 0 0 30px var(--primary), inset 0 0 30px var(--primary); }
+    .evo-ring:nth-child(3) { animation-delay: 1.2s; border-color: #03A9F4; box-shadow: 0 0 30px #03A9F4, inset 0 0 30px #03A9F4; }
+    @keyframes ringExpand { 0% { width: 0; height: 0; opacity: 1; border-width: 20px; } 100% { width: 150vw; height: 150vw; opacity: 0; border-width: 2px; } }
+    #evolve-image { width: 220px; height: 220px; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)); animation: pulseGlow 1.5s infinite alternate; margin-bottom: 20px;}
+    @keyframes pulseGlow { 0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--primary)); } 100% { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--secondary)); } }
+    .evolve-text { font-size: 2.2rem; color: var(--primary-shadow); font-weight: 900; margin-bottom: 30px; text-align: center; text-shadow: 2px 2px #FFF, 0 0 10px #FFF59D;}
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div id="room-view" class="view active">
+    <header class="app-header"><h1 id="main-title">さんすうクイズ</h1></header>
+    <div class="partner-stage" onclick="interactPokemon()">
+      <div id="poke-comment" class="poke-comment">がんばろうね！</div>
+      <img id="partner-image" src="" alt="パートナー">
+      <div id="eating-msg" class="eating-msg">もぐもぐ♪</div>
+      <h2 id="partner-name">ゴンベ</h2>
+    </div>
+    <div class="status-board">
+      <div class="exp-header"><span class="exp-label">たべた きのみ</span><span class="exp-value"><span id="exp-text">0</span> / 100こ</span></div>
+      <div class="exp-bar-bg"><div id="exp-bar" class="exp-bar-fill"></div></div>
+    </div>
+    
+    <div class="mode-select-section">
+      <h3>モードを えらんでね</h3>
+      <div class="mode-buttons">
+        <button class="btn-mode active" onclick="setMode(1)">1. かんたん (10までの たし・ひき)</button>
+        <button class="btn-mode" onclick="setMode(2)">2. ふつう (20までの たし・ひき)</button>
+        <button class="btn-mode" onclick="setMode(3)">3. チャレンジ (2のだん・3のだん)</button>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button id="start-quiz-btn" class="btn btn-primary btn-large">さんすうクイズ (4もん)</button>
+      <button id="reset-game-btn" class="btn btn-danger btn-large" style="margin-top:5px; display:none;">あたらしい ゴンベと あそぶ🔄</button>
+    </div>
+  </div>
+
+  <div id="quiz-view" class="view hidden">
+    <div class="quiz-header-bar"><span id="quiz-progress-text" class="badge">だい 1 もん！</span></div>
+    <div id="quiz-content" class="quiz-card"></div>
+  </div>
+</div>
+
+<div id="feedback-overlay" class="overlay">
+  <div class="feedback-card">
+    <div id="feedback-icon" class="feedback-icon">⭕</div>
+    <div id="feedback-text" class="feedback-text">せいかい！</div>
+  </div>
+</div>
+
+<div id="evolve-overlay" class="overlay" style="background: rgba(255,255,255,0.9);">
+  <div class="evo-rings"><div class="evo-ring"></div><div class="evo-ring"></div><div class="evo-ring"></div></div>
+  <img id="evolve-image" src="" alt="しんか！">
+  <h2 id="evolve-text" class="evolve-text">おめでとう！<br>カビゴンにしんかした！</h2>
+  <button id="close-evolve-btn" class="btn btn-primary btn-large" style="width:80%; max-width:300px;">いっしょにあそぶ！</button>
+</div>
+
+<script>
+// ゴンベ(446)とカビゴン(143)のデータ
+const munchlaxData = { id: 446, name: "ゴンベ" };
+const snorlaxData = { id: 143, name: "カビゴン" };
+
+// きのみ絵文字リスト
+const berryEmojis = ["🍒", "🍎", "🍇", "🍓", "🍊", "🍑"];
+
+// タップ時の可愛いコメント
+const pokeComments = ["たのしいね！", "おなかすいたー！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "きのみ たべたいな！", "すごいすごい！", "えらいね！"];
+const effectEmojis = ["💖", "✨", "⭐", "🎵"];
+
+// 正解・不正解コメントのレパートリー
+const correctTexts = ["せいかい！すごい！", "かんぺき！", "すばらしい！", "やったね！", "さすが！"];
+const incorrectTexts = ["おしい！もういちど！", "どんまい！", "つぎは がんばろう！", "ファイト！", "ざんねん！"];
+
+// 九九のスペシャル日本語読み上げマッピング
+const kukuSpeechMap = {
+  "2x1": "にいちがいち", "2x2": "ににんがし", "2x3": "にごろく", "2x4": "にしがはち", "2x5": "にごじゅう",
+  "2x6": "にろくじゅうに", "2x7": "にしちじゅうし", "2x8": "にはちじゅうろく", "2x9": "にくじゅうはち",
+  "3x1": "さんいちがさん", "3x2": "さんにがろく", "3x3": "さんさがく", "3x4": "さんしじゅうに", "3x5": "さんごじゅうご",
+  "3x6": "さんろくじゅうはち", "3x7": "さんしちにじゅういち", "3x8": "さんぱにじゅうし", "3x9": "さんくにじゅうしち"
+};
+let currentMode = 1; // 1:かんたん, 2:ふつう, 3:チャレンジ
+
+function setMode(modeNum) {
+  currentMode = modeNum;
+  document.querySelectorAll('.btn-mode').forEach((btn, idx) => {
+    if(idx + 1 === modeNum) btn.classList.add('active');
+    else btn.classList.remove('active');
+  });
+}
+
+// モードに応じた計算問題を1問作る関数
+function generateQuestion() {
+  let num1, num2, op, ans, speechText = "";
+  
+  if (currentMode === 1) { // 10までの たし・ひき
+    op = Math.random() > 0.5 ? '+' : '-';
+    if (op === '+') {
+      num1 = Math.floor(Math.random() * 8) + 1; // 1〜8
+      num2 = Math.floor(Math.random() * (10 - num1)) + 1; // 和が10以下
+      ans = num1 + num2;
+    } else {
+      num1 = Math.floor(Math.random() * 9) + 2; // 2〜10
+      num2 = Math.floor(Math.random() * (num1 - 1)) + 1; // 答えが1以上
+      ans = num1 - num2;
+    }
+  } else if (currentMode === 2) { // 20までの たし・ひき
+    op = Math.random() > 0.5 ? '+' : '-';
+    if (op === '+') {
+      num1 = Math.floor(Math.random() * 10) + 5; // 5〜14
+      num2 = Math.floor(Math.random() * (20 - num1)) + 1; // 和が20以下
+      ans = num1 + num2;
+    } else {
+      num1 = Math.floor(Math.random() * 10) + 11; // 11〜20
+      num2 = Math.floor(Math.random() * (num1 - 2)) + 1;
+      ans = num1 - num2;
+    }
+  } else { // 九九 (2のだん・3のだん)
+    op = '×';
+    num1 = Math.random() > 0.5 ? 2 : 3;
+    num2 = Math.floor(Math.random() * 9) + 1; // 1〜9
+    ans = num1 * num2;
+    
+    // 九九の読み上げ音声をセット（例: "2x3" -> "にごろく"）
+    const key = `${num1}x${num2}`;
+    speechText = kukuSpeechMap[key] || `${num1} かける ${num2} は ${ans}`;
+  }
+
+  // 4択選択肢を作成（正解とダミー3つ）
+  let options = [ans];
+  while(options.length < 4) {
+    let dummy = ans + (Math.floor(Math.random() * 7) - 3); // ±3の範囲
+    if(dummy > 0 && !options.includes(dummy)) options.push(dummy);
+  }
+  options.sort(() => 0.5 - Math.random());
+
+  return { num1, num2, op, ans, options, speechText };
+}
+function getPokemonImageUrl(id) { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`; }
+
+let totalBerryCount = 0; // たべたきのみの合計（100個で進化）
+let isEvolved = false;
+
+let synthVoices = [];
+window.speechSynthesis.onvoiceschanged = () => { synthVoices = window.speechSynthesis.getVoices(); };
+
+const roomView = document.getElementById('room-view'), quizView = document.getElementById('quiz-view');
+const expText = document.getElementById('exp-text'), expBar = document.getElementById('exp-bar');
+const partnerImg = document.getElementById('partner-image'), partnerName = document.getElementById('partner-name');
+const resetGameBtn = document.getElementById('reset-game-btn');
+
+function renderRoom() {
+  const currentPoke = isEvolved ? snorlaxData : munchlaxData;
+  partnerImg.src = getPokemonImageUrl(currentPoke.id);
+  partnerName.innerText = currentPoke.name;
+  
+  expText.innerText = totalBerryCount;
+  expBar.style.width = Math.min(100, totalBerryCount) + "%";
+  
+  if (isEvolved) {
+    resetGameBtn.style.display = 'inline-flex';
+  } else {
+    resetGameBtn.style.display = 'none';
+  }
+}
+
+// ポケモンのタップアクション
+let commentTimeout = null;
+function interactPokemon() {
+  const commentBox = document.getElementById('poke-comment');
+  if (commentBox.style.opacity === "1") { commentBox.style.opacity = "0"; clearTimeout(commentTimeout); return; }
+  if (partnerImg.classList.contains('anim-jump') || partnerImg.classList.contains('anim-spin') || partnerImg.classList.contains('anim-shake') || partnerImg.classList.contains('anim-chew')) return;
+  
+  commentBox.innerText = pokeComments[Math.floor(Math.random() * pokeComments.length)];
+  commentBox.style.opacity = "1";
+  commentTimeout = setTimeout(() => { commentBox.style.opacity = "0"; }, 3000);
+  
+  const rand = Math.floor(Math.random() * 5);
+  if (rand === 0) { partnerImg.classList.add('anim-jump'); setTimeout(() => partnerImg.classList.remove('anim-jump'), 400); }
+  else if (rand === 1) { partnerImg.classList.add('anim-spin'); setTimeout(() => partnerImg.classList.remove('anim-spin'), 500); }
+  else if (rand === 2) { partnerImg.classList.add('anim-shake'); setTimeout(() => partnerImg.classList.remove('anim-shake'), 400); }
+  else if (rand === 3) { spawnEffects(); partnerImg.classList.add('anim-jump'); setTimeout(() => partnerImg.classList.remove('anim-jump'), 400); }
+  else {
+    const pokeId = isEvolved ? snorlaxData.id : munchlaxData.id;
+    const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pokeId}.ogg`);
+    audio.volume = 0.5; audio.play().catch(e => console.log(e));
+    partnerImg.classList.add('anim-shake'); setTimeout(() => partnerImg.classList.remove('anim-shake'), 400);
+  }
+}
+
+function spawnEffects() {
+  const emoji = effectEmojis[Math.floor(Math.random() * effectEmojis.length)];
+  for(let i=0; i<4; i++) {
+    const h = document.createElement('div'); h.innerText = emoji; h.className = 'effect-anim';
+    h.style.left = (35 + Math.random()*30) + '%'; h.style.animationDelay = (Math.random()*0.2) + 's';
+    document.querySelector('.partner-stage').appendChild(h); setTimeout(() => h.remove(), 1000);
+  }
+}
+
+// 正解後にきのみが飛んでいってゴンベが食べる演出
+function feedBerries(berryCount, callback) {
+  const currentEmoji = berryEmojis[Math.floor(Math.random() * berryEmojis.length)];
+  
+  // 答えの数だけきのみを飛ばす
+  for(let i=0; i<Math.min(10, berryCount); i++) {
+    setTimeout(() => {
+      const flying = document.createElement('div');
+      flying.innerText = currentEmoji; flying.className = 'flying-food';
+      flying.style.left = (20 + Math.random()*60) + 'vw';
+      flying.style.top = '60vh';
+      document.body.appendChild(flying);
+
+      setTimeout(() => {
+        const pRect = partnerImg.getBoundingClientRect();
+        flying.style.left = (pRect.left + pRect.width/2 - 20) + 'px';
+        flying.style.top = (pRect.top + pRect.height/2 - 20) + 'px';
+        flying.style.transform = 'scale(0.5) rotate(360deg)';
+        flying.style.opacity = '0';
+      }, 50);
+      
+      setTimeout(() => flying.remove(), 600);
+    }, i * 100);
+  }
+
+  // もぐもぐアニメーション
+  setTimeout(() => {
+    const msg = document.getElementById('eating-msg');
+    msg.style.opacity = 1; msg.style.transform = "translate(-50%, -20px)"; partnerImg.classList.add("anim-chew");
+    spawnEffects();
+    
+    setTimeout(() => {
+      msg.style.opacity = 0; msg.style.transform = "translate(-50%, 0)"; partnerImg.classList.remove("anim-chew");
+      
+      totalBerryCount += berryCount;
+      renderRoom();
+      
+      if (totalBerryCount >= 100 && !isEvolved) {
+        isEvolved = true;
+        evolveToSnorlax();
+      } else {
+        if(callback) callback();
+      }
+    }, 1000);
+  }, 600);
+}
+
+function evolveToSnorlax() {
+  document.getElementById('evolve-image').src = getPokemonImageUrl(snorlaxData.id);
+  document.getElementById('evolve-text').innerHTML = `おめでとう！<br>カビゴン に しんかした！`;
+  document.getElementById('evolve-overlay').classList.add('show');
+  
+  const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${snorlaxData.id}.ogg`);
+  audio.volume = 0.5; audio.play().catch(e => console.log(e));
+  
+  renderRoom();
+}
+
+document.getElementById('close-evolve-btn').onclick = () => document.getElementById('evolve-overlay').classList.remove('show');
+
+resetGameBtn.onclick = () => {
+  totalBerryCount = 0;
+  isEvolved = false;
+  renderRoom();
+};
+
+// クイズ進行
+let currentQIndex = 0;
+let currentQuestionData = null;
+
+document.getElementById('start-quiz-btn').onclick = () => {
+  roomView.classList.add('hidden'); quizView.classList.remove('hidden'); currentQIndex = 0;
+  showNextQuestion();
+};
+
+function showNextQuestion() {
+  if (currentQIndex >= 4) {
+    quizView.classList.add('hidden'); roomView.classList.remove('hidden'); renderRoom(); return;
+  }
+  
+  document.getElementById('quiz-progress-text').innerText = `だい ${currentQIndex + 1} もん！`;
+  currentQuestionData = generateQuestion();
+  renderMathQuestion(document.getElementById('quiz-content'), currentQuestionData);
+}
+
+// きのみヒント付き計算問題を描画
+function renderMathQuestion(container, q) {
+  const currentEmoji = berryEmojis[Math.floor(Math.random() * berryEmojis.length)];
+  let hintHtml = "";
+
+  if (q.op === '+') {
+    let group1 = currentEmoji.repeat(q.num1);
+    let group2 = currentEmoji.repeat(q.num2);
+    hintHtml = `<div class="fruit-group">${group1}</div> <span style="font-size:1.5rem; font-weight:900;">＋</span> <div class="fruit-group">${group2}</div>`;
+  } else if (q.op === '-') {
+    let html = "";
+    for(let i=0; i<q.num1; i++) {
+      if (i >= q.num1 - q.num2) {
+        html += `<span class="fruit-minus">${currentEmoji}</span>`; // 引く分は×マーク付き
+      } else {
+        html += `<span>${currentEmoji}</span>`;
+      }
+    }
+    hintHtml = `<div class="fruit-group">${html}</div>`;
+  } else { // 掛け算 (グループ分けして表示)
+    let groupsHtml = "";
+    for(let i=0; i<q.num2; i++) {
+      groupsHtml += `<div style="border:2px dashed #FFD54F; border-radius:10px; padding:4px; margin:2px;">${currentEmoji.repeat(q.num1)}</div>`;
+    }
+    hintHtml = `<div class="fruit-group" style="gap:6px;">${groupsHtml}</div>`;
+  }
+
+  container.innerHTML = `
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+      <p style="font-size:1.2rem; font-weight:800; margin:0;">こたえは いくつかな？</p>
+      <button class="voice-btn" id="math-voice-btn">🔊</button>
+    </div>
+    <div class="math-expr">${q.num1} ${q.op} ${q.num2} = ？</div>
+    <div class="fruit-hint-area">${hintHtml}</div>
+    <div class="options-grid" id="math-opts"></div>
+  `;
+
+  // 🔊ボタンを押した時の音声（掛け算なら「にごろく」等の九九音声を再生）
+  document.getElementById('math-voice-btn').onclick = () => {
+    if (q.op === '×' && q.speechText) {
+      speakJapaneseVoice(q.speechText);
+    } else {
+      speakJapaneseVoice(`${q.num1} ${q.op === '+' ? 'たす' : 'ひく'} ${q.num2} は？`);
+    }
+  };
+
+  const optsGrid = document.getElementById('math-opts');
+  q.options.forEach(opt => {
+    const btn = document.createElement('div');
+    btn.className = 'option-btn'; btn.innerText = opt;
+    btn.onclick = () => checkMathAnswer(opt === q.ans, q.ans);
+    optsGrid.appendChild(btn);
+  });
+
+  // 初回表示時にも音声再生
+  setTimeout(() => {
+    document.getElementById('math-voice-btn').click();
+  }, 300);
+}
+
+function speakJapaneseVoice(text) {
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.lang = 'ja-JP';
+  if (synthVoices.length === 0) synthVoices = window.speechSynthesis.getVoices();
+  const jaVoice = synthVoices.find(v => v.lang.startsWith('ja'));
+  if (jaVoice) msg.voice = jaVoice;
+  msg.pitch = 1.1; msg.rate = 0.9;
+  window.speechSynthesis.speak(msg);
+}
+
+function checkMathAnswer(isCorrect, ansNum) {
+  const overlay = document.getElementById('feedback-overlay'), icon = document.getElementById('feedback-icon'), text = document.getElementById('feedback-text');
+  
+  if (isCorrect) {
+    icon.innerText = "⭕"; icon.style.color = "var(--correct)";
+    text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span style="font-size:1.4rem; color:var(--primary-shadow); display:block; margin-top:10px;">きのみ ${ansNum}こ ゲット！</span>`;
+    text.style.color = "var(--correct)";
+    speakJapaneseVoice("せいかい！");
+  } else {
+    icon.innerText = "❌"; icon.style.color = "var(--incorrect)";
+    text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.2rem; color:#666; display:block; margin-top:10px;">せいかいは：${ansNum}</span>`;
+    text.style.color = "var(--incorrect)";
+    speakJapaneseVoice("ざんねん！");
+  }
+  
+  overlay.classList.add('show');
+  
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    if (isCorrect) {
+      // 正解ならゴンベがきのみを食べる演出が入ってから次の問題へ
+      feedBerries(ansNum, () => {
+        currentQIndex++;
+        showNextQuestion();
+      });
+    }
+  }, 2000); 
+}
+
+window.onload = () => { renderRoom(); };
+</script>
+</body>
+</html>
