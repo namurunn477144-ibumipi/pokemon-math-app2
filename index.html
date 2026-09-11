@@ -75,11 +75,11 @@
     
     .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
     
-    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 85px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; font-size: 1.8rem; }
-    .fruit-line-5 { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 200px; }
-    .fruit-break { flex-basis: 100%; height: 0; }
+    /* 5個ずつピッタリ並べる強力なGridレイアウト */
+    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 12px; margin: 10px 0; min-height: 85px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 15px; }
+    .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; justify-items: center; align-items: center; font-size: 1.8rem; width: 100%; max-width: 180px; }
     .fruit-minus { opacity: 0.3; position: relative; }
-    .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.2rem; opacity: 1; }
+    .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.1rem; opacity: 1; }
     
     .math-expr { font-size: 2.5rem; font-weight: 900; color: #2E7D32; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
     
@@ -166,13 +166,12 @@
 </div>
 
 <script>
-  // 全12パターンの進化ポケモンのデータ
-const pokemonFamilies = [
+  const pokemonFamilies = [
   { stage0: {id: 446, name: "ゴンベ"}, stage1: {id: 143, name: "カビゴン"} },
   { stage0: {id: 79, name: "ヤドン"}, stage1: {id: 199, name: "ヤドキング"} },
   { stage0: {id: 54, name: "コダック"}, stage1: {id: 55, name: "ゴルダック"} },
   { stage0: {id: 90, name: "シェルダー"}, stage1: {id: 91, name: "パルシェン"} },
-  { stage0: {id: 877, name: "モルペコ"}, stage1: {id: 877, name: "モルペコ(まんぷく)"} }, // モルペコ
+  { stage0: {id: 877, name: "モルペコ"}, stage1: {id: 877, name: "モルペコ(まんぷく)"} },
   { stage0: {id: 109, name: "ドガース"}, stage1: {id: 110, name: "マタドガス"} },
   { stage0: {id: 23, name: "アーボ"}, stage1: {id: 24, name: "アーボック"} },
   { stage0: {id: 360, name: "ソーナノ"}, stage1: {id: 202, name: "ソーナンス"} },
@@ -187,11 +186,9 @@ const berryEmojis = ["🍒", "🍎", "🍇", "🍓", "🍊", "🍑"];
 const pokeComments = ["たのしいね！", "おなかすいたー！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "きのみ たべたいな！", "すごいすごい！", "えらいね！"];
 const effectEmojis = ["💖", "✨", "⭐", "🎵"];
 
-// 表示テキスト
 const correctTexts = ["せいかい！すごい！", "かんぺき！", "すばらしい！", "やったね！", "さすが！"];
 const incorrectTexts = ["おしい！もういちど！", "どんまい！", "つぎは がんばろう！", "ファイト！", "ざんねん！"];
 
-// 【修正】指定された正解・不正解の音声バリエーション（各4種）
 const correctVoices = ["やったー！", "せいかい！", "Great!", "Good job!"];
 const incorrectVoices = ["おしい！", "もういっかい！", "Oh no!", "Almost!"];
 
@@ -228,7 +225,7 @@ function setMode(modeNum) {
 function generateQuestion() {
   let num1, num2, op, ans, speechText = "";
   
-  if (currentMode === 1) { // 10までの たし・ひき
+  if (currentMode === 1) {
     op = Math.random() > 0.5 ? '+' : '-';
     if (op === '+') {
       num1 = Math.floor(Math.random() * 8) + 1;
@@ -239,7 +236,7 @@ function generateQuestion() {
       num2 = Math.floor(Math.random() * (num1 - 1)) + 1;
       ans = num1 - num2;
     }
-  } else if (currentMode === 2) { // 20までの たし・ひき
+  } else if (currentMode === 2) {
     op = Math.random() > 0.5 ? '+' : '-';
     if (op === '+') {
       num1 = Math.floor(Math.random() * 10) + 5;
@@ -250,7 +247,7 @@ function generateQuestion() {
       num2 = Math.floor(Math.random() * (num1 - 2)) + 1;
       ans = num1 - num2;
     }
-  } else { // 九九 (2のだん・3のだん)
+  } else {
     op = '×';
     num1 = Math.random() > 0.5 ? 2 : 3;
     num2 = Math.floor(Math.random() * 9) + 1;
@@ -397,10 +394,7 @@ function evolvePoke() {
 
 document.getElementById('close-evolve-btn').onclick = () => document.getElementById('evolve-overlay').classList.remove('show');
 
-// 進化後：新しいポケモンとあそぶボタン
-resetGameBtn.onclick = () => {
-  initNewGame();
-};
+resetGameBtn.onclick = () => { initNewGame(); };
 
 let currentQIndex = 0;
 let currentQuestionData = null;
@@ -428,6 +422,7 @@ function showNextQuestion() {
   renderMathQuestion(document.getElementById('quiz-content'), currentQuestionData);
 }
 
+// 【5個固定のGrid生成関数】
 function generateBerryGridHtml(count, isMinus = false) {
   let html = '<div class="fruit-grid-5">';
   for (let i = 0; i < count; i++) {
@@ -493,10 +488,9 @@ function renderMathQuestion(container, q) {
   }, 300);
 }
 
-// 読み上げ処理（英語フレーズ判定付き）
 function speakVoice(text) {
   const msg = new SpeechSynthesisUtterance(text);
-  const isEnglish = /[a-zA-Z]/.test(text); // 英語文字が含まれているか判定
+  const isEnglish = /[a-zA-Z]/.test(text);
   msg.lang = isEnglish ? 'en-US' : 'ja-JP';
   
   if (synthVoices.length === 0) synthVoices = window.speechSynthesis.getVoices();
