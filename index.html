@@ -60,4 +60,696 @@
     @keyframes jumpPoke { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
     .anim-jump { animation: jumpPoke 0.4s ease !important; }
     @keyframes spinPoke { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
-    .anim-spin { animation: spinPoke 0.5s
+    .anim-spin { animation: spinPoke 0.5s ease !important; }
+    @keyframes shakePoke { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-15deg); } 75% { transform: rotate(15deg); } }
+    .anim-shake { animation: shakePoke 0.4s ease !important; }
+    @keyframes chew { 0% { transform: scale(1); } 25% { transform: scale(1.15) rotate(-5deg); } 50% { transform: scale(0.95) rotate(5deg); } 75% { transform: scale(1.1) rotate(-3deg); } 100% { transform: scale(1); } }
+    .anim-chew { animation: chew 0.5s ease-in-out !important; }
+    
+    .eating-msg { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 1.4rem; color: #FF5722; font-weight: 900; opacity: 0; pointer-events: none; text-shadow: 2px 2px 0 #FFF; transition: all 0.3s; z-index: 30; white-space: nowrap; }
+    .flying-food { position: fixed; font-size: 2.2rem; z-index: 1000; transition: all 0.5s cubic-bezier(0.5, -0.5, 1, 1); pointer-events: none; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .effect-anim { position: absolute; font-size: 2rem; bottom: 40%; opacity: 0; animation: floatUpEffect 1s ease-out; pointer-events: none; z-index: 15; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+    @keyframes floatUpEffect { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-60px) scale(1.5) rotate(15deg); opacity: 0; } }
+    
+    .status-board { width: 100%; background: rgba(255,255,255,0.7); padding: 12px 20px; border-radius: 16px; margin-bottom: 15px; }
+    .exp-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px; }
+    .exp-label { font-size: 1.1rem; font-weight: 800; }
+    .exp-value { font-size: 1.4rem; font-weight: 900; color: var(--primary-shadow); }
+    .exp-bar-bg { background-color: rgba(0,0,0,0.1); border-radius: 15px; height: 24px; overflow: hidden; border: 3px solid #FFF; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+    .exp-bar-fill { background: var(--primary); height: 100%; width: 0%; border-radius: 10px; transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    
+    /* ごはんボックス */
+    .food-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 15px; }
+    .food-header h3 { margin: 0 0 5px 0; font-size: 1.2rem; text-align: center; color: var(--primary-shadow); }
+    .food-header p { margin: 0; font-size: 0.85rem; color: var(--text-main); text-align: center; }
+    .food-list { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
+    .food-item { width: 70px; height: 70px; font-size: 2.5rem; background: #FFF9C4; border: 3px solid #FFF59D; border-radius: 16px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; box-shadow: 0 6px 0 #FBC02D; transition: transform 0.1s, box-shadow 0.1s; }
+    .food-item:active:not(.locked):not(.eaten) { transform: translateY(6px); box-shadow: 0 0 0 #FBC02D; }
+    .food-item.locked { background: #E0E0E0; border-color: #F5F5F5; box-shadow: 0 6px 0 #BDBDBD; filter: grayscale(100%); pointer-events: none; }
+    .food-item.locked::after { content: '🔒'; position: absolute; font-size: 1.2rem; bottom: -5px; right: -5px; text-shadow: none; }
+    .food-item.eaten { background: #E8F5E9; border-color: #C8E6C9; box-shadow: 0 4px 0 #A5D6A7; transform: scale(0.95); pointer-events: none; filter: grayscale(100%) opacity(0.5); }
+
+    .mode-select-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 15px; text-align: center; }
+    .mode-select-section h3 { margin: 0 0 10px 0; font-size: 1.2rem; color: var(--primary-shadow); }
+    .mode-buttons { display: flex; flex-direction: column; gap: 8px; }
+    .btn-mode { background: #E1F5FE; border: 3px solid var(--primary); color: var(--primary-shadow); border-radius: 15px; padding: 10px; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: 0.1s; }
+    .btn-mode.active { background: var(--primary); color: white; box-shadow: 0 4px 0 var(--primary-shadow); }
+    
+    .action-buttons { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+    .btn { border: none; border-radius: 20px; font-weight: 900; cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; text-align: center; outline: none; display: inline-flex; justify-content: center; align-items: center; }
+    .btn-large { width: 100%; padding: 16px; font-size: 1.4rem; }
+    .btn-primary { background: var(--secondary); color: white; box-shadow: 0 8px 0 var(--secondary-shadow); }
+    .btn-primary:active { transform: translateY(8px); box-shadow: 0 0 0 var(--secondary-shadow); }
+    .btn-danger { background: #E91E63; color: white; box-shadow: 0 8px 0 #C2185B; } 
+    .btn-danger:active { transform: translateY(8px); box-shadow: 0 0 0 #C2185B; }
+    .btn-outline { background: #FFF; color: var(--primary-shadow); border: 3px solid var(--primary); box-shadow: 0 6px 0 var(--primary); }
+    .btn-outline:active { transform: translateY(6px); box-shadow: 0 0 0 var(--primary); }
+    
+    .quiz-header-bar { margin-bottom: 8px; }
+    .badge { background: var(--primary); color: #FFF; padding: 6px 18px; border-radius: 20px; font-size: 1.1rem; font-weight: 900; box-shadow: 0 4px 0 var(--primary-shadow); }
+    
+    .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
+    
+    /* 見切れ防止・引き算枠表示用スタイル */
+    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 90px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .fruit-box-frame { display: inline-block; border: 3px solid #FFA000; border-radius: 16px; padding: 8px; background: #FFF; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+    .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; justify-items: center; align-items: center; font-size: 1.6rem; }
+    .fruit-minus { position: relative; display: inline-flex; justify-content: center; align-items: center; }
+    .fruit-minus::after { content: '❌'; position: absolute; font-size: 1.4rem; opacity: 0.85; text-shadow: 0 0 3px #FFF; }
+    
+    /* CSS時計 */
+    .clock-face { width: 120px; height: 120px; border: 6px solid #1A237E; border-radius: 50%; background: #FFF; position: relative; margin: 10px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+    .clock-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; }
+    .hand-hour { width: 6px; height: 35px; background: #F44336; margin-left: -3px; z-index: 2; }
+    .hand-minute { width: 4px; height: 48px; background: #1976D2; margin-left: -2px; z-index: 1; }
+    .clock-center { width: 10px; height: 10px; background: #333; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
+
+    /* CSSコイン（全硬貨対応） */
+    .coin-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 10px 0; }
+    .coin { border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; font-weight: 900; box-shadow: 0 3px 6px rgba(0,0,0,0.2); position: relative; }
+    .coin-1 { width: 36px; height: 36px; background: radial-gradient(circle, #FFFFFF 0%, #B0BEC5 100%); border: 2px solid #78909C; color: #37474F; font-size: 0.9rem; }
+    .coin-5 { width: 40px; height: 40px; background: radial-gradient(circle, #FFF59D 0%, #FBC02D 100%); border: 2px solid #F57F17; color: #5D4037; font-size: 1rem; }
+    .coin-5::after { content: ''; position: absolute; width: 8px; height: 8px; background: #FFF; border-radius: 50%; border: 1px solid #F57F17; }
+    .coin-10 { width: 45px; height: 45px; background: radial-gradient(circle, #D7CCC8 0%, #8D6E63 100%); border: 3px solid #5D4037; color: #FFF; font-size: 1.1rem; text-shadow: 1px 1px 2px #000; }
+    .coin-50 { width: 42px; height: 42px; background: radial-gradient(circle, #ECEFF1 0%, #90A4AE 100%); border: 2px solid #455A64; color: #263238; font-size: 1rem; }
+    .coin-50::after { content: ''; position: absolute; width: 8px; height: 8px; background: #FFF; border-radius: 50%; border: 1px solid #455A64; }
+    .coin-100 { width: 48px; height: 48px; background: radial-gradient(circle, #FFFFFF 0%, #CFD8DC 100%); border: 3px solid #607D8B; color: #263238; font-size: 1.1rem; }
+    .coin-500 { width: 54px; height: 54px; background: radial-gradient(circle, #FFF9C4 0%, #FBC02D 100%); border: 3px solid #E65100; color: #E65100; font-size: 1.2rem; }
+
+    /* バー比較表示 */
+    .bar-compare-box { display: flex; flex-direction: column; gap: 12px; margin: 15px 0; padding: 12px; background: #FFF; border-radius: 16px; border: 2px solid #E0E0E0; }
+    .bar-item { display: flex; align-items: center; gap: 10px; }
+    .bar-label { font-size: 1.2rem; font-weight: 900; width: 50px; text-align: center; }
+    .bar-track { flex: 1; height: 28px; background: #F5F5F5; border-radius: 14px; overflow: hidden; border: 2px solid #DDD; }
+    .bar-fill { height: 100%; border-radius: 12px; transition: width 0.3s; }
+    .bar-fill.color-a { background: linear-gradient(90deg, #FF7043, #FF9800); }
+    .bar-fill.color-b { background: linear-gradient(90deg, #42A5F5, #26C6DA); }
+
+    .math-expr { font-size: 2.5rem; font-weight: 900; color: #2E7D32; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .option-btn { background: #FFF; border: 4px solid #81C784; border-radius: 16px; padding: 12px; font-size: 1.8rem; font-weight: 900; color: #2E7D32; display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 0 #66BB6A; cursor: pointer; transition: 0.1s; }
+    .option-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #66BB6A; }
+    
+    .voice-btn { background: var(--secondary); box-shadow: 0 6px 0 var(--secondary-shadow); border-radius: 50%; border: none; color: white; cursor: pointer; display:inline-flex; justify-content:center; align-items:center; transition: 0.1s; width: 45px; height: 45px; font-size: 1.3rem;}
+    .voice-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--secondary-shadow); }
+    
+    .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.95); z-index: 100; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.3s; opacity: 0; pointer-events: none; }
+    .overlay.show { opacity: 1; pointer-events: auto; }
+    .feedback-card { text-align: center; background: #FFF; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 5px solid var(--primary); width: 90%; max-width: 400px; }
+    .feedback-icon { font-size: 7rem; animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .feedback-text { font-size: 1.8rem; font-weight: 900; margin-top: 10px; line-height: 1.4; }
+    @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    
+    .evo-rings { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; z-index: -1; overflow: hidden; }
+    .evo-ring { position: absolute; width: 0; height: 0; border-radius: 50%; border: 15px solid var(--secondary); animation: ringExpand 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite; box-shadow: 0 0 30px var(--secondary), inset 0 0 30px var(--secondary); opacity: 0; }
+    .evo-ring:nth-child(2) { animation-delay: 0.6s; border-color: var(--primary); box-shadow: 0 0 30px var(--primary), inset 0 0 30px var(--primary); }
+    .evo-ring:nth-child(3) { animation-delay: 1.2s; border-color: #03A9F4; box-shadow: 0 0 30px #03A9F4, inset 0 0 30px #03A9F4; }
+    @keyframes ringExpand { 0% { width: 0; height: 0; opacity: 1; border-width: 20px; } 100% { width: 150vw; height: 150vw; opacity: 0; border-width: 2px; } }
+    #evolve-image { width: 220px; height: 220px; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)); animation: pulseGlow 1.5s infinite alternate; margin-bottom: 20px;}
+    @keyframes pulseGlow { 0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--primary)); } 100% { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--secondary)); } }
+    .evolve-text { font-size: 2.2rem; color: var(--primary-shadow); font-weight: 900; margin-bottom: 30px; text-align: center; text-shadow: 2px 2px #FFF, 0 0 10px #FFF59D;}
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div id="room-view" class="view active">
+    <header class="app-header"><h1 id="main-title">さんすう けいさんクイズ</h1></header>
+    <div id="partner-stage" class="partner-stage bg-grass" onclick="interactPokemon('room')">
+      <div id="poke-comment-room" class="poke-comment">がんばろうね！</div>
+      <img id="partner-image-room" class="partner-image" src="" alt="パートナー">
+      <div id="eating-msg-room" class="eating-msg">もぐもぐ♪</div>
+      <h2 id="partner-name-room" class="partner-name">ゴンベ</h2>
+    </div>
+    <div class="status-board">
+      <div class="exp-header"><span id="exp-label" class="exp-label">たべた きのみ</span><span class="exp-value"><span id="exp-text">0</span><span id="exp-unit"> / 100こ</span></span></div>
+      <div class="exp-bar-bg"><div id="exp-bar" class="exp-bar-fill"></div></div>
+    </div>
+
+    <div id="food-section" class="food-section" style="display:none;">
+      <div class="food-header"><h3>ごはんボックス</h3><p>4もんせいかいで、ごはんが1つひらくよ！</p></div>
+      <div id="food-list" class="food-list"></div>
+    </div>
+    
+    <div id="mode-select-section" class="mode-select-section">
+      <h3>けいさんモードを えらんでね</h3>
+      <div class="mode-buttons">
+        <button id="mode-btn-1" class="btn-mode active" onclick="setCalcMode(1)">1. かんたん (10までの たし・ひき)</button>
+        <button id="mode-btn-2" class="btn-mode" onclick="setCalcMode(2)">2. ふつう (20までの たし・ひき)</button>
+        <button id="mode-btn-3" class="btn-mode" onclick="setCalcMode(3)">3. チャレンジ (2のだん・3のだん)</button>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button id="start-quiz-btn" class="btn btn-primary btn-large">けいさんクイズ (4もん)</button>
+      <button id="mode-toggle-btn" class="btn btn-outline btn-large" style="margin-top:5px;">🔄 せいかつモードにきりかえ</button>
+      <button id="reset-game-btn" class="btn btn-danger btn-large" style="margin-top:5px; display:none;">ゴンベともういちどあそぶ🔄</button>
+    </div>
+  </div>
+
+  <div id="quiz-view" class="view hidden">
+    <div class="quiz-header-bar"><span id="quiz-progress-text" class="badge">だい 1 もん！</span></div>
+    
+    <div id="quiz-partner-stage" class="partner-stage bg-grass" style="padding:20px 10px 10px; margin-bottom:8px;" onclick="interactPokemon('quiz')">
+      <div id="poke-comment-quiz" class="poke-comment">がんばれー！</div>
+      <img id="partner-image-quiz" class="partner-image" style="width:100px; height:100px;" src="" alt="パートナー">
+      <div id="eating-msg-quiz" class="eating-msg">もぐもぐ♪</div>
+    </div>
+
+    <div id="quiz-content" class="quiz-card"></div>
+  </div>
+</div>
+
+<div id="feedback-overlay" class="overlay">
+  <div class="feedback-card">
+    <div id="feedback-icon" class="feedback-icon">⭕</div>
+    <div id="feedback-text" class="feedback-text">せいかい！</div>
+  </div>
+</div>
+
+<div id="evolve-overlay" class="overlay" style="background: rgba(255,255,255,0.9);">
+  <div class="evo-rings"><div class="evo-ring"></div><div class="evo-ring"></div><div class="evo-ring"></div></div>
+  <img id="evolve-image" src="" alt="しんか！">
+  <h2 id="evolve-text" class="evolve-text">おめでとう！<br>しんかした！</h2>
+  <button id="close-evolve-btn" class="btn btn-primary btn-large" style="width:80%; max-width:300px;">いっしょにあそぶ！</button>
+</div>
+
+<script>
+const gonbeFamily = {
+  stage0: { id: 446, name: "ゴンベ" },
+  stage1: { id: 143, name: "カビゴン" }
+};
+
+const eeveeEvolutions = [
+  { id: 134, name: "シャワーズ" }, { id: 135, name: "サンダース" }, { id: 136, name: "ブースター" },
+  { id: 196, name: "エーフィ" }, { id: 197, name: "ブラッキー" }, { id: 470, name: "リーフィア" },
+  { id: 471, name: "グレイシア" }, { id: 700, name: "ニンフィア" }
+];
+
+const allFoods = [
+  { name: "ハンバーガー", emoji: "🍔" }, { name: "おすし", emoji: "🍣" }, { name: "ラーメン", emoji: "🍜" }, { name: "おにぎり", emoji: "🍙" }, 
+  { name: "カレー", emoji: "🍛" }, { name: "ピザ", emoji: "🍕" }, { name: "アイス", emoji: "🍦" }, { name: "ドーナツ", emoji: "🍩" }
+];
+
+const berryEmojis = ["🍎", "🍓", "🍊", "🍇", "🍒", "🍑"];
+const pokeComments = ["たのしいね！", "だーいすき！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "すごいすごい！", "えらいね！"];
+const effectEmojis = ["💖", "✨", "⭐", "🎵"];
+
+const correctTexts = ["せいかい！すごい！", "かんぺき！", "すばらしい！", "やったね！", "さすが！"];
+const incorrectTexts = ["おしい！もういちど！", "どんまい！", "つぎは がんばろう！", "ファイト！", "ざんねん！"];
+
+function getPokemonImageUrl(id) { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`; }
+
+let isLifeMode = false; // false: けいさん (ゴンベ), true: せいかつ (イーブイ)
+let currentCalcLevel = 1; // 1: 10まで, 2: 20まで, 3: 九九(2・3の段)
+let calcState = { totalBerries: 0, isEvolved: false };
+let lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
+let currentQuestionBerryEmoji = "🍎";
+
+let synthVoices = [];
+window.speechSynthesis.onvoiceschanged = () => { synthVoices = window.speechSynthesis.getVoices(); };
+
+const roomView = document.getElementById('room-view'), quizView = document.getElementById('quiz-view');
+const foodListEl = document.getElementById('food-list'), foodSection = document.getElementById('food-section');
+const expText = document.getElementById('exp-text'), expBar = document.getElementById('exp-bar');
+const resetGameBtn = document.getElementById('reset-game-btn');
+const partnerStage = document.getElementById('partner-stage');
+const quizPartnerStage = document.getElementById('quiz-partner-stage');
+
+function initCalcGame() {
+  calcState = { totalBerries: 0, isEvolved: false };
+}
+function initLifeGame() {
+  lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
+  lifeState.foods = [...allFoods].sort(() => 0.5 - Math.random()).slice(0, 4).map(f => ({ ...f, isEaten: false }));
+}
+
+function setCalcMode(level) {
+  currentCalcLevel = level;
+  document.querySelectorAll('.btn-mode').forEach((btn, idx) => {
+    btn.classList.toggle('active', idx + 1 === level);
+  });
+}
+
+function getCurrentPoke() {
+  if (!isLifeMode) {
+    return calcState.isEvolved ? gonbeFamily.stage1 : gonbeFamily.stage0;
+  } else {
+    return { id: lifeState.partnerId, name: lifeState.partnerName };
+  }
+}
+
+function updateStageBackground() {
+  partnerStage.classList.remove('bg-grass', 'bg-lovely', 'bg-cool');
+  quizPartnerStage.classList.remove('bg-grass', 'bg-lovely', 'bg-cool');
+  
+  let targetBg = 'bg-grass';
+  if (!isLifeMode) {
+    targetBg = 'bg-grass';
+  } else {
+    if (lifeState.isEvolved) {
+      targetBg = 'bg-cool';
+    } else {
+      targetBg = 'bg-lovely';
+    }
+  }
+  partnerStage.classList.add(targetBg);
+  quizPartnerStage.classList.add(targetBg);
+}
+
+function renderRoom() {
+  foodListEl.innerHTML = "";
+  const currentPoke = getCurrentPoke();
+  
+  const roomPokeImg = document.getElementById('partner-image-room');
+  if (roomPokeImg) roomPokeImg.src = getPokemonImageUrl(currentPoke.id);
+  document.getElementById('partner-name-room').innerText = currentPoke.name;
+  
+  const quizPokeImg = document.getElementById('partner-image-quiz');
+  if (quizPokeImg) quizPokeImg.src = getPokemonImageUrl(currentPoke.id);
+  
+  updateStageBackground();
+  
+  if (!isLifeMode) {
+    document.getElementById('exp-label').innerText = "たべた きのみ";
+    document.getElementById('exp-unit').innerText = " / 100こ";
+    expText.innerText = calcState.totalBerries;
+    expBar.style.width = Math.min(100, calcState.totalBerries) + "%";
+    foodSection.style.display = "none";
+    
+    if (calcState.isEvolved) resetGameBtn.style.display = 'inline-flex';
+    else resetGameBtn.style.display = 'none';
+  } else {
+    document.getElementById('exp-label').innerText = "なかよし度";
+    document.getElementById('exp-unit').innerText = "%";
+    expText.innerText = lifeState.exp;
+    expBar.style.width = lifeState.exp + "%";
+    foodSection.style.display = "block";
+    
+    if (lifeState.isEvolved) resetGameBtn.style.display = 'inline-flex';
+    else resetGameBtn.style.display = 'none';
+
+    lifeState.foods.forEach((food, index) => {
+      const isUnlocked = lifeState.keys > index;
+      const foodEl = document.createElement('div');
+      if (food.isEaten) { foodEl.className = 'food-item eaten'; foodEl.innerText = food.emoji; }
+      else if (!isUnlocked) { foodEl.className = 'food-item locked'; foodEl.innerText = food.emoji; }
+      else { 
+        foodEl.className = 'food-item'; foodEl.innerText = food.emoji; 
+        if (!lifeState.isEvolved) {
+          foodEl.onclick = () => feedLifePartner(index, foodEl); 
+        }
+      }
+      foodListEl.appendChild(foodEl);
+    });
+  }
+}
+
+function feedLifePartner(index, element) {
+  if (lifeState.foods[index].isEaten) return;
+  const roomPokeImg = document.getElementById('partner-image-room');
+  
+  const flying = document.createElement('div'); flying.innerText = element.innerText; flying.className = 'flying-food';
+  const rect = element.getBoundingClientRect(); flying.style.left = rect.left + 'px'; flying.style.top = rect.top + 'px';
+  document.body.appendChild(flying);
+  element.classList.add('eaten'); lifeState.foods[index].isEaten = true;
+  
+  setTimeout(() => {
+    const pRect = roomPokeImg.getBoundingClientRect();
+    flying.style.left = (pRect.left + pRect.width/2 - 20) + 'px'; flying.style.top = (pRect.top + pRect.height/2 - 20) + 'px';
+    flying.style.transform = 'scale(0.5) rotate(360deg)'; flying.style.opacity = '0';
+  }, 50);
+
+  setTimeout(() => {
+    flying.remove();
+    const msg = document.getElementById('eating-msg-room'); msg.style.opacity = 1; msg.style.transform = "translate(-50%, -20px)"; roomPokeImg.classList.add("anim-chew");
+    spawnEffects('room');
+    
+    setTimeout(() => {
+      msg.style.opacity = 0; msg.style.transform = "translate(-50%, 0)"; roomPokeImg.classList.remove("anim-chew");
+      lifeState.exp = Math.min(100, lifeState.exp + 25);
+      
+      if (lifeState.exp === 100 && !lifeState.isEvolved) {
+        lifeState.isEvolved = true;
+        const evo = eeveeEvolutions[Math.floor(Math.random() * eeveeEvolutions.length)];
+        lifeState.partnerId = evo.id; lifeState.partnerName = evo.name;
+        evolvePoke(evo);
+      } else { renderRoom(); }
+    }, 1000);
+  }, 550);
+}
+
+let commentTimeout = null;
+function interactPokemon(type) {
+  const commentBox = document.getElementById(`poke-comment-${type}`);
+  const pokeImg = document.getElementById(`partner-image-${type}`);
+  if (!commentBox || !pokeImg) return;
+  
+  if (commentBox.style.opacity === "1") { commentBox.style.opacity = "0"; clearTimeout(commentTimeout); return; }
+  if (pokeImg.classList.contains('anim-jump') || pokeImg.classList.contains('anim-spin') || pokeImg.classList.contains('anim-shake') || pokeImg.classList.contains('anim-chew')) return;
+  
+  commentBox.innerText = pokeComments[Math.floor(Math.random() * pokeComments.length)];
+  commentBox.style.opacity = "1";
+  commentTimeout = setTimeout(() => { commentBox.style.opacity = "0"; }, 3000);
+  
+  const rand = Math.floor(Math.random() * 5);
+  if (rand === 0) { pokeImg.classList.add('anim-jump'); setTimeout(() => pokeImg.classList.remove('anim-jump'), 400); }
+  else if (rand === 1) { pokeImg.classList.add('anim-spin'); setTimeout(() => pokeImg.classList.remove('anim-spin'), 500); }
+  else if (rand === 2) { pokeImg.classList.add('anim-shake'); setTimeout(() => pokeImg.classList.remove('anim-shake'), 400); }
+  else if (rand === 3) { spawnEffects(type); pokeImg.classList.add('anim-jump'); setTimeout(() => pokeImg.classList.remove('anim-jump'), 400); }
+  else {
+    const pokeId = getCurrentPoke().id;
+    const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pokeId}.ogg`);
+    audio.volume = 0.5; audio.play().catch(e => console.log(e));
+    pokeImg.classList.add('anim-shake'); setTimeout(() => pokeImg.classList.remove('anim-shake'), 400);
+  }
+}
+
+function spawnEffects(type) {
+  const emoji = effectEmojis[Math.floor(Math.random() * effectEmojis.length)];
+  const stage = type === 'room' ? partnerStage : quizPartnerStage;
+  if (!stage) return;
+  for(let i=0; i<4; i++) {
+    const h = document.createElement('div'); h.innerText = emoji; h.className = 'effect-anim';
+    h.style.left = (35 + Math.random()*30) + '%'; h.style.animationDelay = (Math.random()*0.2) + 's';
+    stage.appendChild(h); setTimeout(() => h.remove(), 1000);
+  }
+}
+
+function feedBerriesInQuiz(berryCount, callback) {
+  const quizPokeImg = document.getElementById('partner-image-quiz');
+  
+  for(let i=0; i<Math.min(10, berryCount); i++) {
+    setTimeout(() => {
+      const flying = document.createElement('div'); flying.innerText = currentQuestionBerryEmoji; flying.className = 'flying-food';
+      flying.style.left = (30 + Math.random()*40) + 'vw'; flying.style.top = '70vh'; document.body.appendChild(flying);
+
+      setTimeout(() => {
+        const pRect = quizPokeImg.getBoundingClientRect();
+        flying.style.left = (pRect.left + pRect.width/2 - 15) + 'px'; flying.style.top = (pRect.top + pRect.height/2 - 15) + 'px';
+        flying.style.transform = 'scale(0.4) rotate(360deg)'; flying.style.opacity = '0';
+      }, 50);
+      setTimeout(() => flying.remove(), 550);
+    }, i * 90);
+  }
+
+  setTimeout(() => {
+    const msg = document.getElementById('eating-msg-quiz');
+    msg.style.opacity = 1; msg.style.transform = "translate(-50%, -15px)"; quizPokeImg.classList.add("anim-chew");
+    spawnEffects('quiz');
+    
+    setTimeout(() => {
+      msg.style.opacity = 0; msg.style.transform = "translate(-50%, 0)"; quizPokeImg.classList.remove("anim-chew");
+      if(!isLifeMode) calcState.totalBerries += berryCount;
+      if(callback) callback();
+    }, 900);
+  }, 500);
+}
+
+function evolvePoke(targetPoke) {
+  document.getElementById('evolve-image').src = getPokemonImageUrl(targetPoke.id);
+  document.getElementById('evolve-text').innerHTML = `おめでとう！<br>${targetPoke.name} に しんかした！`;
+  document.getElementById('evolve-overlay').classList.add('show');
+  
+  const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${targetPoke.id}.ogg`);
+  audio.volume = 0.5; audio.play().catch(e => console.log(e));
+  renderRoom();
+}
+
+document.getElementById('close-evolve-btn').onclick = () => document.getElementById('evolve-overlay').classList.remove('show');
+
+resetGameBtn.onclick = () => {
+  if (!isLifeMode) initCalcGame(); else initLifeGame();
+  renderRoom();
+};
+
+document.getElementById('mode-toggle-btn').onclick = () => {
+  isLifeMode = !isLifeMode;
+  if (!isLifeMode) {
+    document.body.classList.remove('mode-life');
+    document.getElementById('main-title').innerText = "さんすう けいさんクイズ";
+    document.getElementById('start-quiz-btn').innerText = "けいさんクイズ (4もん)";
+    document.getElementById('mode-toggle-btn').innerHTML = "🔄 せいかつモードにきりかえ";
+    document.getElementById('mode-select-section').style.display = "block";
+    resetGameBtn.innerText = "ゴンベともういちどあそぶ🔄";
+  } else {
+    document.body.classList.add('mode-life');
+    document.getElementById('main-title').innerText = "さんすう せいかつクイズ";
+    document.getElementById('start-quiz-btn').innerText = "せいかつクイズ (4もん)";
+    document.getElementById('mode-toggle-btn').innerHTML = "🔄 けいさんモードにきりかえ";
+    document.getElementById('mode-select-section').style.display = "none";
+    resetGameBtn.innerText = "イーブイにもどる🔄";
+  }
+  renderRoom();
+};
+
+let currentQIndex = 0;
+
+document.getElementById('start-quiz-btn').onclick = () => {
+  roomView.classList.add('hidden'); quizView.classList.remove('hidden'); currentQIndex = 0;
+  
+  if (isLifeMode) {
+    quizPartnerStage.style.display = "none";
+  } else {
+    quizPartnerStage.style.display = "block";
+  }
+  
+  renderRoom();
+  showNextQuestion();
+};
+
+function showNextQuestion() {
+  if (currentQIndex >= 4) {
+    quizView.classList.add('hidden'); roomView.classList.remove('hidden'); 
+    
+    if (!isLifeMode) {
+      if (calcState.totalBerries >= 100 && !calcState.isEvolved) {
+        calcState.isEvolved = true;
+        setTimeout(() => evolvePoke(gonbeFamily.stage1), 300);
+      }
+    } else {
+      lifeState.keys++;
+    }
+    renderRoom();
+    return;
+  }
+  
+  document.getElementById('quiz-progress-text').innerText = `だい ${currentQIndex + 1} もん！`;
+  const contentEl = document.getElementById('quiz-content'); contentEl.innerHTML = "";
+  
+  if (!isLifeMode) {
+    const qData = generateMathQuestionData();
+    renderMathCalcQuestion(contentEl, qData);
+  } else {
+    generateLifeQuestion(contentEl);
+  }
+}
+
+/* 計算問題データ生成 (モード選択対応) */
+function generateMathQuestionData() {
+  let num1, num2, op, ans, options = [], speechText = "";
+  
+  if (currentCalcLevel === 1) { // 10までのたし・ひき
+    op = Math.random() > 0.5 ? '+' : '-';
+    if (op === '+') {
+      num1 = Math.floor(Math.random() * 5) + 1;
+      num2 = Math.floor(Math.random() * 5) + 1;
+      ans = num1 + num2;
+    } else {
+      num1 = Math.floor(Math.random() * 5) + 4;
+      num2 = Math.floor(Math.random() * 3) + 1;
+      ans = num1 - num2;
+    }
+  } else if (currentCalcLevel === 2) { // 20までのたし・ひき
+    op = Math.random() > 0.5 ? '+' : '-';
+    if (op === '+') {
+      num1 = Math.floor(Math.random() * 8) + 5;
+      num2 = Math.floor(Math.random() * 7) + 3;
+      ans = num1 + num2;
+    } else {
+      num1 = Math.floor(Math.random() * 10) + 10;
+      num2 = Math.floor(Math.random() * 8) + 2;
+      ans = num1 - num2;
+    }
+  } else { // 2・3の段の九九
+    op = '×';
+    num1 = Math.random() > 0.5 ? 2 : 3;
+    num2 = Math.floor(Math.random() * 9) + 1;
+    ans = num1 * num2;
+    speechText = `${num1} かける ${num2} は？`;
+  }
+  
+  options = [ans, ans + 1, ans - 1, ans + 2].filter(v => v >= 0);
+  options = [...new Set(options)].slice(0, 4).sort(() => 0.5 - Math.random());
+  
+  return { num1, num2, op, ans, options, speechText };
+}
+
+/* ①＆② 計算問題のヒント構造（引き算：四角枠内に引かれる数全体＋引く数ぶん❌） */
+function renderMathCalcQuestion(container, q) {
+  currentQuestionBerryEmoji = berryEmojis[Math.floor(Math.random() * berryEmojis.length)];
+  let hintHtml = "";
+
+  if (q.op === '+') {
+    let group1 = `<div class="fruit-grid-5">${currentQuestionBerryEmoji.repeat(q.num1).split('').map(e=>`<span>${e}</span>`).join('')}</div>`;
+    let group2 = `<div class="fruit-grid-5">${currentQuestionBerryEmoji.repeat(q.num2).split('').map(e=>`<span>${e}</span>`).join('')}</div>`;
+    hintHtml = `${group1} <span style="font-size:1.8rem; font-weight:900; color:var(--primary-shadow); margin:0 6px;">＋</span> ${group2}`;
+  } else if (q.op === '-') {
+    let stayCount = q.num1 - q.num2;
+    let berriesHtml = "";
+    for(let i = 0; i < stayCount; i++) berriesHtml += `<span>${currentQuestionBerryEmoji}</span>`;
+    for(let i = 0; i < q.num2; i++) berriesHtml += `<span class="fruit-minus">${currentQuestionBerryEmoji}</span>`;
+    
+    hintHtml = `<div class="fruit-box-frame"><div class="fruit-grid-5">${berriesHtml}</div></div>`;
+  } else {
+    let groupsHtml = "";
+    for(let i=0; i<q.num2; i++) {
+      groupsHtml += `<div style="display:inline-block; border:2px dashed #FFB300; border-radius:12px; padding:4px 8px; margin:3px; background:rgba(255,255,255,0.9); font-size:1.5rem;">${currentQuestionBerryEmoji.repeat(q.num1)}</div>`;
+    }
+    hintHtml = `<div style="text-align:center;">${groupsHtml}</div>`;
+  }
+
+  container.innerHTML = `
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+      <p style="font-size:1.1rem; font-weight:800; margin:0;">こたえは いくつかな？</p>
+      <button class="voice-btn" id="math-voice-btn">🔊</button>
+    </div>
+    <div class="math-expr">${q.num1} ${q.op} ${q.num2} = ？</div>
+    <div class="fruit-hint-area">${hintHtml}</div>
+    <div class="options-grid" id="math-opts"></div>
+  `;
+
+  const voiceText = q.op === '×' ? q.speechText : `${q.num1} ${q.op === '+' ? 'たす' : 'ひく'} ${q.num2} は？`;
+  document.getElementById('math-voice-btn').onclick = () => speakJapaneseVoice(voiceText);
+
+  const optsGrid = document.getElementById('math-opts');
+  q.options.forEach(opt => {
+    const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
+    btn.onclick = () => checkAnswer(opt === q.ans, q.ans, true);
+    optsGrid.appendChild(btn);
+  });
+
+  setTimeout(() => { document.getElementById('math-voice-btn').click(); }, 300);
+}
+
+/* 生活クイズ生成（時計・お金・バー比較） */
+function generateLifeQuestion(container) {
+  const types = ['clock', 'money', 'bar'];
+  const type = types[currentQIndex % types.length];
+  
+  if (type === 'clock') {
+    const hour = Math.floor(Math.random() * 12) + 1;
+    const deg = hour * 30;
+    container.innerHTML = `
+      <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+        <p style="font-size:1.1rem; font-weight:800; margin:0;">なんじ かな？</p>
+        <button class="voice-btn" onclick="speakJapaneseVoice('${hour}じ')">🔊</button>
+      </div>
+      <div class="clock-face">
+        <div class="clock-center"></div>
+        <div class="clock-hand hand-hour" style="transform: rotate(${deg}deg);"></div>
+        <div class="clock-hand hand-minute" style="transform: rotate(0deg);"></div>
+      </div>
+      <div class="options-grid" id="q-opts"></div>
+    `;
+    renderOptions(container, `${hour}じ`, [`${hour}じ`, `${(hour%12)+1}じ`, `${hour===1?12:hour-1}じ`, `${(hour+2)%12||12}じ`]);
+    speakJapaneseVoice(`${hour}じ`);
+  } 
+  else if (type === 'money') {
+    const coinTypes = [
+      { val: 1, class: 'coin-1', label: '1' },
+      { val: 5, class: 'coin-5', label: '5' },
+      { val: 10, class: 'coin-10', label: '10' },
+      { val: 50, class: 'coin-50', label: '50' },
+      { val: 100, class: 'coin-100', label: '100' },
+      { val: 500, class: 'coin-500', label: '500' }
+    ];
+    
+    const selectedCoins = [];
+    const count = Math.floor(Math.random() * 3) + 2;
+    let total = 0;
+    for(let i=0; i<count; i++) {
+      const coin = coinTypes[Math.floor(Math.random() * coinTypes.length)];
+      selectedCoins.push(coin);
+      total += coin.val;
+    }
+    
+    let coinsHtml = '<div class="coin-container">';
+    selectedCoins.forEach(c => {
+      coinsHtml += `<div class="coin ${c.class}">${c.label}</div>`;
+    });
+    coinsHtml += '</div>';
+
+    container.innerHTML = `
+      <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+        <p style="font-size:1.1rem; font-weight:800; margin:0;">ぜんぶで いくら かな？</p>
+        <button class="voice-btn" onclick="speakJapaneseVoice('ぜんぶで いくらかな')">🔊</button>
+      </div>
+      ${coinsHtml}
+      <div class="options-grid" id="q-opts"></div>
+    `;
+    renderOptions(container, `${total}えん`, [`${total}えん`, `${total+5}えん`, `${total+10}えん`, `${Math.max(1, total-5)}えん`]);
+    speakJapaneseVoice('ぜんぶで いくらかな');
+  }
+  else {
+    const lenA = Math.floor(Math.random() * 60) + 30;
+    const lenB = Math.floor(Math.random() * 60) + 30;
+    if (lenA === lenB) return generateLifeQuestion(container);
+    
+    const isALonger = lenA > lenB;
+    const correctAns = isALonger ? "あかい ほう" : "あおい ほう";
+
+    container.innerHTML = `
+      <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+        <p style="font-size:1.1rem; font-weight:800; margin:0;">ながい ほうは どちらかな？</p>
+        <button class="voice-btn" onclick="speakJapaneseVoice('ながい ほうは どちらかな')">🔊</button>
+      </div>
+      <div class="bar-compare-box">
+        <div class="bar-item"><span class="bar-label">あか:</span><div class="bar-track"><div class="bar-fill color-a" style="width:${lenA}%;"></div></div></div>
+        <div class="bar-item"><span class="bar-label">あお:</span><div class="bar-track"><div class="bar-fill color-b" style="width:${lenB}%;"></div></div></div>
+      </div>
+      <div class="options-grid" id="q-opts"></div>
+    `;
+    renderOptions(container, correctAns, ["あかい ほう", "あおい ほう"]);
+    speakJapaneseVoice('ながい ほうは どちらかな');
+  }
+}
+
+function renderOptions(container, correctAns, options) {
+  const optsGrid = container.querySelector('#q-opts');
+  options.sort(() => 0.5 - Math.random()).forEach(opt => {
+    const btn = document.createElement('div');
+    btn.className = 'option-btn';
+    btn.innerText = opt;
+    btn.onclick = () => checkAnswer(String(opt) === String(correctAns), correctAns, false);
+    optsGrid.appendChild(btn);
+  });
+}
+
+/* 確実な日本語音声読み上げ */
+function speakJapaneseVoice(text) {
+  if (!text) return;
+  window.speechSynthesis.cancel();
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.lang = 'ja-JP';
+  if (synthVoices.length === 0) synthVoices = window.speechSynthesis.getVoices();
+  const jaVoice = synthVoices.find(v => v.lang.startsWith('ja'));
+  if (jaVoice) msg.voice = jaVoice;
+  msg.pitch = 1.1; msg.rate = 0.85;
+  window.speechSynthesis.speak(msg);
+}
+
+/* ③ 正解画面での数値・文字列明記 */
+function checkAnswer(isCorrect, ansText, isCalc = false) {
+  const overlay = document.getElementById('feedback-overlay'), icon = document.getElementById('feedback-icon'), text = document.getElementById('feedback-text');
+  
+  if (isCorrect) {
+    icon.innerText = "⭕"; icon.style.color = "var(--correct)";
+    text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span style="font-size:1.8rem; color:var(--primary-shadow); display:block; margin-top:10px;">せいかい：${ansText}</span>`;
+    text.style.color = "var(--correct)";
+    speakJapaneseVoice("せいかい！やったね！");
+  } else {
+    icon.innerText = "❌"; icon.style.color = "var(--incorrect)";
+    text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.4rem; color:#666; display:block; margin-top:10px;">せいかいは：</span><span style="font-size:1.8rem; color:var(--primary-shadow); display:block;">${ansText}</span>`;
+    text.style.color = "var(--incorrect)";
+    speakJapaneseVoice("ざんね
