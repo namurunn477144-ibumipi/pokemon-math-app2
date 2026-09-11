@@ -66,7 +66,7 @@
     @keyframes chew { 0% { transform: scale(1); } 25% { transform: scale(1.15) rotate(-5deg); } 50% { transform: scale(0.95) rotate(5deg); } 75% { transform: scale(1.1) rotate(-3deg); } 100% { transform: scale(1); } }
     .anim-chew { animation: chew 0.5s ease-in-out !important; }
     
-    .eating-msg { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-size: 1.4rem; color: #FF5722; font-weight: 900; opacity: 0; pointer-events: none; text-shadow: 2px 2px 0 #FFF; transition: all 0.3s; z-index: 20; white-space: nowrap; }
+    .eating-msg { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 1.4rem; color: #FF5722; font-weight: 900; opacity: 0; pointer-events: none; text-shadow: 2px 2px 0 #FFF; transition: all 0.3s; z-index: 30; white-space: nowrap; }
     .flying-food { position: fixed; font-size: 2.2rem; z-index: 1000; transition: all 0.5s cubic-bezier(0.5, -0.5, 1, 1); pointer-events: none; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
     .effect-anim { position: absolute; font-size: 2rem; bottom: 40%; opacity: 0; animation: floatUpEffect 1s ease-out; pointer-events: none; z-index: 15; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
     @keyframes floatUpEffect { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-60px) scale(1.5) rotate(15deg); opacity: 0; } }
@@ -78,7 +78,7 @@
     .exp-bar-bg { background-color: rgba(0,0,0,0.1); border-radius: 15px; height: 24px; overflow: hidden; border: 3px solid #FFF; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
     .exp-bar-fill { background: var(--primary); height: 100%; width: 0%; border-radius: 10px; transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     
-    /* ごはんボックス (生活モード用) */
+    /* ごはんボックス */
     .food-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 15px; }
     .food-header h3 { margin: 0 0 5px 0; font-size: 1.2rem; text-align: center; color: var(--primary-shadow); }
     .food-header p { margin: 0; font-size: 0.85rem; color: var(--text-main); text-align: center; }
@@ -110,26 +110,32 @@
     
     .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
     
-    /* きのみ・グリッドレイアウト */
-    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 12px; margin: 10px 0; min-height: 85px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 15px; }
-    .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; justify-items: center; align-items: center; font-size: 1.8rem; width: 100%; max-width: 180px; }
+    /* 見切れ防止調整済み：きのみグリッド */
+    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 10px; margin: 10px 0; min-height: 90px; display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 10px; overflow: visible; }
+    .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; justify-items: center; align-items: center; font-size: 1.6rem; width: 100%; max-width: 170px; }
     .fruit-minus { opacity: 0.3; position: relative; }
-    .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1.1rem; opacity: 1; }
+    .fruit-minus::after { content: '❌'; position: absolute; top: -5px; left: 0; font-size: 1rem; opacity: 1; }
     
-    /* CSS時計描画 */
+    /* CSS時計 */
     .clock-face { width: 120px; height: 120px; border: 6px solid #1A237E; border-radius: 50%; background: #FFF; position: relative; margin: 10px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
     .clock-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; }
     .hand-hour { width: 6px; height: 35px; background: #F44336; margin-left: -3px; z-index: 2; }
     .hand-minute { width: 4px; height: 48px; background: #1976D2; margin-left: -2px; z-index: 1; }
     .clock-center { width: 10px; height: 10px; background: #333; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
 
-    /* CSSコイン（お金）描画 */
+    /* CSSコイン */
     .coin-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 10px 0; }
     .coin-10 { width: 45px; height: 45px; background: radial-gradient(circle, #D7CCC8 0%, #8D6E63 100%); border: 3px solid #5D4037; border-radius: 50%; color: #FFF; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; text-shadow: 1px 1px 2px #000; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
     .coin-1 { width: 35px; height: 35px; background: radial-gradient(circle, #FFFFFF 0%, #B0BEC5 100%); border: 2px solid #78909C; border-radius: 50%; color: #37474F; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-    /* 方眼グリッド */
-    .grid-paper { background-size: 20px 20px; background-image: linear-gradient(to right, #E0E0E0 1px, transparent 1px), linear-gradient(to bottom, #E0E0E0 1px, transparent 1px); border: 2px solid #9E9E9E; border-radius: 12px; padding: 10px; margin: 10px 0; background-color: #FFF; }
+    /* バー比較表示（くらべてみよう用） */
+    .bar-compare-box { display: flex; flex-direction: column; gap: 12px; margin: 15px 0; padding: 12px; background: #FFF; border-radius: 16px; border: 2px solid #E0E0E0; }
+    .bar-item { display: flex; align-items: center; gap: 10px; }
+    .bar-label { font-size: 1.5rem; font-weight: 900; width: 30px; text-align: center; }
+    .bar-track { flex: 1; height: 28px; background: #F5F5F5; border-radius: 14px; overflow: hidden; border: 2px solid #DDD; }
+    .bar-fill { height: 100%; border-radius: 12px; transition: width 0.3s; }
+    .bar-fill.color-a { background: linear-gradient(90deg, #FF7043, #FF9800); }
+    .bar-fill.color-b { background: linear-gradient(90deg, #42A5F5, #26C6DA); }
 
     .math-expr { font-size: 2.5rem; font-weight: 900; color: #2E7D32; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
     .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
@@ -165,7 +171,7 @@
       <div id="poke-comment-room" class="poke-comment">がんばろうね！</div>
       <img id="partner-image-room" class="partner-image" src="" alt="パートナー">
       <div id="eating-msg-room" class="eating-msg">もぐもぐ♪</div>
-      <h2 id="partner-name-room" class="partner-name">ポケモン</h2>
+      <h2 id="partner-name-room" class="partner-name">ゴンベ</h2>
     </div>
     <div class="status-board">
       <div class="exp-header"><span id="exp-label" class="exp-label">たべた きのみ</span><span class="exp-value"><span id="exp-text">0</span><span id="exp-unit"> / 100こ</span></span></div>
@@ -190,7 +196,7 @@
     <div class="action-buttons">
       <button id="start-quiz-btn" class="btn btn-primary btn-large">けいさんクイズ (4もん)</button>
       <button id="mode-toggle-btn" class="btn btn-outline btn-large" style="margin-top:5px;">🔄 せいかつモードにきりかえ</button>
-      <button id="reset-game-btn" class="btn btn-danger btn-large" style="margin-top:5px; display:none;">あたらしいポケモンとあそぶ🔄</button>
+      <button id="reset-game-btn" class="btn btn-danger btn-large" style="margin-top:5px; display:none;">ゴンベともういちどあそぶ🔄</button>
     </div>
   </div>
 
@@ -223,21 +229,8 @@
 </div>
 
 <script>
-  // けいさんモード用：12種類のポケモン
-const calcPokemonFamilies = [
-  { stage0: {id: 446, name: "ゴンベ"}, stage1: {id: 143, name: "カビゴン"} },
-  { stage0: {id: 79, name: "ヤドン"}, stage1: {id: 199, name: "ヤドキング"} },
-  { stage0: {id: 54, name: "コダック"}, stage1: {id: 55, name: "ゴルダック"} },
-  { stage0: {id: 90, name: "シェルダー"}, stage1: {id: 91, name: "パルシェン"} },
-  { stage0: {id: 877, name: "モルペコ"}, stage1: {id: 877, name: "モルペコ(まんぷく)"} },
-  { stage0: {id: 109, name: "ドガース"}, stage1: {id: 110, name: "マタドガス"} },
-  { stage0: {id: 23, name: "アーボ"}, stage1: {id: 24, name: "アーボック"} },
-  { stage0: {id: 360, name: "ソーナノ"}, stage1: {id: 202, name: "ソーナンス"} },
-  { stage0: {id: 52, name: "ニャース"}, stage1: {id: 53, name: "ペルシアン"} },
-  { stage0: {id: 439, name: "マネネ"}, stage1: {id: 122, name: "バリヤード"} },
-  { stage0: {id: 300, name: "エネコ"}, stage1: {id: 301, name: "エネコロロ"} },
-  { stage0: {id: 447, name: "リオル"}, stage1: {id: 448, name: "ルカリオ"} }
-];
+  // 計算クイズ専用パートナー：ゴンベ（446） -> カビゴン（143）固定
+const gonbeFamily = { stage0: {id: 446, name: "ゴンベ"}, stage1: {id: 143, name: "カビゴン"} };
 
 // せいかつモード用：イーブイ（133）とその進化系
 const eeveeEvolutions = [
@@ -278,18 +271,20 @@ const clockData = [
   { hour: 9, minute: 0, ans: "9じ", options: ["9じ", "8じ", "10じ", "9じはん"] }
 ];
 
+// 読み上げ前にカッコをカットするように改善
 const shapeData = [
-  { text: "さんかく（🔺）は どれかな？", ans: "🔺", options: ["🔺", "🔴", "🟦", "⭐"] },
-  { text: "しかく（🟦）は どれかな？", ans: "🟦", options: ["🟦", "🔴", "🔺", "💎"] },
-  { text: "まる（🔴）は どれかな？", ans: "🔴", options: ["🔴", "🟦", "🔺", "⭐"] },
-  { text: "つみき（📦）は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦<br>📦📦</div>", ans: "4こ", options: ["4こ", "3こ", "5こ", "6こ"] },
-  { text: "つみき（📦）は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦</div>", ans: "3こ", options: ["3こ", "2こ", "4こ", "5こ"] }
+  { text: "さんかく は どれかな？", ans: "🔺", options: ["🔺", "🔴", "🟦", "⭐"] },
+  { text: "しかく は どれかな？", ans: "🟦", options: ["🟦", "🔴", "🔺", "💎"] },
+  { text: "まる は どれかな？", ans: "🔴", options: ["🔴", "🟦", "🔺", "⭐"] },
+  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦<br>📦📦</div>", ans: "4こ", options: ["4こ", "3こ", "5こ", "6こ"] },
+  { text: "つみき は ぜんぶで なんこ？", html: "<div style='font-size:2.5rem;'>📦📦📦</div>", ans: "3こ", options: ["3こ", "2こ", "4こ", "5こ"] }
 ];
 
+// CSSバー比較に完全リニューアル！
 const compareData = [
-  { text: "ながい えんぴつは どちらかな？", html: "<div class='grid-paper'><div style='text-align:left; font-size:1.5rem;'>A: ✏️✏️✏️✏️</div><div style='text-align:left; font-size:1.5rem; margin-top:5px;'>B: ✏️✏️</div></div>", ans: "A", options: ["A", "B"] },
-  { text: "ひろい おへやは どちらかな？", html: "<div class='grid-paper'><div style='text-align:left; font-size:1.5rem;'>A: 🟩🟩🟩</div><div style='text-align:left; font-size:1.5rem; margin-top:5px;'>B: 🟩🟩🟩🟩🟩</div></div>", ans: "B", options: ["A", "B"] },
-  { text: "みずが たくさん はいっているのは？", html: "<div style='display:flex; justify-content:center; gap:20px; font-size:2.5rem;'><div>A 🥛</div><div>B 🥛🥛🥛</div></div>", ans: "B", options: ["A", "B"] }
+  { text: "ながい 方は どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 85%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 40%;'></div></div></div></div>", ans: "A", options: ["A", "B"] },
+  { text: "ながい 方は どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 30%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 90%;'></div></div></div></div>", ans: "B", options: ["A", "B"] },
+  { text: "おおい 方は どちらかな？", html: "<div class='bar-compare-box'><div class='bar-item'><div class='bar-label'>A</div><div class='bar-track'><div class='bar-fill color-a' style='width: 75%;'></div></div></div><div class='bar-item'><div class='bar-label'>B</div><div class='bar-track'><div class='bar-fill color-b' style='width: 25%;'></div></div></div></div>", ans: "A", options: ["A", "B"] }
 ];
 
 const moneyData = [
@@ -354,8 +349,8 @@ function generateCalcQuestion() {
 }
   function getPokemonImageUrl(id) { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`; }
 
-let isLifeMode = false; // false: けいさん, true: せいかつ
-let calcState = { totalBerries: 0, isEvolved: false, familyIdx: 0 };
+let isLifeMode = false; // false: けいさん (ゴンベ), true: せいかつ (イーブイ)
+let calcState = { totalBerries: 0, isEvolved: false };
 let lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
 let currentQuestionBerryEmoji = "🍎";
 
@@ -370,7 +365,7 @@ const partnerStage = document.getElementById('partner-stage');
 const quizPartnerStage = document.getElementById('quiz-partner-stage');
 
 function initCalcGame() {
-  calcState = { totalBerries: 0, isEvolved: false, familyIdx: Math.floor(Math.random() * calcPokemonFamilies.length) };
+  calcState = { totalBerries: 0, isEvolved: false };
 }
 function initLifeGame() {
   lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
@@ -379,8 +374,7 @@ function initLifeGame() {
 
 function getCurrentPoke() {
   if (!isLifeMode) {
-    const family = calcPokemonFamilies[calcState.familyIdx];
-    return calcState.isEvolved ? family.stage1 : family.stage0;
+    return calcState.isEvolved ? gonbeFamily.stage1 : gonbeFamily.stage0;
   } else {
     return { id: lifeState.partnerId, name: lifeState.partnerName };
   }
@@ -578,7 +572,7 @@ document.getElementById('mode-toggle-btn').onclick = () => {
     document.getElementById('start-quiz-btn').innerText = "けいさんクイズ (4もん)";
     document.getElementById('mode-toggle-btn').innerHTML = "🔄 せいかつモードにきりかえ";
     document.getElementById('mode-select-section').style.display = "block";
-    resetGameBtn.innerText = "あたらしいポケモンとあそぶ🔄";
+    resetGameBtn.innerText = "ゴンベともういちどあそぶ🔄";
   } else {
     document.body.classList.add('mode-life');
     document.getElementById('main-title').innerText = "さんすう せいかつクイズ";
@@ -596,7 +590,6 @@ let currentQuestionData = null;
 document.getElementById('start-quiz-btn').onclick = () => {
   roomView.classList.add('hidden'); quizView.classList.remove('hidden'); currentQIndex = 0;
   
-  // 生活モードでは問題画面のポケモンを非表示にしてスッキリ！
   if (isLifeMode) {
     quizPartnerStage.style.display = "none";
   } else {
@@ -614,8 +607,7 @@ function showNextQuestion() {
     if (!isLifeMode) {
       if (calcState.totalBerries >= 100 && !calcState.isEvolved) {
         calcState.isEvolved = true;
-        const targetPoke = calcPokemonFamilies[calcState.familyIdx].stage1;
-        setTimeout(() => evolvePoke(targetPoke), 300);
+        setTimeout(() => evolvePoke(gonbeFamily.stage1), 300);
       }
     } else {
       lifeState.keys++;
@@ -735,7 +727,11 @@ function renderLifeCardQuestion(container, dataList, titleText) {
     <div class="options-grid" id="life-opts"></div>
   `;
 
-  document.getElementById('life-voice-btn').onclick = () => speakJapaneseVoice(q.text);
+  // 読み上げ前にカッコや絵文字を自動除去
+  document.getElementById('life-voice-btn').onclick = () => {
+    let cleanText = q.text.replace(/（[^）]*）/g, '').replace(/[\u1F600-\u1F64F\u1F300-\u1F5FF\u1F680-\u1F6FF\u2600-\u26FF\u2700-\u27BF]/g, '');
+    speakJapaneseVoice(cleanText);
+  };
 
   const optsGrid = document.getElementById('life-opts');
   q.options.slice().sort(() => 0.5 - Math.random()).forEach(opt => {
@@ -748,11 +744,23 @@ function renderLifeCardQuestion(container, dataList, titleText) {
 }
 
 function speakJapaneseVoice(text) {
+  if (!text) return;
   const msg = new SpeechSynthesisUtterance(text); msg.lang = 'ja-JP';
   if (synthVoices.length === 0) synthVoices = window.speechSynthesis.getVoices();
   const jaVoice = synthVoices.find(v => v.lang.startsWith('ja'));
   if (jaVoice) msg.voice = jaVoice;
   msg.pitch = 1.1; msg.rate = 0.9;
+  window.speechSynthesis.speak(msg);
+}
+
+// 英語ボイス対応
+function speakEnglishVoice(text) {
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.lang = 'en-US';
+  if (synthVoices.length === 0) synthVoices = window.speechSynthesis.getVoices();
+  const enVoice = synthVoices.find(v => v.lang.startsWith('en'));
+  if (enVoice) msg.voice = enVoice;
+  msg.pitch = 1.1; msg.rate = 0.8;
   window.speechSynthesis.speak(msg);
 }
 
@@ -763,12 +771,18 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     icon.innerText = "⭕"; icon.style.color = "var(--correct)";
     text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span style="font-size:1.4rem; color:var(--primary-shadow); display:block; margin-top:10px;">せいかい：${ansText}</span>`;
     text.style.color = "var(--correct)";
-    speakJapaneseVoice(correctVoices[Math.floor(Math.random() * correctVoices.length)]);
+    
+    const voice = correctVoices[Math.floor(Math.random() * correctVoices.length)];
+    if (/[a-zA-Z]/.test(voice)) speakEnglishVoice(voice);
+    else speakJapaneseVoice(voice);
   } else {
     icon.innerText = "❌"; icon.style.color = "var(--incorrect)";
     text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.2rem; color:#666; display:block; margin-top:10px;">せいかいは：${ansText}</span>`;
     text.style.color = "var(--incorrect)";
-    speakJapaneseVoice(incorrectVoices[Math.floor(Math.random() * incorrectVoices.length)]);
+    
+    const voice = incorrectVoices[Math.floor(Math.random() * incorrectVoices.length)];
+    if (/[a-zA-Z]/.test(voice)) speakEnglishVoice(voice);
+    else speakJapaneseVoice(voice);
   }
   
   overlay.classList.add('show');
