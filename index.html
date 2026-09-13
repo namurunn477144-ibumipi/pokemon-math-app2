@@ -747,7 +747,7 @@ function renderMathCalcQuestion(container, q) {
 
   document.getElementById('math-voice-btn').onclick = () => {
     if (q.op === '×' && q.speechText) speakJapaneseVoice(q.speechText);
-    else speakJapaneseVoice(`${q.num1} ${q.op === '+' ? 'たす' : 'ひく'} ${q.num2} は？`);
+    else speakJapaneseVoice(`${q.num1} ${q.op === '+' ? 'たす' : 'ひく'} ${q.num2} わ？`); // 「は」を「わ」に変更！
   };
 
   const optsGrid = document.getElementById('math-opts');
