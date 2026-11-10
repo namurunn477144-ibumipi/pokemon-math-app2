@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>さんすうクイズ - いぶちゃん＆みーちゃん</title>
   <meta name="color-scheme" content="only light">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="さんすう">
   <meta name="theme-color" content="#38C6EE">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -397,6 +403,13 @@
     .question-emoji { font-size: 4rem; margin: 6px 0 0; }
     .mic-btn { width: 88px; height: 88px; font-size: 2.6rem; margin: 8px auto 4px; }
     .question-word.big { margin: 8px 0 2px; }
+    /* ---------- ポケモンを タップした ときの えんしゅつ ---------- */
+    .emote { position: fixed; z-index: 1003; width: 48px; height: 48px; padding: 9px; border-radius: 50%; background: #FFF; box-shadow: 0 8px 18px var(--shadow); pointer-events: none; }
+    .emote::after { content: ''; position: absolute; left: 6px; bottom: 0; width: 12px; height: 12px; background: #FFF; transform: rotate(45deg); border-radius: 2px; }
+    .emote svg { position: relative; z-index: 1; display: block; width: 100%; height: 100%; }
+    .tap-ripple { position: fixed; z-index: 1002; width: 70px; height: 70px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.95); box-shadow: 0 0 14px rgba(255,255,255,0.9), inset 0 0 10px rgba(255,255,255,0.6); pointer-events: none; }
+    .tap-ripple.sound { width: 150px; height: 150px; border: 3px solid var(--accent); box-shadow: none; }
+    .float-note { position: fixed; z-index: 1003; font-size: 2rem; font-weight: 900; pointer-events: none; text-shadow: 0 2px 0 #FFF, 0 0 8px #FFF; }
   </style>
 </head>
 <body>
@@ -1057,31 +1070,146 @@ function renderRoom() {
   }
 }
 
-let commentTimeout = null;
-function interactPokemon(type) {
-  const commentBox = document.getElementById(`poke-comment-${type}`);
-  const pokeImg = document.getElementById(`partner-image-${type}`);
-  if (!commentBox || !pokeImg) return;
-  
-  if (commentBox.style.opacity === "1") { commentBox.style.opacity = "0"; clearTimeout(commentTimeout); return; }
-  if (pokeImg.classList.contains('anim-jump') || pokeImg.classList.contains('anim-spin') || pokeImg.classList.contains('anim-shake') || pokeImg.classList.contains('anim-chew')) return;
-  
-  commentBox.innerText = pokeComments[Math.floor(Math.random() * pokeComments.length)];
-  commentBox.style.opacity = "1";
-  commentTimeout = setTimeout(() => { commentBox.style.opacity = "0"; }, 3000);
-  
-  const rand = Math.floor(Math.random() * 5);
-  if (rand === 0) { pokeImg.classList.add('anim-jump'); setTimeout(() => pokeImg.classList.remove('anim-jump'), 400); }
-  else if (rand === 1) { pokeImg.classList.add('anim-spin'); setTimeout(() => pokeImg.classList.remove('anim-spin'), 500); }
-  else if (rand === 2) { pokeImg.classList.add('anim-shake'); setTimeout(() => pokeImg.classList.remove('anim-shake'), 400); }
-  else if (rand === 3) { spawnEffects(type); pokeImg.classList.add('anim-jump'); setTimeout(() => pokeImg.classList.remove('anim-jump'), 400); }
-  else {
-    const pokeId = getCurrentPoke().id;
-    const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pokeId}.ogg`);
-    audio.volume = 0.5; if (!isMuted) audio.play().catch(e => console.log(e));
-    pokeImg.classList.add('anim-shake'); setTimeout(() => pokeImg.classList.remove('anim-shake'), 400);
+// =========================================================
+// ▼▼ ポケモンを タップ・なでなで した ときの リアクション ▼▼
+// =========================================================
+const EMOTE_SVG = {
+  heart: '<svg viewBox="0 0 24 24"><path fill="#FF4F81" d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.2 0 3.6 1.3 4.3 2.4.7-1.1 2.1-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg>',
+  note: '<svg viewBox="0 0 24 24"><path fill="#4E8BFF" d="M9 3.5l11-2v13.2a3.3 3.3 0 1 1-2-3V6.1l-7 1.3v9.3a3.3 3.3 0 1 1-2-3z"/></svg>',
+  star: '<svg viewBox="0 0 24 24"><path fill="#FFB800" d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 16.9 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg>',
+  bang: '<svg viewBox="0 0 24 24"><rect x="9.6" y="2.5" width="4.8" height="13" rx="2.4" fill="#FF6A3D"/><circle cx="12" cy="19.5" r="2.6" fill="#FF6A3D"/></svg>'
+};
+function emote(img, kind) {
+  const r = img.getBoundingClientRect();
+  const e = document.createElement('div');
+  e.className = 'emote'; e.innerHTML = EMOTE_SVG[kind];
+  e.style.left = (r.left + r.width * 0.92) + 'px'; e.style.top = (r.top + r.height * 0.32) + 'px';
+  document.body.appendChild(e);
+  e.animate([
+    { transform: 'translate(-50%, 10px) scale(0.2)', opacity: 0 },
+    { transform: 'translate(-50%, -6px) scale(1.15)', opacity: 1, offset: 0.25 },
+    { transform: 'translate(-50%, -10px) scale(1)', opacity: 1, offset: 0.75 },
+    { transform: 'translate(-50%, -24px) scale(0.9)', opacity: 0 }
+  ], { duration: 1100, easing: 'ease-out' }).onfinish = () => e.remove();
+}
+function tapRipple(x, y, color) {
+  for (let i = 0; i < 2; i++) {
+    const r = document.createElement('div');
+    r.className = 'tap-ripple'; r.style.left = x + 'px'; r.style.top = y + 'px';
+    if (color) r.style.borderColor = color;
+    document.body.appendChild(r);
+    r.animate([{ transform: 'translate(-50%, -50%) scale(0.2)', opacity: 0.9 }, { transform: 'translate(-50%, -50%) scale(1.6)', opacity: 0 }],
+      { duration: 600, delay: i * 120, fill: 'backwards', easing: 'cubic-bezier(0.2, 0.7, 0.3, 1)' }).onfinish = () => r.remove();
   }
 }
+function soundRings(img) {
+  const c = elementCenter(img);
+  for (let i = 0; i < 3; i++) {
+    const r = document.createElement('div');
+    r.className = 'tap-ripple sound'; r.style.left = c.x + 'px'; r.style.top = c.y + 'px';
+    document.body.appendChild(r);
+    r.animate([{ transform: 'translate(-50%, -50%) scale(0.6)', opacity: 0.8 }, { transform: 'translate(-50%, -50%) scale(2.4)', opacity: 0 }],
+      { duration: 900, delay: i * 180, fill: 'backwards', easing: 'ease-out' }).onfinish = () => r.remove();
+  }
+}
+// ぷにっ ・ ぴょんぴょん ・ くるっ（ふりかえる）
+const POKE_MOVES = {
+  squish: [
+    { transform: 'scale(1, 1)' }, { transform: 'scale(1.18, 0.82) translateY(10px)', offset: 0.2 }, { transform: 'scale(0.9, 1.12) translateY(-12px)', offset: 0.45 },
+    { transform: 'scale(1.06, 0.95)', offset: 0.7 }, { transform: 'scale(1, 1)' }
+  ],
+  hop: [
+    { transform: 'translateY(0) scale(1, 1)' }, { transform: 'translateY(4px) scale(1.1, 0.9)', offset: 0.08 }, { transform: 'translateY(-34px) scale(0.95, 1.05)', offset: 0.25 },
+    { transform: 'translateY(2px) scale(1.12, 0.88)', offset: 0.45 }, { transform: 'translateY(-22px) scale(0.97, 1.03)', offset: 0.65 }, { transform: 'translateY(0) scale(1.06, 0.94)', offset: 0.85 }, { transform: 'translateY(0) scale(1, 1)' }
+  ],
+  turn: [
+    { transform: 'scaleX(1)' }, { transform: 'scaleX(-1) translateY(-8px)', offset: 0.25 }, { transform: 'scaleX(-1) translateY(-8px)', offset: 0.6 }, { transform: 'scaleX(1)' }
+  ],
+  wiggle: [
+    { transform: 'rotate(0)' }, { transform: 'rotate(-8deg) scale(1.04)', offset: 0.2 }, { transform: 'rotate(8deg) scale(1.04)', offset: 0.4 },
+    { transform: 'rotate(-6deg)', offset: 0.6 }, { transform: 'rotate(4deg)', offset: 0.8 }, { transform: 'rotate(0)' }
+  ]
+};
+function pokeMove(img, move, duration) {
+  if (img._fx) img._fx.cancel();
+  img._fx = img.animate(POKE_MOVES[move], { duration, easing: 'ease-in-out' });
+  return img._fx;
+}
+function playCry(id, volume = 0.5) {
+  if (isMuted) return;
+  try { const a = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`); a.volume = volume; a.play().catch(() => {}); } catch (e) {}
+}
+// タップ リアクション（4しゅるいから ランダム）
+let lastPokeReaction = '';
+function pokeReaction(img, point, pokeId) {
+  const c = elementCenter(img);
+  const x = point ? point.x : c.x, y = point ? point.y : c.y;
+  tapRipple(x, y);
+  const kinds = ['love', 'hop', 'turn', 'cry'].filter(k => k !== lastPokeReaction);
+  const k = kinds[Math.floor(Math.random() * kinds.length)];
+  lastPokeReaction = k;
+  if (k === 'love') {
+    pokeMove(img, 'squish', 650); emote(img, 'heart'); sfx('boing');
+    burst(x, y - 10, { count: 9, spread: 80, shapes: ['heart'], colors: ['#FF6B9A', '#FF8FB1', '#FF4F81'] });
+  } else if (k === 'hop') {
+    pokeMove(img, 'hop', 900); emote(img, 'note'); sfx('hop');
+    setTimeout(() => { const cc = elementCenter(img); floatNotes(cc.x, cc.y - 30); }, 150);
+  } else if (k === 'turn') {
+    pokeMove(img, 'turn', 900); emote(img, 'star'); sfx('twinkle');
+    burst(c.x, c.y - 20, { count: 10, spread: 100, shapes: ['star'], colors: ['#FFD23F', '#FFB800', '#FFF0A0'] });
+  } else {
+    pokeMove(img, 'wiggle', 700); emote(img, 'bang'); soundRings(img); playCry(pokeId);
+  }
+}
+function floatNotes(x, y) {
+  ['♪', '♫', '♪'].forEach((t, i) => {
+    const n = document.createElement('div');
+    n.className = 'float-note'; n.innerText = t; n.style.left = (x + (i - 1) * 30) + 'px'; n.style.top = y + 'px';
+    n.style.color = ['#4E8BFF', '#B05CFF', '#FF6A3D'][i];
+    document.body.appendChild(n);
+    n.animate([{ transform: 'translate(-50%, 0) scale(0.4)', opacity: 0 }, { transform: 'translate(-50%, -20px) scale(1.1)', opacity: 1, offset: 0.3 }, { transform: `translate(calc(-50% + ${(i - 1) * 14}px), -70px) rotate(${(i - 1) * 20}deg)`, opacity: 0 }],
+      { duration: 1100, delay: i * 120, fill: 'backwards', easing: 'ease-out' }).onfinish = () => n.remove();
+  });
+}
+// なでなで：ポケモンの うえで ゆびを うごかすと ハートが でて、たくさん なでると よろこぶ
+function setupPetting(stage, getImg, getPokeId, sayFn) {
+  let down = false, moved = 0, lastX = 0, lastY = 0, lastHeart = 0, done = false;
+  stage.addEventListener('pointerdown', (e) => { down = true; moved = 0; done = false; lastX = e.clientX; lastY = e.clientY; stage._lastPoint = { x: e.clientX, y: e.clientY }; stage._petted = false; });
+  stage.addEventListener('pointermove', (e) => {
+    if (!down) return;
+    const d = Math.hypot(e.clientX - lastX, e.clientY - lastY);
+    lastX = e.clientX; lastY = e.clientY; moved += d;
+    if (moved > 24) stage._petted = true;
+    const now = Date.now();
+    if (stage._petted && now - lastHeart > 110) {
+      lastHeart = now;
+      burst(e.clientX, e.clientY - 10, { count: 2, spread: 40, shapes: ['heart'], colors: ['#FF6B9A', '#FF8FB1'] });
+    }
+    if (!done && moved > 420) {
+      done = true;
+      const img = getImg();
+      pokeMove(img, 'hop', 900); emote(img, 'heart'); sfx('twinkle');
+      if (sayFn) sayFn('きもちいい〜！');
+    }
+  });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => stage.addEventListener(t, () => { down = false; }));
+  stage.style.touchAction = 'none'; // なでなでで がめんが スクロールしないように
+}
+// =========================================================
+
+let commentTimeout = null;
+function showPokeComment(text) {
+  const commentBox = document.getElementById('poke-comment-room');
+  commentBox.innerText = text; commentBox.style.opacity = "1";
+  clearTimeout(commentTimeout);
+  commentTimeout = setTimeout(() => { commentBox.style.opacity = "0"; }, 2200);
+}
+function interactPokemon(type) {
+  if (partnerStage._petted) { partnerStage._petted = false; return; } // なでなでの あとは タップ あつかいに しない
+  showPokeComment(pokeComments[Math.floor(Math.random() * pokeComments.length)]);
+  pokeReaction(document.getElementById('partner-image-room'), partnerStage._lastPoint, getCurrentPoke().id);
+}
+setupPetting(partnerStage, () => document.getElementById('partner-image-room'), () => getCurrentPoke().id, showPokeComment);
 
 // =========================================================
 // ▼▼ えんしゅつ（つぶつぶ・かみふぶき・こうかおん）▼▼
@@ -1142,6 +1270,9 @@ function sfx(type) {
     if (type === 'correct') { tone(784, 784, 0, 0.12, 0.12); tone(1175, 1175, 0.1, 0.3, 0.12); }
     if (type === 'wrong') { tone(330, 220, 0, 0.35, 0.1); }
     if (type === 'levelup') { [523, 659, 784, 1047].forEach((f, i) => tone(f, f, i * 0.11, 0.22, 0.12)); tone(1319, 1568, 0.45, 0.5, 0.1, 'sine'); }
+    if (type === 'boing') { tone(260, 640, 0, 0.18, 0.12, 'sine'); tone(640, 420, 0.16, 0.14, 0.08, 'sine'); }
+    if (type === 'hop') { tone(480, 920, 0, 0.12, 0.09, 'triangle'); tone(480, 920, 0.34, 0.12, 0.09, 'triangle'); }
+    if (type === 'twinkle') { [1319, 1568, 2093].forEach((f, i) => tone(f, f, i * 0.07, 0.2, 0.07, 'sine')); }
   } catch (e) {}
 }
 // =========================================================
@@ -1747,6 +1878,11 @@ window.onload = () => {
   if (saved && saved.isLifeMode === true) document.getElementById('mode-toggle-btn').onclick(); // せいかつモードで おわっていたら もどす
   else renderRoom();
 };
+
+// ホームがめんに おける アプリに する（オフラインでも ひらける）
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
 </script>
 </body>
 </html>
