@@ -54,6 +54,39 @@
     }
 
     /* けいさんモードの えらびかた */
+
+    /* あたらしい もんだい */
+    .cmp-box { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; padding: 12px; border-radius: 18px; background: var(--option-bg); }
+    .cmp-row { display: flex; align-items: center; gap: 8px; }
+    .cmp-items { display: flex; flex-wrap: wrap; gap: 3px; }
+    .cmp-items .berry-ico { width: 26px; height: 26px; }
+    .order-row { display: flex; align-items: flex-end; justify-content: center; gap: 2px; margin: 12px 0; padding: 10px 6px; border-radius: 18px; background: var(--option-bg); }
+    .order-head { writing-mode: vertical-rl; font-size: 0.85rem; font-weight: 900; color: #FFF; background: var(--accent-2); padding: 6px 3px; border-radius: 8px; margin-right: 4px; align-self: center; }
+    .order-poke { width: calc((100% - 34px) / 5); max-width: 66px; aspect-ratio: 1; object-fit: contain; object-position: bottom; }
+    .opt-poke { width: 70px; height: 70px; object-fit: contain; }
+    .shape-svg { width: 52px; height: 52px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15)); }
+    .options-grid.two-col.three-col { grid-template-columns: repeat(3, 1fr); }
+    .pattern-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px; margin: 12px 0; padding: 12px 8px; border-radius: 18px; background: var(--option-bg); }
+    .pat-ico { width: 38px; height: 38px; object-fit: contain; }
+    .pat-num { font-family: 'Fredoka', sans-serif; font-size: 1.7rem; font-weight: 700; min-width: 1.6em; text-align: center; }
+    .pat-num::after { content: ','; color: var(--ink-soft); }
+    .pat-q { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 12px; border: 3px dashed var(--accent); color: var(--accent-ink); font-family: 'Fredoka', sans-serif; font-size: 1.5rem; font-weight: 700; }
+    .opt-berry { width: 52px; height: 52px; object-fit: contain; }
+    .place-blocks { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 4px; margin: 12px 0 6px; padding: 12px; border-radius: 18px; background: var(--option-bg); }
+    .pb-100, .pb-10, .pb-1 { display: inline-block; border-radius: 3px; background-color: #FFB84D; box-shadow: inset 0 0 0 1px rgba(160,90,0,0.5); }
+    .pb-100 { width: 44px; height: 44px; background-image: linear-gradient(rgba(160,90,0,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(160,90,0,0.35) 1px, transparent 1px); background-size: 4.4px 4.4px; }
+    .pb-10 { width: 6px; height: 44px; background-color: #4FC3F7; box-shadow: inset 0 0 0 1px rgba(0,90,140,0.5); background-image: linear-gradient(rgba(0,90,140,0.35) 1px, transparent 1px); background-size: 6px 4.4px; }
+    .pb-1 { width: 6px; height: 6px; background-color: #FF6B8B; box-shadow: inset 0 0 0 1px rgba(150,0,40,0.5); }
+    .pb-legend { display: flex; justify-content: center; gap: 14px; font-family: 'Fredoka', sans-serif; font-weight: 700; color: var(--ink-soft); font-size: 0.9rem; }
+    .pb-legend span { display: inline-flex; align-items: center; gap: 4px; }
+    .pb-legend .mini.pb-100 { width: 16px; height: 16px; background-size: 1.6px 1.6px; }
+    .pb-legend .mini.pb-10 { width: 4px; height: 16px; background-size: 4px 1.6px; }
+    .pb-legend .mini.pb-1 { width: 5px; height: 5px; }
+    .split-box { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .berry-ico.silhouette { filter: brightness(0) opacity(0.2); }
+    .hidden-group { border-style: dashed; border-color: var(--ink-soft); }
+    .split-note { font-weight: 900; color: var(--ink-soft); font-size: 0.95rem; }
+    .mode-buttons { grid-template-columns: 1fr 1fr !important; }
     .mode-select-section { width: 100%; margin-bottom: 16px; padding: 14px; border-radius: 22px; background: rgba(255,255,255,0.78); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 14px 34px var(--shadow); text-align: center; }
     .mode-select-section h3 { margin: 0 0 10px; font-size: 1.05rem; color: var(--accent-ink); }
     .mode-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -328,6 +361,9 @@
     @media (prefers-reduced-motion: reduce) {
       #partner-image, .poke-wrap img, .poke-wrap::after, .food-item.ready, .bg-deco *, .partner-stage::after, .exp-bar-fill::after, #start-quiz-btn::after { animation: none !important; }
     }
+    /* 3Dの えもじ */
+    .emo { display: inline-block; width: 1.2em; height: 1.2em; object-fit: contain; vertical-align: -0.25em; -webkit-user-drag: none; }
+    .question-emoji .emo, .opt-emoji .emo { width: 1.1em; height: 1.1em; vertical-align: middle; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.12)); }
   </style>
 </head>
 <body>
@@ -356,16 +392,17 @@
     <div id="mode-select-section" class="mode-select-section">
       <h3>けいさんモードを えらんでね</h3>
       <div class="mode-buttons">
-        <button class="btn-mode active" onclick="setMode(1)">かんたん<small>10まで ＋ −</small></button>
-        <button class="btn-mode" onclick="setMode(2)">ふつう<small>20まで ＋ −</small></button>
-        <button class="btn-mode" onclick="setMode(3)">チャレンジ<small>2・3の だん</small></button>
+        <button class="btn-mode active" data-mode="1" onclick="setMode(1)">かんたん<small>10まで ＋ −</small></button>
+        <button class="btn-mode" data-mode="2" onclick="setMode(2)">ふつう<small>20まで ＋ −</small></button>
+        <button class="btn-mode" data-mode="4" onclick="setMode(4)">いくつと いくつ<small>10までの かず</small></button>
+        <button class="btn-mode" data-mode="3" onclick="setMode(3)">チャレンジ<small>2・3の だん</small></button>
       </div>
     </div>
 
     <div class="action-buttons">
       <button id="start-quiz-btn" class="btn btn-primary btn-large">けいさんクイズ</button>
       <div class="sub-actions">
-        <button id="mode-toggle-btn" class="btn btn-outline btn-small">せいかつモード</button>
+        <button id="mode-toggle-btn" class="btn btn-outline btn-small">いろいろモード</button>
         <button id="mute-btn" class="btn btn-outline btn-small" onclick="setMuted(!isMuted)">おとを けす</button>
       </div>
       <button id="reset-game-btn" class="btn btn-danger btn-large" style="display:none;">ゴンベと もういちど あそぶ</button>
@@ -575,13 +612,183 @@ const moneyData = [
 
   let currentCalcMode = 1;
 
+// =========================================================
+// ▼▼ かずの よみかた（よみあげで「ナイン」に ならないように、すうじを ひらがなに する）▼▼
+// =========================================================
+function numToYomi(n) {
+  n = Number(n);
+  if (n === 0) return 'ぜろ';
+  if (n >= 10000) return String(n);
+  const ones = ['', 'いち', 'に', 'さん', 'よん', 'ご', 'ろく', 'なな', 'はち', 'きゅう'];
+  const hundreds = ['', 'ひゃく', 'にひゃく', 'さんびゃく', 'よんひゃく', 'ごひゃく', 'ろっぴゃく', 'ななひゃく', 'はっぴゃく', 'きゅうひゃく'];
+  const thousands = ['', 'せん', 'にせん', 'さんぜん', 'よんせん', 'ごせん', 'ろくせん', 'ななせん', 'はっせん', 'きゅうせん'];
+  const th = Math.floor(n / 1000), h = Math.floor(n % 1000 / 100), t = Math.floor(n % 100 / 10), o = n % 10;
+  return thousands[th] + hundreds[h] + (t ? (t === 1 ? '' : ones[t]) + 'じゅう' : '') + ones[o];
+}
+// ぶんしょうの なかの すうじを よみに おきかえる（「4じ」→「よじ」など じこくも）
+function yomiText(str) {
+  const jiYomi = { 4: 'よ', 7: 'しち', 9: 'く' };
+  return String(str).replace(/(\d+)(じ)?/g, (m, d, ji) => ji ? ((jiYomi[d] || numToYomi(d)) + 'じ') : numToYomi(d));
+}
+
+// =========================================================
+// ▼▼ あたらしい もんだい ▼▼
+// =========================================================
+const kidPokemon = [
+  { id: 25, name: 'ピカチュウ' }, { id: 133, name: 'イーブイ' }, { id: 393, name: 'ポッチャマ' }, { id: 7, name: 'ゼニガメ' },
+  { id: 4, name: 'ヒトカゲ' }, { id: 1, name: 'フシギダネ' }, { id: 39, name: 'プリン' }, { id: 143, name: 'カビゴン' },
+  { id: 54, name: 'コダック' }, { id: 906, name: 'ニャオハ' }, { id: 909, name: 'ホゲータ' }, { id: 912, name: 'クワッス' },
+  { id: 722, name: 'モクロー' }, { id: 175, name: 'トゲピー' }, { id: 446, name: 'ゴンベ' }, { id: 172, name: 'ピチュー' }
+];
+function pokeIconUrl(id) { return getPokemonImageUrl(id); } // うごく ドット絵（パートナーと おなじ）
+function shuffle(a) { return a.slice().sort(() => 0.5 - Math.random()); }
+function rand(min, max) { return min + Math.floor(Math.random() * (max - min + 1)); }
+function numberOptions(ans, spread = 3, min = 0) {
+  const opts = [ans];
+  let guard = 0;
+  while (opts.length < 4 && guard++ < 100) {
+    const d = ans + rand(-spread, spread);
+    if (d >= min && !opts.includes(d)) opts.push(d);
+  }
+  return shuffle(opts);
+}
+function berryImg(food, cls = 'berry-ico') { return `<img class="${cls}" src="${getBerryImageUrl(food.img)}" alt="${food.name}" draggable="false">`; }
+
+// それぞれ { title, text, html, options: [{label, html?, correct}], answerText, speech }
+const quizMakers = {
+  // どっちが おおい？
+  more() {
+    if (Math.random() < 0.6) {
+      const [fa, fb] = shuffle(allFoods).slice(0, 2);
+      let a = rand(2, 10), b = rand(2, 10); while (b === a) b = rand(2, 10);
+      const askMore = Math.random() < 0.6;
+      const ans = (askMore ? a > b : a < b) ? 'A' : 'B';
+      const row = (label, f, n) => `<div class="cmp-row"><span class="bar-label">${label}</span><div class="cmp-items">${berryImg(f).repeat(n)}</div></div>`;
+      const text = askMore ? 'きのみが おおい ほうは どっち？' : 'きのみが すくない ほうは どっち？';
+      return { title: 'どっちが おおい？', text, html: `<div class="cmp-box">${row('A', fa, a)}${row('B', fb, b)}</div>`,
+        options: ['A', 'B'].map(l => ({ label: l, correct: l === ans })), answerText: ans, speech: text, keepOrder: true };
+    }
+    let a = rand(1, 99), b = rand(1, 99); while (b === a) b = rand(1, 99);
+    const big = Math.max(a, b);
+    return { title: 'どっちが おおきい？', text: 'おおきい かずは どっち？', html: '',
+      options: [a, b].map(n => ({ label: String(n), correct: n === big })), answerText: String(big), speech: 'おおきい かずは どっち？', keepOrder: true };
+  },
+  // なんばんめ？
+  order() {
+    const row = shuffle(kidPokemon).slice(0, 5);
+    const k = rand(1, 5);
+    const rowHtml = `<div class="order-row"><span class="order-head">まえ</span>${row.map(p => `<img class="order-poke" src="${pokeIconUrl(p.id)}" alt="${p.name}">`).join('')}</div>`;
+    if (Math.random() < 0.5) {
+      const t = row[k - 1];
+      const others = shuffle(row.filter(p => p !== t)).slice(0, 3);
+      const opts = shuffle([t, ...others]).map(p => ({ label: p.name, html: `<img class="opt-poke" src="${pokeIconUrl(p.id)}" alt="${p.name}">`, correct: p === t }));
+      return { title: 'なんばんめ？', text: `まえから ${k}ばんめは どれかな？`, html: rowHtml, options: opts, answerText: t.name, speech: `まえから ${k}ばんめは どれかな？` };
+    }
+    const t = row[k - 1];
+    const opts = shuffle([1, 2, 3, 4, 5]).slice(0, 4);
+    if (!opts.includes(k)) opts[0] = k;
+    return { title: 'なんばんめ？', text: `${t.name}は まえから なんばんめ？`, html: rowHtml,
+      options: shuffle(opts).map(n => ({ label: `${n}ばんめ`, correct: n === k })), answerText: `${k}ばんめ`, speech: `${t.name}は まえから なんばんめ？` };
+  },
+  // きまり
+  pattern() {
+    if (Math.random() < 0.7) {
+      const kinds = shuffle(allFoods).slice(0, 3);
+      const pats = [[0, 1], [0, 0, 1], [0, 1, 1], [0, 1, 2]];
+      const p = pats[rand(0, pats.length - 1)];
+      const seq = []; for (let i = 0; i < 7; i++) seq.push(kinds[p[i % p.length]]);
+      const ans = seq.pop();
+      const html = `<div class="pattern-row">${seq.map(f => berryImg(f, 'pat-ico')).join('')}<span class="pat-q">?</span></div>`;
+      const opts = shuffle(kinds).map(f => ({ label: f.name, html: berryImg(f, 'opt-berry'), correct: f === ans }));
+      return { title: 'きまりを みつけよう！', text: '「?」に はいるのは どれ？', html, options: opts, answerText: ans.name, speech: 'はてなに はいるのは どれ？' };
+    }
+    const step = [1, 2, 5, 10][rand(0, 3)];
+    const start = rand(0, 5) * step;
+    const seq = [0, 1, 2, 3].map(i => start + i * step);
+    const ans = start + 4 * step;
+    return { title: 'きまりを みつけよう！', text: 'つぎに くる かずは？', html: `<div class="pattern-row num">${seq.map(n => `<span class="pat-num">${n}</span>`).join('')}<span class="pat-q">?</span></div>`,
+      options: numberOptions(ans, step * 2).map(n => ({ label: String(n), correct: n === ans })), answerText: String(ans), speech: 'つぎに くる かずは？' };
+  },
+  // 1000までの かず
+  bignum() {
+    const type = rand(0, 2);
+    if (type === 0) {
+      const h = rand(1, 9), t = rand(0, 9), o = rand(0, 9), ans = h * 100 + t * 10 + o;
+      const blocks = `<div class="place-blocks">${'<span class="pb-100"></span>'.repeat(h)}${'<span class="pb-10"></span>'.repeat(t)}${'<span class="pb-1"></span>'.repeat(o)}</div><div class="pb-legend"><span><i class="pb-100 mini"></i>100</span><span><i class="pb-10 mini"></i>10</span><span><i class="pb-1 mini"></i>1</span></div>`;
+      const opts = shuffle([ans, h * 100 + o * 10 + t, (h + 1) * 100 + t * 10 + o, h * 10 + t * 100 + o].filter((v, i, a) => a.indexOf(v) === i && v > 0 && v <= 1000));
+      while (opts.length < 4) { const d = ans + rand(-20, 20); if (!opts.includes(d) && d > 0) opts.push(d); }
+      return { title: '1000までの かず', text: 'ぜんぶで いくつ？', html: blocks, options: shuffle(opts).map(n => ({ label: String(n), correct: n === ans })), answerText: String(ans), speech: 'ぜんぶで いくつ？' };
+    }
+    if (type === 1) {
+      const base = [rand(1, 9) * 100 - 1, rand(1, 9) * 100 + rand(1, 9) * 10 - 1, rand(100, 998)][rand(0, 2)];
+      const ans = base + 1;
+      return { title: '1000までの かず', text: `${base} の つぎの かずは？`, html: '', options: numberOptions(ans, 10, 1).map(n => ({ label: String(n), correct: n === ans })), answerText: String(ans), speech: `${base} の つぎの かずは？` };
+    }
+    let a = rand(100, 999), b = Number(String(a).split('').reverse().join(''));
+    if (b === a || b < 100) b = a + rand(1, 50);
+    const big = Math.max(a, b);
+    return { title: '1000までの かず', text: 'おおきい かずは どっち？', html: '', options: [a, b].map(n => ({ label: String(n), correct: n === big })), answerText: String(big), speech: 'おおきい かずは どっち？', keepOrder: true };
+  }
+};
+
+function renderMadeQuestion(container, q) {
+  container.innerHTML = `
+    <div class="q-head">
+      <p class="q-title">${q.title}</p>
+      <button class="voice-btn" id="made-voice-btn">${ICON.speaker}</button>
+    </div>
+    <p class="question-word" style="font-size:1.4rem; margin:12px 0 4px;">${q.text}</p>
+    ${q.html}
+    <div class="options-grid two-col" id="made-opts"></div>
+  `;
+  document.getElementById('made-voice-btn').onclick = () => speakJapaneseVoice(q.speech);
+  const optsGrid = document.getElementById('made-opts');
+  if (q.options.length === 3) optsGrid.classList.add('three-col');
+  (q.keepOrder ? q.options : shuffle(q.options)).forEach(o => {
+    const btn = document.createElement('div'); btn.className = 'option-btn';
+    if (o.html) btn.innerHTML = o.html; else btn.innerText = o.label;
+    if (o.correct) btn.dataset.correct = '1';
+    btn.onclick = () => checkAnswer(o.correct, q.answerText, false);
+    optsGrid.appendChild(btn);
+  });
+  setTimeout(() => { const vb = document.getElementById('made-voice-btn'); if (vb) vb.click(); }, 300);
+}
+
+// いくつと いくつ（けいさんモードの レベル4）
+function generateSplitQuestion() {
+  const total = rand(2, 10), part = rand(1, total - 1), ans = total - part;
+  return { split: true, total, part, ans, options: numberOptions(ans, 2, 0), feedCount: total, num1: total, num2: part, op: 'split' };
+}
+function renderSplitQuestion(container, q) {
+  currentQuestionBerry = allFoods[Math.floor(Math.random() * allFoods.length)];
+  const src = getBerryImageUrl(currentQuestionBerry.img);
+  const known = `<img class="berry-ico" src="${src}" alt="">`.repeat(q.part);
+  const hidden = `<img class="berry-ico silhouette" src="${src}" alt="">`.repeat(q.ans);
+  container.innerHTML = `
+    <div class="q-head">
+      <p class="q-title">いくつと いくつ？</p>
+      <button class="voice-btn" id="math-voice-btn">${ICON.speaker}</button>
+    </div>
+    <div class="math-expr">${q.total} は ${q.part} と <span class="q-mark">?</span></div>
+    <div class="fruit-hint-area"><div class="split-box"><div class="fruit-group">${known}</div><div class="fruit-group hidden-group">${hidden}</div></div><div class="split-note">ぜんぶで ${q.total}こ</div></div>
+    <div class="options-grid two-col" id="math-opts"></div>
+  `;
+  document.getElementById('math-voice-btn').onclick = () => speakJapaneseVoice(`${q.total} わ ${q.part} と いくつ？`);
+  const optsGrid = document.getElementById('math-opts');
+  q.options.forEach(opt => {
+    const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
+    if (opt === q.ans) btn.dataset.correct = '1';
+    btn.onclick = () => checkAnswer(opt === q.ans, q.ans, true);
+    optsGrid.appendChild(btn);
+  });
+  setTimeout(() => { const vb = document.getElementById('math-voice-btn'); if (vb) vb.click(); }, 300);
+}
+// =========================================================
+
 function setMode(modeNum) {
   currentCalcMode = modeNum;
   saveCurrentProgress();
-  document.querySelectorAll('.btn-mode').forEach((btn, idx) => {
-    if(idx + 1 === modeNum) btn.classList.add('active');
-    else btn.classList.remove('active');
-  });
+  document.querySelectorAll('.btn-mode').forEach(btn => btn.classList.toggle('active', Number(btn.dataset.mode) === modeNum));
 }
 
 function generateCalcQuestion() {
@@ -702,7 +909,7 @@ function speakSequence(parts) {
 }
 function speakText(text, lang) { speakSequence([{ text, lang }]); }
 function speakEnglishVoice(text) { speakText(text, 'en'); }
-function speakJapaneseVoice(text) { speakText(text, 'ja'); }
+function speakJapaneseVoice(text) { speakText(yomiText(text), 'ja'); } // すうじは ひらがなの よみに して よむ
 // ことばの ( ___ ) を「ま」に して よむ
 function speakWithBlank(text, lang) {
   const parts = text.split('( ___ )');
@@ -1023,8 +1230,8 @@ resetGameBtn.onclick = () => {
 };
 
 function setModeButtons() {
-  document.getElementById('start-quiz-btn').innerHTML = `${ICON.play}<span>${isLifeMode ? 'せいかつクイズ' : 'けいさんクイズ'}</span><span class="btn-sub">4もん</span>`;
-  document.getElementById('mode-toggle-btn').innerHTML = `${ICON.swap}<span>${isLifeMode ? 'けいさんモード' : 'せいかつモード'}</span>`;
+  document.getElementById('start-quiz-btn').innerHTML = `${ICON.play}<span>${isLifeMode ? 'いろいろクイズ' : 'けいさんクイズ'}</span><span class="btn-sub">4もん</span>`;
+  document.getElementById('mode-toggle-btn').innerHTML = `${ICON.swap}<span>${isLifeMode ? 'けいさんモード' : 'いろいろモード'}</span>`;
   resetGameBtn.innerHTML = `${ICON.retry}<span>${isLifeMode ? 'イーブイに もどる' : 'ゴンベと もういちど あそぶ'}</span>`;
 }
 
@@ -1037,7 +1244,7 @@ document.getElementById('mode-toggle-btn').onclick = () => {
     setModeButtons();
   } else {
     document.body.classList.add('mode-life');
-    document.getElementById('main-title').innerText = "さんすう せいかつクイズ";
+    document.getElementById('main-title').innerText = "さんすう いろいろクイズ";
     document.getElementById('mode-select-section').style.display = "none";
     setModeButtons();
   }
@@ -1046,6 +1253,14 @@ document.getElementById('mode-toggle-btn').onclick = () => {
 
 let currentQIndex = 0;
 let currentQuestionData = null;
+const LIFE_CATS = ['clock', 'shape', 'compare', 'money', 'more', 'order', 'pattern', 'bignum'];
+let lifeRound = [], lastLifeRound = [];
+function pickLifeRound() {
+  const fresh = shuffle(LIFE_CATS.filter(c => !lastLifeRound.includes(c)));
+  const rest = shuffle(LIFE_CATS.filter(c => lastLifeRound.includes(c)));
+  lastLifeRound = fresh.concat(rest).slice(0, 4);
+  return lastLifeRound;
+}
 let recentCalc = [];
 
 document.getElementById('start-quiz-btn').onclick = () => {
@@ -1083,16 +1298,21 @@ function showNextQuestion() {
   if (!isLifeMode) {
     // おなじ けいさんが つづけて でないようにする
     let tries = 0;
-    do { currentQuestionData = generateCalcQuestion(); tries++; }
+    do { currentQuestionData = currentCalcMode === 4 ? generateSplitQuestion() : generateCalcQuestion(); tries++; }
     while (recentCalc.includes(`${currentQuestionData.num1}${currentQuestionData.op}${currentQuestionData.num2}`) && tries < 20);
     recentCalc.push(`${currentQuestionData.num1}${currentQuestionData.op}${currentQuestionData.num2}`);
     if (recentCalc.length > 8) recentCalc.shift();
-    renderMathCalcQuestion(contentEl, currentQuestionData);
+    if (currentQuestionData.split) renderSplitQuestion(contentEl, currentQuestionData);
+    else renderMathCalcQuestion(contentEl, currentQuestionData);
   } else {
-    if (currentQIndex === 0) renderClockQuestion(contentEl);
-    else if (currentQIndex === 1) renderLifeCardQuestion(contentEl, shapeData, "かたちクイズ！");
-    else if (currentQIndex === 2) renderLifeCardQuestion(contentEl, compareData, "くらべてみよう！");
-    else renderLifeCardQuestion(contentEl, moneyData, "いくらかな？");
+    // いろいろモード：8しゅるいの なかから 4つ えらんで だす（まえの かいと なるべく かぶらないように）
+    if (currentQIndex === 0) lifeRound = pickLifeRound();
+    const cat = lifeRound[currentQIndex];
+    if (cat === 'clock') renderClockQuestion(contentEl);
+    else if (cat === 'shape') renderLifeCardQuestion(contentEl, shapeData, "かたちクイズ！");
+    else if (cat === 'compare') renderLifeCardQuestion(contentEl, compareData, "くらべてみよう！");
+    else if (cat === 'money') renderLifeCardQuestion(contentEl, moneyData, "いくらかな？");
+    else renderMadeQuestion(contentEl, quizMakers[cat]());
   }
   buddyOnQuestion();
 }
@@ -1158,7 +1378,7 @@ function renderMathCalcQuestion(container, q) {
     optsGrid.appendChild(btn);
   });
 
-  setTimeout(() => { document.getElementById('math-voice-btn').click(); }, 300);
+  setTimeout(() => { const vb = document.getElementById('math-voice-btn'); if (vb) vb.click(); }, 300);
 }
 
 function renderClockQuestion(container) {
@@ -1199,8 +1419,23 @@ function renderClockQuestion(container) {
     optsGrid.appendChild(btn);
   });
 
-  setTimeout(() => { document.getElementById('clock-voice-btn').click(); }, 300);
+  setTimeout(() => { const vb = document.getElementById('clock-voice-btn'); if (vb) vb.click(); }, 300);
 }
+
+// かたちクイズの きほんの かたちは じぶんで かいた え（SVG）で だす
+const SHAPE_SVG = (() => {
+  const g = (id, c1, c2) => `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs>`;
+  const wrap = (inner) => `<svg class="shape-svg" viewBox="0 0 100 100" aria-hidden="true">${inner}</svg>`;
+  return {
+    '🔺': wrap(g('gt', '#FF8A8A', '#E53950') + '<path d="M50 10 L92 86 Q94 90 89 90 L11 90 Q6 90 8 86 Z" fill="url(#gt)" stroke="#C42340" stroke-width="3" stroke-linejoin="round"/>'),
+    '🔴': wrap(g('gc', '#FF8A8A', '#E53950') + '<circle cx="50" cy="50" r="40" fill="url(#gc)" stroke="#C42340" stroke-width="3"/>'),
+    '🟦': wrap(g('gs', '#7FB2FF', '#2F6BEA') + '<rect x="12" y="12" width="76" height="76" rx="8" fill="url(#gs)" stroke="#1F4FB8" stroke-width="3"/>'),
+    '⭐': wrap(g('gst', '#FFE27A', '#FFB300') + '<path d="M50 8 L61.8 35.5 L91.5 38.2 L69 57.8 L75.7 87 L50 71.8 L24.3 87 L31 57.8 L8.5 38.2 L38.2 35.5 Z" fill="url(#gst)" stroke="#E08A00" stroke-width="3" stroke-linejoin="round"/>'),
+    '🔶': wrap(g('gd', '#FFC27A', '#FF8A1F') + '<path d="M50 8 L90 50 L50 92 L10 50 Z" fill="url(#gd)" stroke="#D96A00" stroke-width="3" stroke-linejoin="round"/>'),
+    '🟡': wrap(g('gy', '#FFE98A', '#FFC400') + '<circle cx="50" cy="50" r="40" fill="url(#gy)" stroke="#D9A400" stroke-width="3"/>'),
+    '🟣': wrap(g('gp', '#C9A2FF', '#8A4FE0') + '<circle cx="50" cy="50" r="40" fill="url(#gp)" stroke="#6A35B8" stroke-width="3"/>')
+  };
+})();
 
 function renderLifeCardQuestion(container, dataList, titleText) {
   const q = pickFresh(dataList, titleText);
@@ -1233,13 +1468,14 @@ function renderLifeCardQuestion(container, dataList, titleText) {
   displayOptions.forEach(opt => {
     const btn = document.createElement('div'); btn.className = 'option-btn';
     // かたちの えもじは おおきく みせる
-    if (/\p{Extended_Pictographic}/u.test(opt)) btn.innerHTML = `<span class="opt-emoji">${opt}</span>`; else btn.innerText = opt;
+    if (SHAPE_SVG[opt]) btn.innerHTML = SHAPE_SVG[opt];
+    else if (/\p{Extended_Pictographic}/u.test(opt)) btn.innerHTML = `<span class="opt-emoji">${opt}</span>`; else btn.innerText = opt;
     if (opt === q.ans) btn.dataset.correct = '1';
     btn.onclick = () => checkAnswer(opt === q.ans, q.ans, false);
     optsGrid.appendChild(btn);
   });
 
-  setTimeout(() => { document.getElementById('life-voice-btn').click(); }, 300);
+  setTimeout(() => { const vb = document.getElementById('life-voice-btn'); if (vb) vb.click(); }, 300);
 }
 
 // =========================================================
@@ -1404,7 +1640,7 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     overlay.classList.remove('show');
     if (isCorrect) {
       if (isCalc) {
-        feedBerriesInQuiz(parseInt(ansText) || 5, () => {
+        feedBerriesInQuiz((currentQuestionData && currentQuestionData.feedCount) || parseInt(ansText) || 5, () => {
           answerLocked = false;
           currentQIndex++; showNextQuestion();
         });
@@ -1417,6 +1653,47 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     }
   }, 2200);
 }
+
+// ==== EMOJI-3D START ====
+// もんだいの なかの えもじを、どの スマホでも おなじに みえる 3Dの え（Microsoft Fluent Emoji, MIT ライセンス）に おきかえる
+const EMOJI_BASE = 'https://raw.githubusercontent.com/microsoft/fluentui-emoji/1ffb34c752ecf5d402f04cfb4b392c77f57c54bc/';
+const EMOJI_IMG = {"♣️": "assets/Club suit/3D/club_suit_3d.png","♦️": "assets/Diamond suit/3D/diamond_suit_3d.png","♠️": "assets/Spade suit/3D/spade_suit_3d.png","🍎": "assets/Red apple/3D/red_apple_3d.png","🍓": "assets/Strawberry/3D/strawberry_3d.png","🔺": "assets/Red triangle/3D/red_triangle_3d.png","🔴": "assets/Red circle/3D/red_circle_3d.png","♣": "assets/Club suit/3D/club_suit_3d.png","🔶": "assets/Large orange diamond/3D/large_orange_diamond_3d.png","💎": "assets/Gem stone/3D/gem_stone_3d.png","🟣": "assets/Purple circle/3D/purple_circle_3d.png","🌊": "assets/Water wave/3D/water_wave_3d.png","♦": "assets/Diamond suit/3D/diamond_suit_3d.png","💖": "assets/Sparkling heart/3D/sparkling_heart_3d.png","🍇": "assets/Grapes/3D/grapes_3d.png","⭕": "assets/Hollow red circle/3D/hollow_red_circle_3d.png","🟦": "assets/Blue square/3D/blue_square_3d.png","🍑": "assets/Peach/3D/peach_3d.png","♠": "assets/Spade suit/3D/spade_suit_3d.png","🍊": "assets/Tangerine/3D/tangerine_3d.png","❌": "assets/Cross mark/3D/cross_mark_3d.png","📦": "assets/Package/3D/package_3d.png","🍒": "assets/Cherries/3D/cherries_3d.png","🟡": "assets/Yellow circle/3D/yellow_circle_3d.png","⭐": "assets/Star/3D/star_3d.png"};
+const EMOJI_RE = /(?:\p{Extended_Pictographic}|\p{Regional_Indicator}{2}|[0-9#*]\uFE0F?\u20E3)(?:\uFE0F|\u200D\p{Extended_Pictographic}|[\u{1F3FB}-\u{1F3FF}])*/gu;
+function emojiSrc(e) {
+  const p = EMOJI_IMG[e] || EMOJI_IMG[e.replace(/\uFE0F/g, '')] || EMOJI_IMG[e + '\uFE0F'];
+  return p ? EMOJI_BASE + encodeURI(p) : null;
+}
+function emojify(root) {
+  if (!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) { EMOJI_RE.lastIndex = 0; if (EMOJI_RE.test(walker.currentNode.nodeValue)) nodes.push(walker.currentNode); }
+  nodes.forEach(node => {
+    const frag = document.createDocumentFragment();
+    let last = 0; const text = node.nodeValue;
+    text.replace(EMOJI_RE, (m, offset) => {
+      const src = emojiSrc(m);
+      if (!src) return m;
+      if (offset > last) frag.appendChild(document.createTextNode(text.slice(last, offset)));
+      const img = document.createElement('img');
+      img.className = 'emo'; img.src = src; img.alt = m; img.draggable = false;
+      img.onerror = () => { img.replaceWith(document.createTextNode(m)); }; // よみこめなかったら もとの えもじ
+      frag.appendChild(img);
+      last = offset + m.length;
+      return m;
+    });
+    if (last === 0) return;
+    if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    node.replaceWith(frag);
+  });
+}
+// がめんが かわったら じどうで おきかえる
+['quiz-content', 'feedback-text'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  new MutationObserver(() => emojify(el)).observe(el, { childList: true, subtree: true, characterData: true });
+});
+// ==== EMOJI-3D END ====
 
 setMuted(isMuted);
 setModeButtons();
@@ -1433,7 +1710,7 @@ window.onload = () => {
   } else {
     initCalcGame(); initLifeGame();
   }
-  if (saved && [1, 2, 3].includes(saved.currentCalcMode)) setMode(saved.currentCalcMode);
+  if (saved && [1, 2, 3, 4].includes(saved.currentCalcMode)) setMode(saved.currentCalcMode);
   if (saved && saved.isLifeMode === true) document.getElementById('mode-toggle-btn').onclick(); // せいかつモードで おわっていたら もどす
   else renderRoom();
 };
