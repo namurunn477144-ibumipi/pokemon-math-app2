@@ -410,6 +410,9 @@
     .tap-ripple { position: fixed; z-index: 1002; width: 70px; height: 70px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.95); box-shadow: 0 0 14px rgba(255,255,255,0.9), inset 0 0 10px rgba(255,255,255,0.6); pointer-events: none; }
     .tap-ripple.sound { width: 150px; height: 150px; border: 3px solid var(--accent); box-shadow: none; }
     .float-note { position: fixed; z-index: 1003; font-size: 2rem; font-weight: 900; pointer-events: none; text-shadow: 0 2px 0 #FFF, 0 0 8px #FFF; }
+    /* しんかした あとの「もどる」ボタンは ステージの みぎうえに */
+    .reset-pill { position: absolute; top: 10px; right: 10px; z-index: 25; display: inline-flex; align-items: center; gap: 4px; padding: 7px 12px; border: none; border-radius: 999px; font-size: 0.8rem; font-weight: 900; color: #FFF; background: linear-gradient(135deg, #34D399, var(--correct-2)); box-shadow: 0 6px 14px var(--shadow); white-space: nowrap; cursor: pointer; }
+    .reset-pill:active { transform: scale(0.94); }
   </style>
 </head>
 <body>
@@ -419,6 +422,7 @@
   <div id="room-view" class="view active">
     <header class="app-header"><p class="app-kicker">いぶちゃん＆みーちゃんの</p><h1 id="main-title">さんすう けいさんクイズ</h1></header>
     <div id="partner-stage" class="partner-stage" onclick="interactPokemon('room')">
+      <button id="reset-game-btn" class="reset-pill" style="display:none;"></button>
       <div id="poke-comment-room" class="poke-comment">がんばろうね！</div>
       <div class="poke-wrap"><img id="partner-image-room" class="partner-image" src="" alt="パートナー"></div>
       <div id="eating-msg-room" class="eating-msg">もぐもぐ♪</div>
@@ -451,7 +455,6 @@
         <button id="mode-toggle-btn" class="btn btn-outline btn-small">いろいろモード</button>
         <button id="mute-btn" class="btn btn-outline btn-small" onclick="setMuted(!isMuted)">おとを けす</button>
       </div>
-      <button id="reset-game-btn" class="btn btn-danger btn-large" style="display:none;">ゴンベと もういちど あそぶ</button>
     </div>
   </div>
 
@@ -1388,7 +1391,9 @@ function evolvePoke(targetPoke) {
 
 document.getElementById('close-evolve-btn').onclick = () => document.getElementById('evolve-overlay').classList.remove('show');
 
-resetGameBtn.onclick = () => {
+resetGameBtn.onclick = (e) => {
+  e.stopPropagation(); // ステージの タップ（リアクション）に ならないように
+  if (!confirm('さいしょから そだてなおす？\n（いまの しんかは もとに もどるよ）')) return;
   if (!isLifeMode) initCalcGame(); else initLifeGame();
   renderRoom();
 };
@@ -1396,7 +1401,7 @@ resetGameBtn.onclick = () => {
 function setModeButtons() {
   document.getElementById('start-quiz-btn').innerHTML = `${ICON.play}<span>${isLifeMode ? 'いろいろクイズ' : 'けいさんクイズ'}</span><span class="btn-sub">4もん</span>`;
   document.getElementById('mode-toggle-btn').innerHTML = `${ICON.swap}<span>${isLifeMode ? 'けいさんモード' : 'いろいろモード'}</span>`;
-  resetGameBtn.innerHTML = `${ICON.retry}<span>${isLifeMode ? 'イーブイに もどる' : 'ゴンベと もういちど あそぶ'}</span>`;
+  resetGameBtn.innerHTML = `${ICON.retry}<span>${isLifeMode ? 'イーブイに もどる' : 'ゴンベに もどる'}</span>`;
 }
 
 document.getElementById('mode-toggle-btn').onclick = () => {
