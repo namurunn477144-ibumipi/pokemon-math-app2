@@ -4,167 +4,338 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>さんすうクイズ - いぶちゃん＆みーちゃん</title>
-  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800;900&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#38C6EE">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
+    /* =========================================================
+       さんすう：🌊 うみ
+       けいさん（ゴンベ）＝あおい うみ ・ せいかつ（イーブイ）＝すなはまと あさせ
+       ========================================================= */
     :root {
-      --primary: #03A9F4; --primary-shadow: #0288D1;
-      --secondary: #FFB300; --secondary-shadow: #FF8F00;
-      --bg-color: #E1F5FE; --card-bg: #FFFFFF;
-      --text-main: #0277BD; --correct: #4CAF50; --incorrect: #F44336;
-      --bg-dot: #B3E5FC;
+      --bg-top: #38C6EE; --bg-mid: #9BE6F6; --bg-bottom: #ECFBFF;
+      --accent: #FF9A6B; --accent-2: #FF4F7B; --accent-ink: #E2456B;
+      --title-1: #0086D6; --title-2: #00B8A9;
+      --secondary: #00B4D8; --secondary-2: #2B7BFF;
+      --ink: #12324A; --ink-soft: #557488;
+      --shadow: rgba(0, 110, 160, 0.18); --shadow-strong: rgba(0, 90, 140, 0.3);
+      --stage-glow: rgba(150, 235, 255, 0.7); --stage-ring: #7FD6F0; --floor: rgba(0, 170, 220, 0.4);
+      --track: #DDF4FB; --tile: #E6F8FD; --option-bg: #EEF9FD; --card-bg: #FFFFFF;
+      --correct: #22C55E; --correct-2: #16A34A; --incorrect: #F43F5E; --incorrect-2: #E11D48;
     }
     body.mode-life {
-      --primary: #1A237E; --primary-shadow: #0D47A1;
-      --secondary: #FFC107; --secondary-shadow: #FFA000;
-      --bg-color: #E8EAF6; --card-bg: #FFFFFF;
-      --text-main: #1A237E;
-      --bg-dot: #C5CAE9;
+      --bg-top: #5FD3EE; --bg-mid: #C9F1F2; --bg-bottom: #FFF3D9;
+      --accent: #FFC14D; --accent-2: #FF8A3D; --accent-ink: #DE6F14;
+      --title-1: #00A0C6; --title-2: #FF8A3D;
+      --secondary: #19C2B2; --secondary-2: #0098D8;
+      --ink: #2E2A1E; --ink-soft: #7A6F58;
+      --shadow: rgba(170, 120, 40, 0.18); --shadow-strong: rgba(150, 100, 30, 0.3);
+      --stage-glow: rgba(255, 225, 150, 0.7); --stage-ring: #F3CF86; --floor: rgba(230, 180, 90, 0.45);
+      --track: #FBEFD6; --tile: #FFF6E3; --option-bg: #FFF8EA;
     }
-    * { box-sizing: border-box; font-family: 'M PLUS Rounded 1c', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
-    body { margin: 0; padding: 0; background-color: var(--bg-color); background-image: radial-gradient(var(--bg-dot) 2px, transparent 2px); background-size: 20px 20px; color: var(--text-main); overflow-x: hidden; touch-action: manipulation; transition: background-color 0.5s; }
-    #app { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; }
-    .view { display: flex; flex-direction: column; align-items: center; padding: 15px; min-height: 100vh; transition: opacity 0.3s ease; }
-    .view.hidden { display: none !important; opacity: 0; }
-    .app-header { text-align: center; margin-bottom: 10px; }
-    #main-title { font-size: 2rem; color: var(--primary-shadow); line-height: 1.2; text-shadow: 2px 2px 0px #FFF; margin: 10px 0; transition: color 0.5s; }
-    
-    .partner-stage { position: relative; width: 100%; border-radius: 24px; padding: 30px 20px 15px; border: 4px solid #FFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); text-align: center; margin-bottom: 10px; cursor: pointer; overflow: hidden; transition: background 0.5s; }
-    .partner-stage.bg-grass { background: linear-gradient(180deg, #E8F5E9 0%, #C8E6C9 100%); }
-    .partner-stage.bg-grass::before { content: '🌱☘️🍀'; position: absolute; bottom: 5px; left: 10px; font-size: 1.2rem; opacity: 0.6; }
-    .partner-stage.bg-grass::after { content: '🍀☘️🌱'; position: absolute; bottom: 5px; right: 10px; font-size: 1.2rem; opacity: 0.6; }
-    .partner-stage.bg-lovely { background: linear-gradient(180deg, #FFF0F5 0%, #FFD1DC 100%); }
-    .partner-stage.bg-lovely::before { content: '💖✨'; position: absolute; bottom: 8px; left: 12px; font-size: 1.2rem; opacity: 0.7; }
-    .partner-stage.bg-lovely::after { content: '✨💖'; position: absolute; bottom: 8px; right: 12px; font-size: 1.2rem; opacity: 0.7; }
-    .partner-stage.bg-cool { background: linear-gradient(180deg, #2A0845 0%, #6441A5 100%); border-color: #FFD700; }
-    .partner-stage.bg-cool::before { content: '⚡⭐'; position: absolute; bottom: 8px; left: 12px; font-size: 1.2rem; opacity: 0.8; }
-    .partner-stage.bg-cool::after { content: '⭐⚡'; position: absolute; bottom: 8px; right: 12px; font-size: 1.2rem; opacity: 0.8; }
-    .partner-stage.bg-cool #partner-name-room { color: #FFD700; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
-    .partner-image { width: 130px; height: 130px; object-fit: contain; filter: drop-shadow(0 8px 6px rgba(0,0,0,0.2)); animation: float 3s ease-in-out infinite; transition: transform 0.3s; z-index: 5; position: relative; }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-    .partner-name { font-size: 1.5rem; color: var(--text-main); margin: 5px 0 0 0; pointer-events: none; font-weight: 900; }
-    .poke-comment { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #FFF; border: 3px solid var(--primary); border-radius: 20px; padding: 6px 14px; font-size: 1rem; font-weight: 900; color: var(--text-main); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 20; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.15); }
-    .poke-comment::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-width: 8px 8px 0; border-style: solid; border-color: var(--primary) transparent transparent transparent; }
-    @keyframes jumpPoke { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
+    /* うみの かざり：ひかりの すじ ・ すなはま ・ のぼる あわ */
+    .bg-deco .rays { position: absolute; top: -10vh; left: -20vw; width: 140vw; height: 70vh; background: conic-gradient(from 150deg at 50% 0%, transparent 0deg, rgba(255,255,255,0.35) 8deg, transparent 18deg, rgba(255,255,255,0.25) 30deg, transparent 42deg, rgba(255,255,255,0.3) 56deg, transparent 70deg); filter: blur(8px); }
+    .bg-deco .sand { position: absolute; left: -20vw; right: -20vw; bottom: -22vh; height: 42vh; border-radius: 50% 50% 0 0; background: radial-gradient(ellipse at 50% 0%, rgba(255,226,160,0.65), rgba(255,226,160,0) 70%); opacity: 0; transition: opacity 0.6s; }
+    body.mode-life .bg-deco .sand { opacity: 1; }
+    .bg-deco .bubble { position: absolute; bottom: -40px; width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.85); background: radial-gradient(circle at 32% 30%, rgba(255,255,255,0.9) 0 18%, rgba(255,255,255,0.15) 22%); animation: bubbleUp linear infinite; }
+    .bg-deco .bubble:nth-child(3) { left: 6vw; animation-duration: 14s; animation-delay: -3s; }
+    .bg-deco .bubble:nth-child(4) { left: 22vw; animation-duration: 19s; animation-delay: -11s; width: 12px; height: 12px; }
+    .bg-deco .bubble:nth-child(5) { left: 41vw; animation-duration: 16s; animation-delay: -7s; width: 26px; height: 26px; }
+    .bg-deco .bubble:nth-child(6) { left: 58vw; animation-duration: 22s; animation-delay: -15s; width: 14px; height: 14px; }
+    .bg-deco .bubble:nth-child(7) { left: 76vw; animation-duration: 17s; animation-delay: -1s; width: 22px; height: 22px; }
+    .bg-deco .bubble:nth-child(8) { left: 90vw; animation-duration: 24s; animation-delay: -19s; width: 10px; height: 10px; }
+    @keyframes bubbleUp {
+      0% { transform: translate(0, 0); opacity: 0; }
+      10% { opacity: 1; }
+      50% { transform: translate(18px, -55vh); }
+      90% { opacity: 1; }
+      100% { transform: translate(-12px, -112vh); opacity: 0; }
+    }
+
+    /* けいさんモードの えらびかた */
+    .mode-select-section { width: 100%; margin-bottom: 16px; padding: 14px; border-radius: 22px; background: rgba(255,255,255,0.78); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 14px 34px var(--shadow); text-align: center; }
+    .mode-select-section h3 { margin: 0 0 10px; font-size: 1.05rem; color: var(--accent-ink); }
+    .mode-buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .btn-mode { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 4px; border: none; border-radius: 16px; background: var(--option-bg); color: var(--ink); font-weight: 900; font-size: 1rem; cursor: pointer; transition: transform 0.12s, background 0.2s; white-space: nowrap; }
+    .btn-mode small { font-size: 0.7rem; font-weight: 800; color: var(--ink-soft); }
+    .btn-mode:active { transform: scale(0.95); }
+    .btn-mode.active { color: #FFF; background: linear-gradient(135deg, var(--secondary), var(--secondary-2)); box-shadow: 0 10px 20px -8px var(--secondary-2); }
+    .btn-mode.active small { color: rgba(255,255,255,0.9); }
+
+    /* けいさんの しき ・ きのみの ヒント */
+    .math-expr { font-size: clamp(2.4rem, 12vw, 3rem); font-weight: 700; color: var(--ink); margin: 8px 0 4px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    .math-expr .q-mark { display: inline-flex; align-items: center; justify-content: center; width: 1.3em; height: 1.2em; border-radius: 0.3em; border: 3px dashed var(--accent); color: var(--accent-ink); font-size: 0.85em; }
+    .fruit-hint-area { background: var(--option-bg); border-radius: 20px; padding: 14px; margin: 10px 0 4px; min-height: 90px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; }
+    .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 30px); gap: 6px; justify-content: center; }
+    .berry-ico { width: 30px; height: 30px; object-fit: contain; display: block; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.15)); }
+    .fruit-plus { font-family: 'Fredoka', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--accent-ink); line-height: 1; }
+    .fruit-minus { position: relative; opacity: 0.35; }
+    .fruit-minus::before, .fruit-minus::after { content: ''; position: absolute; left: 50%; top: 50%; width: 30px; height: 4px; border-radius: 4px; background: var(--incorrect); }
+    .fruit-minus::before { transform: translate(-50%, -50%) rotate(45deg); }
+    .fruit-minus::after { transform: translate(-50%, -50%) rotate(-45deg); }
+    .fruit-group { display: inline-flex; gap: 2px; padding: 4px 6px; margin: 3px; border-radius: 12px; border: 2px dashed var(--accent); background: #FFF; }
+    .fruit-group .berry-ico { width: 24px; height: 24px; }
+
+    /* とけい */
+    .clock-face { width: 160px; height: 160px; border: 6px solid var(--title-1); border-radius: 50%; background: #FFF; position: relative; margin: 14px auto; box-shadow: 0 10px 22px var(--shadow); }
+    .clock-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; }
+    .hand-hour { width: 7px; height: 45px; background: var(--accent-2); margin-left: -3.5px; z-index: 2; }
+    .hand-minute { width: 4px; height: 60px; background: var(--secondary-2); margin-left: -2px; z-index: 1; }
+    .clock-center { width: 14px; height: 14px; background: var(--ink); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
+    .clock-number { position: absolute; font-family: 'Fredoka', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--ink); transform: translate(-50%, -50%); }
+
+    /* おかね */
+    .coin-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 14px 0; }
+    .coin-500, .coin-100, .coin-50, .coin-10, .coin-5, .coin-1 { border-radius: 50%; font-family: 'Fredoka', sans-serif; font-weight: 700; display: flex; justify-content: center; align-items: center; box-shadow: 0 3px 6px rgba(0,0,0,0.2); position: relative; }
+    .coin-500 { width: 60px; height: 60px; background: radial-gradient(circle, #FFFDE7 0%, #D7CCC8 100%); border: 3px solid #8D6E63; color: #5D4037; font-size: 1.3rem; }
+    .coin-100 { width: 50px; height: 50px; background: radial-gradient(circle, #FFFFFF 0%, #CFD8DC 100%); border: 3px solid #90A4AE; color: #455A64; font-size: 1.15rem; }
+    .coin-50 { width: 45px; height: 45px; background: radial-gradient(circle, #FFFFFF 0%, #CFD8DC 100%); border: 3px solid #90A4AE; color: transparent; font-size: 1.05rem; }
+    .coin-50::before { content: '50'; color: #455A64; position: absolute; z-index: 2; }
+    .coin-50::after { content: ''; width: 10px; height: 10px; background: var(--card-bg); border: 2px solid #90A4AE; border-radius: 50%; position: absolute; z-index: 1; }
+    .coin-10 { width: 45px; height: 45px; background: radial-gradient(circle, #E0B98C 0%, #A1683A 100%); border: 3px solid #6D4321; color: #FFF; font-size: 1.05rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+    .coin-5 { width: 45px; height: 45px; background: radial-gradient(circle, #FFF9C4 0%, #FBC02D 100%); border: 3px solid #F57F17; color: transparent; font-size: 1.05rem; }
+    .coin-5::before { content: '5'; color: #E65100; position: absolute; z-index: 2; }
+    .coin-5::after { content: ''; width: 10px; height: 10px; background: var(--card-bg); border: 2px solid #F57F17; border-radius: 50%; position: absolute; z-index: 1; }
+    .coin-1 { width: 35px; height: 35px; background: radial-gradient(circle, #FFFFFF 0%, #B0BEC5 100%); border: 2px solid #78909C; color: #37474F; font-size: 0.85rem; }
+
+    /* ながさ・おおきさ くらべ */
+    .bar-compare-box { display: flex; flex-direction: column; gap: 12px; margin: 14px 0; padding: 14px; background: var(--option-bg); border-radius: 18px; }
+    .bar-item { display: flex; align-items: center; gap: 10px; }
+    .bar-label { font-family: 'Fredoka', sans-serif; font-size: 1.5rem; font-weight: 700; width: 30px; text-align: center; }
+    .bar-track { flex: 1; height: 26px; background: #FFF; border-radius: 13px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 13px; }
+    .bar-fill.color-a { background: linear-gradient(90deg, #FF9A6B, #FF4F7B); }
+    .bar-fill.color-b { background: linear-gradient(90deg, #4FD1F0, #2B7BFF); }
+    /* =========================================================
+       きょうつうの ぶひん（あかるい デザイン）
+       いろは テーマの へんすう（--bg-top など）で きまる
+       ========================================================= */
+    * { box-sizing: border-box; font-family: 'M PLUS Rounded 1c', sans-serif; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+    .en, .question-word, .opt-en, .sort-word-btn, .exp-value, .app-kicker, .progress-label, .btn-sub, .math-expr { font-family: 'Fredoka', 'M PLUS Rounded 1c', sans-serif; }
+    /* にほんごは「ことばの まとまり（スペース）」で だけ かいぎょう する */
+    body, button { word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+    h1, h2, h3, p, .question-word, .question-ja, .question-sub, .feedback-text, .option-btn { text-wrap: balance; }
+
+    html { background: var(--bg-bottom); }
+    body { margin: 0; color: var(--ink); overflow-x: hidden; touch-action: manipulation; min-height: 100vh; background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%); transition: background 0.6s; }
+    .bg-deco { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    #app { position: relative; max-width: 480px; margin: 0 auto; min-height: 100vh; }
+    .view { display: flex; flex-direction: column; align-items: center; padding: max(16px, env(safe-area-inset-top)) 16px 28px; min-height: 100vh; }
+    .view.hidden { display: none !important; }
+
+    /* ---------- ヘッダー ---------- */
+    .app-header { width: 100%; display: flex; flex-direction: column; align-items: center; margin: 4px 0 14px; }
+    .app-kicker { display: inline-flex; align-items: center; gap: 6px; margin: 0 0 6px; padding: 4px 14px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; color: var(--accent-ink); background: rgba(255,255,255,0.8); box-shadow: 0 4px 12px var(--shadow); }
+    #main-title {
+      margin: 0; text-align: center; font-size: clamp(1.75rem, 8.6vw, 2.35rem); font-weight: 900; line-height: 1.15; letter-spacing: 0.02em;
+      background: linear-gradient(90deg, var(--title-1), var(--title-2)); -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 2px 0 #FFF) drop-shadow(0 6px 12px var(--shadow));
+    }
+
+    /* ---------- パネル ---------- */
+    .partner-stage, .status-board, .food-section {
+      background: rgba(255,255,255,0.78); border: 1px solid rgba(255,255,255,0.95);
+      -webkit-backdrop-filter: blur(14px) saturate(130%); backdrop-filter: blur(14px) saturate(130%);
+      box-shadow: 0 14px 34px var(--shadow);
+    }
+
+    /* ---------- パートナーの ステージ ---------- */
+    .partner-stage { position: relative; width: 100%; border-radius: 30px; padding: 40px 16px 20px; margin-bottom: 14px; text-align: center; cursor: pointer; overflow: hidden; background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.9)); }
+    .partner-stage::before { content: ''; position: absolute; left: 50%; top: 44%; width: 270px; height: 270px; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, var(--stage-glow) 0%, transparent 66%); pointer-events: none; transition: background 0.6s; }
+    .partner-stage::after { content: ''; position: absolute; left: 50%; top: 44%; width: 214px; height: 214px; transform: translate(-50%, -50%); border-radius: 50%; border: 2px dashed var(--stage-ring); opacity: 0.7; animation: spinRing 30s linear infinite; pointer-events: none; }
+    @keyframes spinRing { to { transform: translate(-50%, -50%) rotate(360deg); } }
+    .partner-stage.bg-cool, .partner-stage.stage-final { --stage-glow: rgba(255, 205, 60, 0.6); --stage-ring: #F5B400; box-shadow: 0 14px 34px var(--shadow), 0 0 0 3px #FFD54A inset; }
+
+    .poke-wrap { position: relative; z-index: 2; width: 170px; height: 170px; margin: 0 auto; }
+    .poke-wrap::after { content: ''; position: absolute; left: 50%; bottom: 2px; width: 150px; height: 26px; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(ellipse, var(--floor) 0%, transparent 70%); animation: floorPulse 3s ease-in-out infinite; z-index: 0; }
+    @keyframes floorPulse { 0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.9; } 50% { transform: translateX(-50%) scale(0.8); opacity: 0.55; } }
+    .poke-wrap img, #partner-image { position: relative; z-index: 5; width: 170px; height: 170px; object-fit: contain; filter: drop-shadow(0 8px 6px rgba(0,0,0,0.18)); animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    .partner-name, #partner-name { position: relative; z-index: 3; display: inline-block; margin: 12px 0 0; padding: 5px 22px; border-radius: 999px; font-size: 1.3rem; font-weight: 900; pointer-events: none; color: var(--ink); background: #FFF; box-shadow: 0 6px 14px var(--shadow); }
+    .stage-final .partner-name, .bg-cool #partner-name { color: #B07A00; box-shadow: 0 6px 14px var(--shadow), 0 0 0 2px #FFD54A; }
+
+    .poke-comment { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: #FFF; border-radius: 16px; padding: 7px 14px; font-size: 1.02rem; font-weight: 900; color: var(--ink); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 20; white-space: nowrap; box-shadow: 0 8px 20px var(--shadow); }
+    .poke-comment::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-width: 8px 8px 0; border-style: solid; border-color: #FFF transparent transparent transparent; }
+
+    @keyframes jumpPoke { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
     .anim-jump { animation: jumpPoke 0.4s ease !important; }
     @keyframes spinPoke { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
     .anim-spin { animation: spinPoke 0.5s ease !important; }
     @keyframes shakePoke { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-15deg); } 75% { transform: rotate(15deg); } }
     .anim-shake { animation: shakePoke 0.4s ease !important; }
-    @keyframes chew { 0% { transform: scale(1); } 25% { transform: scale(1.15) rotate(-5deg); } 50% { transform: scale(0.95) rotate(5deg); } 75% { transform: scale(1.1) rotate(-3deg); } 100% { transform: scale(1); } }
-    .anim-chew { animation: chew 0.5s ease-in-out !important; }
-    .eating-msg { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 1.4rem; color: #FF5722; font-weight: 900; opacity: 0; pointer-events: none; text-shadow: 2px 2px 0 #FFF; transition: all 0.3s; z-index: 30; white-space: nowrap; }
-    .flying-food { position: fixed; font-size: 2.2rem; z-index: 1000; transition: all 0.5s cubic-bezier(0.5, -0.5, 1, 1); pointer-events: none; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-    .effect-anim { position: absolute; font-size: 2rem; bottom: 40%; opacity: 0; animation: floatUpEffect 1s ease-out; pointer-events: none; z-index: 15; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
-    @keyframes floatUpEffect { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-60px) scale(1.5) rotate(15deg); opacity: 0; } }
-    
-    .status-board { width: 100%; background: rgba(255,255,255,0.7); padding: 12px 20px; border-radius: 16px; margin-bottom: 15px; }
-    .exp-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px; }
-    .exp-label { font-size: 1.1rem; font-weight: 800; }
-    .exp-value { font-size: 1.4rem; font-weight: 900; color: var(--primary-shadow); }
-    .exp-bar-bg { background-color: rgba(0,0,0,0.1); border-radius: 15px; height: 24px; overflow: hidden; border: 3px solid #FFF; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
-    .exp-bar-fill { background: var(--primary); height: 100%; width: 0%; border-radius: 10px; transition: width 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    
-    .food-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 15px; }
-    .food-header h3 { margin: 0 0 5px 0; font-size: 1.2rem; text-align: center; color: var(--primary-shadow); }
-    .food-header p { margin: 0; font-size: 0.85rem; color: var(--text-main); text-align: center; }
-    .food-list { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
-    .food-item { width: 70px; height: 70px; font-size: 2.5rem; background: #FFF9C4; border: 3px solid #FFF59D; border-radius: 16px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; box-shadow: 0 6px 0 #FBC02D; transition: transform 0.1s, box-shadow 0.1s; }
-    .food-item:active:not(.locked):not(.eaten) { transform: translateY(6px); box-shadow: 0 0 0 #FBC02D; }
-    .food-item.locked { background: #E0E0E0; border-color: #F5F5F5; box-shadow: 0 6px 0 #BDBDBD; filter: grayscale(100%); pointer-events: none; }
-    .food-item.locked::after { content: '🔒'; position: absolute; font-size: 1.2rem; bottom: -5px; right: -5px; text-shadow: none; }
-    .food-item.eaten { background: #E8F5E9; border-color: #C8E6C9; box-shadow: 0 4px 0 #A5D6A7; transform: scale(0.95); pointer-events: none; filter: grayscale(100%) opacity(0.5); }
+    @keyframes chew { 0%, 100% { transform: scale(1, 1); } 20% { transform: scale(1.12, 0.9) translateY(6px); } 40% { transform: scale(0.94, 1.08); } 60% { transform: scale(1.1, 0.92) translateY(5px); } 80% { transform: scale(0.97, 1.04); } }
+    .anim-chew { animation: chew 0.9s ease-in-out !important; }
 
-    .mode-select-section { width: 100%; background: var(--card-bg); border-radius: 20px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 15px; text-align: center; }
-    .mode-select-section h3 { margin: 0 0 10px 0; font-size: 1.2rem; color: var(--primary-shadow); }
-    .mode-buttons { display: flex; flex-direction: column; gap: 8px; }
-    .btn-mode { background: #E1F5FE; border: 3px solid var(--primary); color: var(--primary-shadow); border-radius: 15px; padding: 10px; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: 0.1s; }
-    .btn-mode.active { background: var(--primary); color: white; box-shadow: 0 4px 0 var(--primary-shadow); }
-    
-    .action-buttons { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-    .btn { border: none; border-radius: 20px; font-weight: 900; cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; text-align: center; outline: none; display: inline-flex; justify-content: center; align-items: center; }
-    .btn-large { width: 100%; padding: 16px; font-size: 1.4rem; }
-    .btn-primary { background: var(--secondary); color: white; box-shadow: 0 8px 0 var(--secondary-shadow); }
-    .btn-primary:active { transform: translateY(8px); box-shadow: 0 0 0 var(--secondary-shadow); }
-    .btn-danger { background: #E91E63; color: white; box-shadow: 0 8px 0 #C2185B; } 
-    .btn-danger:active { transform: translateY(8px); box-shadow: 0 0 0 #C2185B; }
-    .btn-outline { background: #FFF; color: var(--primary-shadow); border: 3px solid var(--primary); box-shadow: 0 6px 0 var(--primary); }
-    .btn-outline:active { transform: translateY(6px); box-shadow: 0 0 0 var(--primary); }
-    
-    .quiz-header-bar { margin-bottom: 8px; }
-    .badge { background: var(--primary); color: #FFF; padding: 6px 18px; border-radius: 20px; font-size: 1.1rem; font-weight: 900; box-shadow: 0 4px 0 var(--primary-shadow); }
-    
-    .quiz-card { background: linear-gradient(180deg, #FFFFFF 0%, #F1F8E9 100%); width: 100%; padding: 15px; border-radius: 24px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid #A5D6A7; text-align: center; position: relative; }
-    
-/* きのみグリッド（もう少し大きめ＆隙間ゆったり！） */
-    .fruit-hint-area { background: #FFFDE7; border: 3px dashed #FFE082; border-radius: 16px; padding: 15px; margin: 15px 0; min-height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; overflow: visible; font-size: 2.2rem; }
-    .fruit-grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; justify-items: center; align-items: center; font-size: 2.2rem; width: 100%; max-width: 230px; }
-    .fruit-minus { opacity: 0.3; position: relative; }
-    .fruit-minus::after { content: '❌'; position: absolute; top: -7px; left: -2px; font-size: 1.3rem; opacity: 1; }
-    
-    /* CSS時計（サイズアップ＆数字入り！） */
-    .clock-face { width: 160px; height: 160px; border: 6px solid #1A237E; border-radius: 50%; background: #FFF; position: relative; margin: 15px auto; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-    .clock-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; }
-    .hand-hour { width: 6px; height: 45px; background: #F44336; margin-left: -3px; z-index: 2; }
-    .hand-minute { width: 4px; height: 60px; background: #1976D2; margin-left: -2px; z-index: 1; }
-    .clock-center { width: 12px; height: 12px; background: #333; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3; }
-    .clock-number { position: absolute; font-size: 1.2rem; font-weight: 900; color: #1A237E; transform: translate(-50%, -50%); }
+    .eating-msg { position: absolute; top: 12px; left: 50%; transform: translate(-50%, 0) scale(0.6); font-size: 1.55rem; font-weight: 900; color: var(--accent-2); opacity: 0; pointer-events: none; z-index: 20; white-space: nowrap; text-shadow: 0 2px 0 #FFF, 0 0 10px #FFF; transition: transform 0.25s cubic-bezier(0.2, 1.6, 0.4, 1), opacity 0.2s; }
+    .eating-msg.show { opacity: 1; transform: translate(-50%, -6px) scale(1); }
 
-    /* CSSコイン（500円・100円・50円・5円追加！） */
-    .coin-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 15px 0; }
-    .coin-500 { width: 60px; height: 60px; background: radial-gradient(circle, #FFFDE7 0%, #D7CCC8 100%); border: 3px solid #8D6E63; border-radius: 50%; color: #5D4037; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
-    .coin-100 { width: 50px; height: 50px; background: radial-gradient(circle, #FFFFFF 0%, #CFD8DC 100%); border: 3px solid #90A4AE; border-radius: 50%; color: #455A64; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
-    .coin-50 { width: 45px; height: 45px; background: radial-gradient(circle, #FFFFFF 0%, #CFD8DC 100%); border: 3px solid #90A4AE; border-radius: 50%; color: transparent; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; box-shadow: 0 3px 6px rgba(0,0,0,0.2); position: relative; }
-    .coin-50::before { content: '50'; color: #455A64; position: absolute; z-index: 2; }
-    .coin-50::after { content: ''; width: 10px; height: 10px; background: var(--card-bg); border: 2px solid #90A4AE; border-radius: 50%; position: absolute; z-index: 1; }
-    .coin-10 { width: 45px; height: 45px; background: radial-gradient(circle, #D7CCC8 0%, #8D6E63 100%); border: 3px solid #5D4037; border-radius: 50%; color: #FFF; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; text-shadow: 1px 1px 2px #000; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
-    .coin-5 { width: 45px; height: 45px; background: radial-gradient(circle, #FFF9C4 0%, #FBC02D 100%); border: 3px solid #F57F17; border-radius: 50%; color: transparent; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 1.1rem; box-shadow: 0 3px 6px rgba(0,0,0,0.2); position: relative;}
-    .coin-5::before { content: '5'; color: #E65100; position: absolute; z-index: 2; }
-    .coin-5::after { content: ''; width: 10px; height: 10px; background: var(--card-bg); border: 2px solid #F57F17; border-radius: 50%; position: absolute; z-index: 1; }
-    .coin-1 { width: 35px; height: 35px; background: radial-gradient(circle, #FFFFFF 0%, #B0BEC5 100%); border: 2px solid #78909C; border-radius: 50%; color: #37474F; font-weight: 900; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .flying-food { position: fixed; z-index: 1000; pointer-events: none; object-fit: contain; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.25)); }
+    .particle { position: fixed; z-index: 1001; width: 14px; height: 14px; pointer-events: none; border-radius: 50%; }
+    .particle.star { clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); border-radius: 0; width: 18px; height: 18px; }
+    .particle.heart { width: 18px; height: 18px; border-radius: 0; clip-path: path('M9 16.5 L2.2 9.6 A4 4 0 0 1 9 3.9 A4 4 0 0 1 15.8 9.6 Z'); }
+    .confetti { position: fixed; top: -20px; z-index: 1002; width: 10px; height: 16px; border-radius: 3px; pointer-events: none; }
+    .exp-pop { position: absolute; right: 18px; top: -8px; font-family: 'Fredoka', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--accent-2); text-shadow: 0 2px 0 #FFF; pointer-events: none; }
+    .flash { position: fixed; inset: 0; background: #FFF; z-index: 99; pointer-events: none; }
 
-    /* バー比較表示 */
-    .bar-compare-box { display: flex; flex-direction: column; gap: 12px; margin: 15px 0; padding: 12px; background: #FFF; border-radius: 16px; border: 2px solid #E0E0E0; }
-    .bar-item { display: flex; align-items: center; gap: 10px; }
-    .bar-label { font-size: 1.5rem; font-weight: 900; width: 30px; text-align: center; }
-    .bar-track { flex: 1; height: 28px; background: #F5F5F5; border-radius: 14px; overflow: hidden; border: 2px solid #DDD; }
-    .bar-fill { height: 100%; border-radius: 12px; transition: width 0.3s; }
-    .bar-fill.color-a { background: linear-gradient(90deg, #FF7043, #FF9800); }
-    .bar-fill.color-b { background: linear-gradient(90deg, #42A5F5, #26C6DA); }
+    /* ---------- なかよし度 ---------- */
+    .status-board { position: relative; width: 100%; padding: 14px 18px 16px; border-radius: 22px; margin-bottom: 14px; }
+    .exp-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+    .exp-label { font-size: 1rem; font-weight: 800; color: var(--ink-soft); }
+    .exp-value { font-size: 1.5rem; font-weight: 700; color: var(--accent-ink); }
+    .exp-bar-bg { position: relative; height: 14px; border-radius: 999px; overflow: hidden; background: var(--track); }
+    .exp-bar-fill { position: relative; height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width 0.8s cubic-bezier(0.2, 1.3, 0.4, 1); overflow: hidden; }
+    .exp-bar-fill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.65) 45%, transparent 60%); animation: shine 2.6s ease-in-out infinite; }
+    @keyframes shine { 0% { transform: translateX(-100%); } 60%, 100% { transform: translateX(100%); } }
 
-    .math-expr { font-size: 2.5rem; font-weight: 900; color: #2E7D32; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 10px; }
-    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-    .option-btn { background: #FFF; border: 4px solid #81C784; border-radius: 16px; padding: 12px; font-size: 1.8rem; font-weight: 900; color: #2E7D32; display: flex; justify-content: center; align-items: center; box-shadow: 0 6px 0 #66BB6A; cursor: pointer; transition: 0.1s; }
-    .option-btn:active { transform: translateY(6px); box-shadow: 0 0 0 #66BB6A; }
-    
-    .voice-btn { background: var(--secondary); box-shadow: 0 6px 0 var(--secondary-shadow); border-radius: 50%; border: none; color: white; cursor: pointer; display:inline-flex; justify-content:center; align-items:center; transition: 0.1s; width: 45px; height: 45px; font-size: 1.3rem;}
-    .voice-btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--secondary-shadow); }
-    
-    .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 255, 255, 0.95); z-index: 100; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.3s; opacity: 0; pointer-events: none; }
+    /* ---------- きのみ ボックス ---------- */
+    .food-section { width: 100%; border-radius: 22px; padding: 14px 14px 18px; margin-bottom: 18px; }
+    .food-header h3 { margin: 0 0 4px; font-size: 1.1rem; text-align: center; color: var(--accent-ink); letter-spacing: 0.04em; }
+    .food-header p { margin: 0; font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); text-align: center; }
+    .food-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
+    .food-item { position: relative; aspect-ratio: 1; border-radius: 18px; display: flex; justify-content: center; align-items: center; cursor: pointer; background: radial-gradient(circle at 50% 35%, #FFFFFF, var(--tile)); box-shadow: 0 6px 14px var(--shadow); transition: transform 0.12s; }
+    .food-item img { width: 72%; height: 72%; object-fit: contain; pointer-events: none; -webkit-user-drag: none; filter: drop-shadow(0 4px 3px rgba(0,0,0,0.18)); }
+    .food-item.ready { animation: readyGlow 1.8s ease-in-out infinite; box-shadow: 0 6px 14px var(--shadow), 0 0 0 3px var(--accent) inset; }
+    @keyframes readyGlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    .food-item:active:not(.locked):not(.eaten) { transform: scale(0.92); }
+    .food-item.locked { background: rgba(0,0,0,0.05); box-shadow: none; pointer-events: none; }
+    .food-item.locked img { filter: brightness(0) opacity(0.12); }
+    .food-item.locked::after, .food-item.eaten::after {
+      content: ''; position: absolute; right: -5px; bottom: -5px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid #FFF;
+      background: #A6A3B8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M7 10V7a5 5 0 0 1 10 0v3h.5A1.5 1.5 0 0 1 19 11.5v8a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19.5v-8A1.5 1.5 0 0 1 6.5 10zm2.5 0h5V7a2.5 2.5 0 0 0-5 0z'/%3E%3C/svg%3E") center / 13px no-repeat;
+    }
+    .food-item.eaten { background: rgba(0,0,0,0.03); box-shadow: none; pointer-events: none; }
+    .food-item.eaten img { opacity: 0.25; filter: grayscale(1); }
+    .food-item.eaten::after { background-color: var(--correct); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E"); }
+
+    /* ---------- ボタン ---------- */
+    .icon { width: 1.15em; height: 1.15em; flex: none; }
+    .action-buttons { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+    .sub-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn { border: none; border-radius: 20px; font-weight: 900; cursor: pointer; transition: transform 0.12s, box-shadow 0.2s, filter 0.2s; text-align: center; outline: none; display: inline-flex; justify-content: center; align-items: center; gap: 8px; line-height: 1.3; }
+    .btn:active { transform: scale(0.96); filter: brightness(0.96); }
+    .btn-large { width: 100%; padding: 17px 16px; font-size: 1.3rem; }
+    .btn-large > span { white-space: nowrap; }
+    .btn-small { width: 100%; padding: 13px 6px; font-size: clamp(0.85rem, 4vw, 0.98rem); border-radius: 16px; white-space: nowrap; gap: 6px; }
+    .btn-sub { font-size: 0.75em; font-weight: 600; padding: 2px 10px; border-radius: 999px; background: rgba(255,255,255,0.28); }
+    .btn-primary { color: #FFF; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 12px 26px -8px var(--accent-2), inset 0 1px 0 rgba(255,255,255,0.4); text-shadow: 0 1px 2px rgba(0,0,0,0.15); }
+    #start-quiz-btn { font-size: clamp(1.15rem, 5.8vw, 1.35rem); position: relative; overflow: hidden; }
+    #start-quiz-btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.45) 50%, transparent 65%); animation: shine 3.2s ease-in-out infinite; pointer-events: none; }
+    .btn-outline { color: var(--ink); background: rgba(255,255,255,0.85); box-shadow: 0 8px 18px var(--shadow); }
+    .btn-outline .icon { color: var(--accent-ink); }
+    .btn-danger { color: #FFF; background: linear-gradient(135deg, #34D399, var(--correct-2)); box-shadow: 0 12px 24px -8px var(--correct); }
+    .btn-parent { color: #FFF; background: linear-gradient(135deg, #FB7185, var(--incorrect-2)); box-shadow: 0 10px 22px -8px var(--incorrect); padding: 14px; border-radius: 18px; font-size: 1.1rem; width: 100%; margin-top: 12px; }
+
+    /* ---------- クイズ ---------- */
+    .quiz-top { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 6px 0 16px; }
+    .progress-dots { display: flex; gap: 8px; }
+    .progress-dots .dot { width: 48px; height: 9px; border-radius: 999px; background: rgba(255,255,255,0.75); box-shadow: inset 0 1px 2px rgba(0,0,0,0.08); transition: background 0.3s; }
+    .progress-dots .dot.done { background: var(--accent); }
+    .progress-dots .dot.now { background: linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow: 0 0 0 3px #FFF, 0 4px 10px var(--shadow); }
+    .progress-label { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.1em; color: var(--ink-soft); }
+    .quiz-card { width: 100%; padding: 22px 18px; border-radius: 28px; text-align: center; color: var(--ink); background: #FFF; box-shadow: 0 20px 44px var(--shadow); }
+    .q-head { display: flex; justify-content: center; align-items: center; gap: 12px; }
+    .q-title, .question-sub { margin: 0; font-size: 1.2rem; font-weight: 900; color: var(--ink); text-align: left; }
+    .question-emoji { font-size: 5rem; margin: 10px 0 4px; line-height: 1.1; }
+    .question-word { font-size: clamp(1.7rem, 7.5vw, 2.2rem); font-weight: 700; color: var(--ink); margin: 16px 0 6px; line-height: 1.35; }
+    .question-word.big { font-size: clamp(2.4rem, 12vw, 3.2rem); background: linear-gradient(90deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .question-ja { font-size: 1.1rem; font-weight: 800; color: var(--ink-soft); margin: 0 0 14px; }
+
+    .options-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+    .options-grid.two-col { display: grid; grid-template-columns: 1fr 1fr; }
+    .options-grid.two-col .option-btn { min-height: 72px; padding: 10px 8px; }
+    .option-btn { background: var(--option-bg); border: 2px solid transparent; border-radius: 18px; padding: 12px 14px; min-height: 64px; font-size: 1.4rem; font-weight: 900; color: var(--ink); display: flex; justify-content: center; align-items: center; gap: 14px; cursor: pointer; transition: transform 0.12s, background 0.2s, border-color 0.2s, box-shadow 0.2s; }
+    .option-btn:active { transform: scale(0.97); border-color: var(--accent); }
+    .option-btn .opt-emoji { font-size: 2.5rem; line-height: 1; }
+    .option-btn .opt-en { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 1.8rem; }
+    .option-btn.is-correct { background: linear-gradient(135deg, #34D399, var(--correct-2)); color: #FFF; box-shadow: 0 10px 24px -6px var(--correct); animation: popIn 0.35s ease; }
+    .option-btn.is-wrong { background: #FFF1F3; border-color: var(--incorrect); animation: shakeX 0.4s ease; }
+    .option-btn.hinted-out { opacity: 0.22; filter: grayscale(1); transform: scale(0.96); pointer-events: none; transition: opacity 0.4s, transform 0.4s; }
+    @keyframes popIn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    @keyframes shakeX { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+
+    .sort-area { min-height: 76px; background: var(--option-bg); border: 2px dashed var(--accent); border-radius: 18px; display: flex; flex-wrap: wrap; gap: 8px; padding: 12px; margin: 6px 0 14px; align-items: center; justify-content: center; }
+    .sort-words { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 14px; }
+    .sort-word-btn { background: #FFF; border: 2px solid #E8E6F0; border-radius: 14px; padding: 9px 16px; font-size: 1.5rem; font-weight: 600; color: var(--ink); box-shadow: 0 4px 12px rgba(30,22,64,0.08); cursor: pointer; transition: transform 0.12s; word-break: normal; }
+    .sort-area .sort-word-btn { border-color: var(--accent); }
+    .sort-word-btn:active { transform: scale(0.94); }
+    .sort-word-btn.selected { visibility: hidden; }
+    .sort-word-btn.hint-glow { box-shadow: 0 0 0 3px #FFD95A, 0 0 18px #FFD95A; }
+    .quiz-card .btn-outline { background: var(--option-bg); box-shadow: none; }
+
+    .voice-btn { flex: none; width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; color: #FFF; font-size: 1.6rem; background: linear-gradient(135deg, var(--secondary), var(--secondary-2)); box-shadow: 0 8px 20px -6px var(--secondary-2); transition: transform 0.12s; }
+    .voice-btn:active { transform: scale(0.92); }
+    .mic-btn { width: 108px; height: 108px; margin: 14px auto 6px; border-radius: 50%; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center; color: #FFF; font-size: 3.2rem; background: linear-gradient(135deg, #FF5FA2, #E11D74); box-shadow: 0 14px 30px -8px #E11D74, 0 0 0 8px rgba(225,29,116,0.12); transition: transform 0.12s; }
+    .mic-btn:active { transform: scale(0.94); }
+    .mic-btn.listening { animation: pulse 1s infinite; background: linear-gradient(135deg, #FB7185, var(--incorrect-2)); }
+    @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 8px rgba(244,63,94,0.15); } 50% { transform: scale(1.08); box-shadow: 0 0 0 18px rgba(244,63,94,0.08); } }
+
+    /* ---------- クイズの おうえん ステージ ---------- */
+    .quiz-buddy { position: relative; z-index: 101; width: 100%; margin-top: auto; padding-top: 18px; display: flex; align-items: center; gap: 12px; }
+    .buddy-btn { position: relative; flex: none; width: 118px; height: 118px; padding: 0; border: none; background: none; cursor: pointer; }
+    .buddy-btn::before { content: ''; position: absolute; left: 50%; bottom: 0; width: 104px; height: 22px; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(ellipse, var(--floor) 0%, transparent 70%); animation: floorPulse 3s ease-in-out infinite; }
+    .buddy-btn::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, transparent 66%); z-index: -1; }
+    .buddy-btn img { position: relative; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 8px 6px rgba(0,0,0,0.18)); animation: float 3s ease-in-out infinite; pointer-events: none; }
+    .buddy-side { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .buddy-bubble { position: relative; max-width: 100%; padding: 10px 14px; border-radius: 18px; background: #FFF; color: var(--ink); font-size: 1rem; font-weight: 900; line-height: 1.4; box-shadow: 0 10px 24px var(--shadow); transform-origin: left center; transition: opacity 0.2s, transform 0.25s cubic-bezier(0.2, 1.5, 0.4, 1); }
+    .buddy-bubble::before { content: ''; position: absolute; left: -9px; top: 50%; transform: translateY(-50%); border-style: solid; border-width: 8px 10px 8px 0; border-color: transparent #FFF transparent transparent; }
+    .buddy-bubble.hide { opacity: 0; transform: scale(0.8); }
+    .hint-chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; border: none; background: rgba(255,255,255,0.88); box-shadow: 0 6px 14px var(--shadow); color: var(--ink); font-size: 0.85rem; font-weight: 800; cursor: pointer; white-space: nowrap; }
+    .hint-chip .icon { color: #F5A400; }
+    .hint-chip.used { opacity: 0.5; cursor: default; }
+
+    .quiz-meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; min-height: 34px; }
+    .meta-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px 4px 6px; border-radius: 999px; background: rgba(255,255,255,0.88); box-shadow: 0 6px 14px var(--shadow); color: var(--ink); font-size: 0.82rem; font-weight: 800; white-space: nowrap; }
+    .meta-chip img { width: 26px; height: 26px; object-fit: contain; }
+    .meta-chip.streak { padding-left: 10px; color: #FFF; background: linear-gradient(135deg, #FF9A3D, #FF4F6B); }
+    .meta-chip.get { animation: getPop 0.9s ease; box-shadow: 0 0 0 3px #FFD95A, 0 0 24px #FFD95A; }
+    @keyframes getPop { 0% { transform: scale(1); } 30% { transform: scale(1.35); } 60% { transform: scale(0.95); } 100% { transform: scale(1.1); } }
+
+    /* ---------- ⭕ / ❌ の けっか ---------- */
+    .overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.45); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); z-index: 100; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.25s; opacity: 0; pointer-events: none; }
     .overlay.show { opacity: 1; pointer-events: auto; }
-    .feedback-card { text-align: center; background: #FFF; padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 5px solid var(--primary); width: 90%; max-width: 400px; }
-    .feedback-icon { font-size: 7rem; animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    .feedback-text { font-size: 1.8rem; font-weight: 900; margin-top: 10px; line-height: 1.4; }
+    #feedback-overlay { justify-content: flex-start; padding-top: max(9vh, 36px); }
+    .feedback-card { text-align: center; background: #FFF; color: var(--ink); padding: 30px 22px; border-radius: 30px; box-shadow: 0 30px 70px var(--shadow-strong); width: 88%; max-width: 380px; }
+    .fb-mark { position: relative; width: 116px; height: 116px; margin: 0 auto; animation: pop 0.45s cubic-bezier(0.2, 1.6, 0.4, 1); }
+    .fb-mark.correct { border-radius: 50%; border: 18px solid var(--correct); }
+    .fb-mark.wrong::before, .fb-mark.wrong::after { content: ''; position: absolute; left: 50%; top: 50%; width: 128px; height: 18px; border-radius: 999px; background: var(--incorrect); }
+    .fb-mark.wrong::before { transform: translate(-50%, -50%) rotate(45deg); }
+    .fb-mark.wrong::after { transform: translate(-50%, -50%) rotate(-45deg); }
+    .feedback-text { font-size: 1.65rem; font-weight: 900; margin-top: 18px; line-height: 1.4; }
     @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
-    
-    .evo-rings { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; z-index: -1; overflow: hidden; }
-    .evo-ring { position: absolute; width: 0; height: 0; border-radius: 50%; border: 15px solid var(--secondary); animation: ringExpand 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite; box-shadow: 0 0 30px var(--secondary), inset 0 0 30px var(--secondary); opacity: 0; }
-    .evo-ring:nth-child(2) { animation-delay: 0.6s; border-color: var(--primary); box-shadow: 0 0 30px var(--primary), inset 0 0 30px var(--primary); }
-    .evo-ring:nth-child(3) { animation-delay: 1.2s; border-color: #03A9F4; box-shadow: 0 0 30px #03A9F4, inset 0 0 30px #03A9F4; }
-    @keyframes ringExpand { 0% { width: 0; height: 0; opacity: 1; border-width: 20px; } 100% { width: 150vw; height: 150vw; opacity: 0; border-width: 2px; } }
-    #evolve-image { width: 220px; height: 220px; object-fit: contain; filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)); animation: pulseGlow 1.5s infinite alternate; margin-bottom: 20px;}
-    @keyframes pulseGlow { 0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--primary)); } 100% { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--secondary)); } }
-    .evolve-text { font-size: 2.2rem; color: var(--primary-shadow); font-weight: 900; margin-bottom: 30px; text-align: center; text-shadow: 2px 2px #FFF, 0 0 10px #FFF59D;}
+
+    /* ---------- しんか ---------- */
+    #evolve-overlay { background: radial-gradient(circle at 50% 40%, #FFFFFF, var(--bg-top)) !important; }
+    .evo-rings { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; z-index: -1; overflow: hidden; }
+    .evo-ring { position: absolute; width: 0; height: 0; border-radius: 50%; border: 15px solid var(--accent); animation: ringExpand 2s cubic-bezier(0.1, 0.8, 0.3, 1) infinite; opacity: 0; }
+    .evo-ring:nth-child(2) { animation-delay: 0.6s; border-color: var(--accent-2); }
+    .evo-ring:nth-child(3) { animation-delay: 1.2s; border-color: #FFD95A; }
+    @keyframes ringExpand { 0% { width: 0; height: 0; opacity: 0.9; border-width: 20px; } 100% { width: 150vw; height: 150vw; opacity: 0; border-width: 2px; } }
+    #evolve-image { width: 220px; height: 220px; object-fit: contain; animation: pulseGlow 1.5s infinite alternate; margin-bottom: 20px; }
+    @keyframes pulseGlow { 0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--accent)); } 100% { transform: scale(1.08); filter: drop-shadow(0 0 28px var(--accent-2)); } }
+    .evolve-text { font-size: clamp(1.6rem, 7vw, 2.1rem); color: var(--accent-ink); font-weight: 900; margin: 0 16px 28px; text-align: center; text-shadow: 0 3px 0 #FFF; }
+
+    @media (max-height: 740px) {
+      .partner-stage { padding-top: 32px; }
+      .poke-wrap, .poke-wrap img, #partner-image { width: 140px; height: 140px; }
+      .poke-wrap::after { width: 124px; }
+      .partner-stage::before { width: 220px; height: 220px; }
+      .partner-stage::after { width: 176px; height: 176px; }
+    }
+    @media (max-height: 700px) { .buddy-btn { width: 96px; height: 96px; } .buddy-bubble { font-size: 0.92rem; } }
+    @media (prefers-reduced-motion: reduce) {
+      #partner-image, .poke-wrap img, .poke-wrap::after, .food-item.ready, .bg-deco *, .partner-stage::after, .exp-bar-fill::after, #start-quiz-btn::after { animation: none !important; }
+    }
   </style>
 </head>
 <body>
+<div class="bg-deco" aria-hidden="true"><div class="rays"></div><div class="sand"></div><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i></div>
 
 <div id="app">
   <div id="room-view" class="view active">
-    <header class="app-header"><h1 id="main-title">さんすう けいさんクイズ</h1></header>
-    <div id="partner-stage" class="partner-stage bg-grass" onclick="interactPokemon('room')">
+    <header class="app-header"><p class="app-kicker">いぶちゃん＆みーちゃんの</p><h1 id="main-title">さんすう けいさんクイズ</h1></header>
+    <div id="partner-stage" class="partner-stage" onclick="interactPokemon('room')">
       <div id="poke-comment-room" class="poke-comment">がんばろうね！</div>
-      <img id="partner-image-room" class="partner-image" src="" alt="パートナー">
+      <div class="poke-wrap"><img id="partner-image-room" class="partner-image" src="" alt="パートナー"></div>
       <div id="eating-msg-room" class="eating-msg">もぐもぐ♪</div>
       <h2 id="partner-name-room" class="partner-name">ゴンベ</h2>
     </div>
@@ -175,44 +346,45 @@
 
     <!-- ごはんボックス（生活モード用） -->
     <div id="food-section" class="food-section" style="display:none;">
-      <div class="food-header"><h3>ごはんボックス</h3><p>4もんせいかいで、ごはんが1つひらくよ！</p></div>
+      <div class="food-header"><h3>きのみボックス</h3><p>4もん せいかいすると きのみが 1こ ひらくよ！</p></div>
       <div id="food-list" class="food-list"></div>
     </div>
     
     <div id="mode-select-section" class="mode-select-section">
       <h3>けいさんモードを えらんでね</h3>
       <div class="mode-buttons">
-        <button class="btn-mode active" onclick="setMode(1)">1. かんたん (10までの たし・ひき)</button>
-        <button class="btn-mode" onclick="setMode(2)">2. ふつう (20までの たし・ひき)</button>
-        <button class="btn-mode" onclick="setMode(3)">3. チャレンジ (2のだん・3のだん)</button>
+        <button class="btn-mode active" onclick="setMode(1)">かんたん<small>10まで ＋ −</small></button>
+        <button class="btn-mode" onclick="setMode(2)">ふつう<small>20まで ＋ −</small></button>
+        <button class="btn-mode" onclick="setMode(3)">チャレンジ<small>2・3の だん</small></button>
       </div>
     </div>
 
     <div class="action-buttons">
-      <button id="start-quiz-btn" class="btn btn-primary btn-large">けいさんクイズ (4もん)</button>
-      <button id="mode-toggle-btn" class="btn btn-outline btn-large" style="margin-top:5px;">🔄 せいかつモードにきりかえ</button>
-      <button id="mute-btn" class="btn btn-outline btn-large" style="margin-top:5px;" onclick="setMuted(!isMuted)">🔇 おとを けす</button>
-      <button id="reset-game-btn" class="btn btn-danger btn-large" style="margin-top:5px; display:none;">ゴンベともういちどあそぶ🔄</button>
+      <button id="start-quiz-btn" class="btn btn-primary btn-large">けいさんクイズ</button>
+      <div class="sub-actions">
+        <button id="mode-toggle-btn" class="btn btn-outline btn-small">せいかつモード</button>
+        <button id="mute-btn" class="btn btn-outline btn-small" onclick="setMuted(!isMuted)">おとを けす</button>
+      </div>
+      <button id="reset-game-btn" class="btn btn-danger btn-large" style="display:none;">ゴンベと もういちど あそぶ</button>
     </div>
   </div>
 
   <div id="quiz-view" class="view hidden">
-    <div class="quiz-header-bar"><span id="quiz-progress-text" class="badge">だい 1 もん！</span></div>
-    
-    <!-- 計算クイズ用パートナー表示 -->
-    <div id="quiz-partner-stage" class="partner-stage bg-grass" style="padding:20px 10px 10px; margin-bottom:8px;" onclick="interactPokemon('quiz')">
-      <div id="poke-comment-quiz" class="poke-comment">がんばれー！</div>
-      <img id="partner-image-quiz" class="partner-image" style="width:100px; height:100px;" src="" alt="パートナー">
-      <div id="eating-msg-quiz" class="eating-msg">もぐもぐ♪</div>
-    </div>
-
+    <div class="quiz-top"><div id="quiz-progress" class="progress-dots"></div><span id="quiz-progress-text" class="progress-label">だい 1 もん</span><div id="quiz-meta" class="quiz-meta"></div></div>
     <div id="quiz-content" class="quiz-card"></div>
+    <div class="quiz-buddy">
+      <button id="buddy-btn" class="buddy-btn" aria-label="ヒント"><img id="buddy-img" src="" alt=""></button>
+      <div class="buddy-side">
+        <div id="buddy-bubble" class="buddy-bubble hide">がんばれー！</div>
+        <button id="hint-chip" class="hint-chip"></button>
+      </div>
+    </div>
   </div>
 </div>
 
 <div id="feedback-overlay" class="overlay">
   <div class="feedback-card">
-    <div id="feedback-icon" class="feedback-icon">⭕</div>
+    <div id="feedback-icon" class="fb-mark correct"></div>
     <div id="feedback-text" class="feedback-text">せいかい！</div>
   </div>
 </div>
@@ -236,14 +408,27 @@ const eeveeEvolutions = [
 ];
 
 const allFoods = [
-  { name: "ハンバーガー", emoji: "🍔" }, { name: "おすし", emoji: "🍣" }, { name: "ラーメン", emoji: "🍜" }, { name: "おにぎり", emoji: "🍙" }, 
-  { name: "カレー", emoji: "🍛" }, { name: "ピザ", emoji: "🍕" }, { name: "アイス", emoji: "🍦" }, { name: "ドーナツ", emoji: "🍩" }, 
-  { name: "パンケーキ", emoji: "🥞" }, { name: "ステーキ", emoji: "🥩" }, { name: "サンドイッチ", emoji: "🥪" }, { name: "たこやき", emoji: "🐙" }
+  { name: "オレンのみ", img: "oran" }, { name: "モモンのみ", img: "pecha" }, { name: "クラボのみ", img: "cheri" }, { name: "カゴのみ", img: "chesto" },
+  { name: "チーゴのみ", img: "rawst" }, { name: "ナナシのみ", img: "aspear" }, { name: "ヒメリのみ", img: "leppa" }, { name: "キーのみ", img: "persim" },
+  { name: "ラムのみ", img: "lum" }, { name: "オボンのみ", img: "sitrus" }, { name: "ズリのみ", img: "razz" }, { name: "ナナのみ", img: "nanab" },
+  { name: "パイルのみ", img: "pinap" }, { name: "ザロクのみ", img: "pomeg" }, { name: "フィラのみ", img: "figy" }, { name: "ブリーのみ", img: "bluk" }, { name: "セシナのみ", img: "wepear" }
 ];
+function getBerryImageUrl(img) { return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/dream-world/${img}-berry.png`; }
+function randomBerries() { return [...allFoods].sort(() => 0.5 - Math.random()).slice(0, 4).map(f => ({ ...f, isEaten: false })); }
 
 const berryEmojis = ["🍒", "🍎", "🍇", "🍓", "🍊", "🍑"];
 const pokeComments = ["たのしいね！", "おなかすいたー！", "いぶちゃん、がんばろうね！", "みーちゃん、がんばろうね！", "すごーい！", "えらいね！"];
-const effectEmojis = ["💖", "✨", "⭐", "🎵"];
+// ボタンの アイコン（えもじの かわりに おなじ みためで でる SVG）
+const ICON = {
+  bulb: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5a6.5 6.5 0 0 0-3.9 11.7c.6.5.9 1.1.9 1.8v.5h6V16c0-.7.3-1.3.9-1.8A6.5 6.5 0 0 0 12 2.5zM9 18h6v1.2a2.3 2.3 0 0 1-2.3 2.3h-1.4A2.3 2.3 0 0 1 9 19.2z"/></svg>',
+  flame: '<svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 2s.8 3-1.4 5.6C10.4 9.6 8 11.2 8 14.6A4.9 4.9 0 0 0 12 19.5a4.6 4.6 0 0 1-1.7-3.6c0-2.3 2.4-3.4 2.9-5.6 2.6 1.6 4.3 4 4.3 6.3 0 3.6-3 6.4-5.9 6.4S5 20.4 5 15.6C5 8.7 13.5 6.3 13.5 2z"/></svg>',
+  speaker: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5z" fill="currentColor"/><path d="M16.5 8.8a4.5 4.5 0 0 1 0 6.4"/><path d="M19.2 6.2a8.3 8.3 0 0 1 0 11.6"/></svg>',
+  mute: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.5L13 19V5L7.5 9.5z" fill="currentColor"/><path d="M16.5 9.5l5 5M21.5 9.5l-5 5"/></svg>',
+  swap: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14l-3.5-3.5M20 16H6l3.5 3.5"/></svg>',
+  mic: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="12" rx="3" fill="currentColor"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>',
+  retry: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.4-5.7M20 4v5h-5"/></svg>',
+  play: '<svg class="icon" viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>'
+};
 
 const correctTexts = ["せいかい！すごい！", "かんぺき！", "すばらしい！", "やったね！", "さすが！"];
 const incorrectTexts = ["おしい！もういちど！", "どんまい！", "つぎは がんばろう！", "ファイト！", "ざんねん！"];
@@ -445,7 +630,7 @@ function generateCalcQuestion() {
 let isLifeMode = false;
 let calcState = { totalBerries: 0, isEvolved: false };
 let lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
-let currentQuestionBerryEmoji = "🍎";
+let currentQuestionBerry = null; // けいさんの ヒントに つかう きのみ
 
 // =========================================================
 // ▼▼ よみあげ（こえ）の しくみ ▼▼
@@ -541,7 +726,7 @@ function setMuted(m) {
   isMuted = m; saveProgress(APP_ID + '-muted', m);
   if (m) stopSpeech();
   const b = document.getElementById('mute-btn');
-  if (b) b.innerText = m ? '🔊 おとを だす' : '🔇 おとを けす';
+  if (b) b.innerHTML = m ? `${ICON.speaker}<span>おとを だす</span>` : `${ICON.mute}<span>おとを けす</span>`;
 }
 
 // おなじ もんだいが つづけて でないように、さいきん でた もんだいを おぼえておく
@@ -569,12 +754,11 @@ const foodListEl = document.getElementById('food-list'), foodSection = document.
 const expText = document.getElementById('exp-text'), expBar = document.getElementById('exp-bar');
 const resetGameBtn = document.getElementById('reset-game-btn');
 const partnerStage = document.getElementById('partner-stage');
-const quizPartnerStage = document.getElementById('quiz-partner-stage');
 
 function initCalcGame() { calcState = { totalBerries: 0, isEvolved: false }; }
 function initLifeGame() {
   lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
-  lifeState.foods = [...allFoods].sort(() => 0.5 - Math.random()).slice(0, 4).map(f => ({ ...f, isEaten: false }));
+  lifeState.foods = randomBerries();
 }
 
 function getCurrentPoke() {
@@ -583,14 +767,8 @@ function getCurrentPoke() {
 }
 
 function updateStageBackground() {
-  partnerStage.classList.remove('bg-grass', 'bg-lovely', 'bg-cool');
-  quizPartnerStage.classList.remove('bg-grass', 'bg-lovely', 'bg-cool');
-  
-  let targetBg = 'bg-grass';
-  if (!isLifeMode) { targetBg = 'bg-grass'; }
-  else { targetBg = lifeState.isEvolved ? 'bg-cool' : 'bg-lovely'; }
-  partnerStage.classList.add(targetBg);
-  quizPartnerStage.classList.add(targetBg);
+  // しんかした あとは きんいろの ステージ
+  partnerStage.classList.toggle('stage-final', isLifeMode ? lifeState.isEvolved : calcState.isEvolved);
 }
 
 const SAVE_KEY = 'sansu-quiz-progress-v1';
@@ -603,9 +781,6 @@ function renderRoom() {
   const roomPokeImg = document.getElementById('partner-image-room');
   if (roomPokeImg) roomPokeImg.src = getPokemonImageUrl(currentPoke.id);
   document.getElementById('partner-name-room').innerText = currentPoke.name;
-  
-  const quizPokeImg = document.getElementById('partner-image-quiz');
-  if (quizPokeImg) quizPokeImg.src = getPokemonImageUrl(currentPoke.id);
   
   updateStageBackground();
   
@@ -627,49 +802,16 @@ function renderRoom() {
     lifeState.foods.forEach((food, index) => {
       const isUnlocked = lifeState.keys > index;
       const foodEl = document.createElement('div');
-      if (food.isEaten) { foodEl.className = 'food-item eaten'; foodEl.innerText = food.emoji; }
-      else if (!isUnlocked) { foodEl.className = 'food-item locked'; foodEl.innerText = food.emoji; }
-      else { 
-        foodEl.className = 'food-item'; foodEl.innerText = food.emoji; 
-        if (!lifeState.isEvolved) { foodEl.onclick = () => feedLifePartner(index, foodEl); }
+      foodEl.innerHTML = `<img src="${getBerryImageUrl(food.img)}" alt="${food.name}" draggable="false">`;
+      if (food.isEaten) { foodEl.className = 'food-item eaten'; }
+      else if (!isUnlocked) { foodEl.className = 'food-item locked'; }
+      else {
+        foodEl.className = 'food-item';
+        if (!lifeState.isEvolved) { foodEl.classList.add('ready'); foodEl.onclick = () => feedLifePartner(index, foodEl); }
       }
       foodListEl.appendChild(foodEl);
     });
   }
-}
-
-function feedLifePartner(index, element) {
-  if (lifeState.foods[index].isEaten) return;
-  const roomPokeImg = document.getElementById('partner-image-room');
-  
-  const flying = document.createElement('div'); flying.innerText = element.innerText; flying.className = 'flying-food';
-  const rect = element.getBoundingClientRect(); flying.style.left = rect.left + 'px'; flying.style.top = rect.top + 'px';
-  document.body.appendChild(flying);
-  element.classList.add('eaten'); lifeState.foods[index].isEaten = true;
-  
-  setTimeout(() => {
-    const pRect = roomPokeImg.getBoundingClientRect();
-    flying.style.left = (pRect.left + pRect.width/2 - 20) + 'px'; flying.style.top = (pRect.top + pRect.height/2 - 20) + 'px';
-    flying.style.transform = 'scale(0.5) rotate(360deg)'; flying.style.opacity = '0';
-  }, 50);
-
-  setTimeout(() => {
-    flying.remove();
-    const msg = document.getElementById('eating-msg-room'); msg.style.opacity = 1; msg.style.transform = "translate(-50%, -20px)"; roomPokeImg.classList.add("anim-chew");
-    spawnEffects('room');
-    
-    setTimeout(() => {
-      msg.style.opacity = 0; msg.style.transform = "translate(-50%, 0)"; roomPokeImg.classList.remove("anim-chew");
-      lifeState.exp = Math.min(100, lifeState.exp + 25);
-      
-      if (lifeState.exp === 100 && !lifeState.isEvolved) {
-        lifeState.isEvolved = true;
-        const evo = eeveeEvolutions[Math.floor(Math.random() * eeveeEvolutions.length)];
-        lifeState.partnerId = evo.id; lifeState.partnerName = evo.name;
-        evolvePoke(evo);
-      } else { renderRoom(); }
-    }, 1000);
-  }, 550);
 }
 
 let commentTimeout = null;
@@ -698,48 +840,169 @@ function interactPokemon(type) {
   }
 }
 
-function spawnEffects(type) {
-  const emoji = effectEmojis[Math.floor(Math.random() * effectEmojis.length)];
-  const stage = type === 'room' ? partnerStage : quizPartnerStage;
-  if (!stage) return;
-  for(let i=0; i<4; i++) {
-    const h = document.createElement('div'); h.innerText = emoji; h.className = 'effect-anim';
-    h.style.left = (35 + Math.random()*30) + '%'; h.style.animationDelay = (Math.random()*0.2) + 's';
-    stage.appendChild(h); setTimeout(() => h.remove(), 1000);
+// =========================================================
+// ▼▼ えんしゅつ（つぶつぶ・かみふぶき・こうかおん）▼▼
+// =========================================================
+const PARTICLE_COLORS = ['#FF6B9A', '#FFD23F', '#5BC0EB', '#9BE564', '#FF9F1C', '#B388FF'];
+function burst(cx, cy, opts = {}) {
+  const n = opts.count || 14, spread = opts.spread || 80, shapes = opts.shapes || ['star', 'heart', ''];
+  for (let i = 0; i < n; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle ' + shapes[i % shapes.length];
+    p.style.background = p.style.color = (opts.colors || PARTICLE_COLORS)[i % (opts.colors || PARTICLE_COLORS).length];
+    p.style.left = cx + 'px'; p.style.top = cy + 'px';
+    document.body.appendChild(p);
+    const ang = Math.random() * Math.PI * 2, dist = spread * (0.5 + Math.random() * 0.7);
+    const tx = Math.cos(ang) * dist, ty = Math.sin(ang) * dist - 30;
+    const a = p.animate([
+      { transform: 'translate(-50%, -50%) scale(0.3)', opacity: 1 },
+      { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1) rotate(${Math.random() * 300}deg)`, opacity: 1, offset: 0.7 },
+      { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty + 25}px)) scale(0.8)`, opacity: 0 }
+    ], { duration: 750 + Math.random() * 350, easing: 'cubic-bezier(0.2, 0.7, 0.3, 1)' });
+    a.onfinish = () => p.remove();
   }
 }
-
-function feedBerriesInQuiz(berryCount, callback) {
-  const quizPokeImg = document.getElementById('partner-image-quiz');
-  
-  for(let i=0; i<Math.min(10, berryCount); i++) {
-    setTimeout(() => {
-      const flying = document.createElement('div'); flying.innerText = currentQuestionBerryEmoji; flying.className = 'flying-food';
-      flying.style.left = (30 + Math.random()*40) + 'vw'; flying.style.top = '70vh'; document.body.appendChild(flying);
-
-      setTimeout(() => {
-        const pRect = quizPokeImg.getBoundingClientRect();
-        flying.style.left = (pRect.left + pRect.width/2 - 15) + 'px'; flying.style.top = (pRect.top + pRect.height/2 - 15) + 'px';
-        flying.style.transform = 'scale(0.4) rotate(360deg)'; flying.style.opacity = '0';
-      }, 50);
-      setTimeout(() => flying.remove(), 550);
-    }, i * 90);
+function confetti() {
+  for (let i = 0; i < 28; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = (Math.random() * 100) + 'vw';
+    c.style.background = PARTICLE_COLORS[i % PARTICLE_COLORS.length];
+    document.body.appendChild(c);
+    const drift = (Math.random() - 0.5) * 120;
+    const a = c.animate([
+      { transform: 'translate(0, 0) rotate(0)', opacity: 1 },
+      { transform: `translate(${drift}px, 105vh) rotate(${540 + Math.random() * 540}deg)`, opacity: 0.9 }
+    ], { duration: 1400 + Math.random() * 900, delay: Math.random() * 250, easing: 'cubic-bezier(0.3, 0.4, 0.6, 1)' });
+    a.onfinish = () => c.remove();
   }
+}
+function elementCenter(el) { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
 
+// ファイルを つかわず ブラウザの なかで つくる こうかおん（おとを けす と ならない）
+let audioCtx = null;
+function sfx(type) {
+  if (isMuted) return;
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const t = audioCtx.currentTime;
+    const tone = (f1, f2, start, dur, vol = 0.15, wave = 'triangle') => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = wave;
+      o.frequency.setValueAtTime(f1, t + start); o.frequency.exponentialRampToValueAtTime(f2, t + start + dur);
+      g.gain.setValueAtTime(0.0001, t + start); g.gain.exponentialRampToValueAtTime(vol, t + start + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + start + dur);
+      o.connect(g); g.connect(audioCtx.destination); o.start(t + start); o.stop(t + start + dur + 0.05);
+    };
+    if (type === 'throw') tone(380, 950, 0, 0.3, 0.1, 'sine');
+    if (type === 'munch') { tone(520, 200, 0, 0.09, 0.22); tone(480, 180, 0.2, 0.09, 0.2); tone(500, 190, 0.4, 0.09, 0.18); }
+    if (type === 'correct') { tone(784, 784, 0, 0.12, 0.12); tone(1175, 1175, 0.1, 0.3, 0.12); }
+    if (type === 'wrong') { tone(330, 220, 0, 0.35, 0.1); }
+    if (type === 'levelup') { [523, 659, 784, 1047].forEach((f, i) => tone(f, f, i * 0.11, 0.22, 0.12)); tone(1319, 1568, 0.45, 0.5, 0.1, 'sine'); }
+  } catch (e) {}
+}
+// =========================================================
+
+const roomPokeImgEl = document.getElementById('partner-image-room');
+function spawnEffects(type) {
+  const c = elementCenter(roomPokeImgEl);
+  burst(c.x, c.y - 20, { count: 10, spread: 90 });
+}
+
+function showExpPop(text) {
+  const board = document.querySelector('.status-board');
+  const pop = document.createElement('div');
+  pop.className = 'exp-pop'; pop.innerText = text;
+  board.appendChild(pop);
+  pop.animate([
+    { transform: 'translateY(10px) scale(0.6)', opacity: 0 },
+    { transform: 'translateY(-8px) scale(1.15)', opacity: 1, offset: 0.3 },
+    { transform: 'translateY(-26px) scale(1)', opacity: 0 }
+  ], { duration: 1200, easing: 'ease-out' }).onfinish = () => pop.remove();
+}
+
+// きのみを ほうぶつせんで なげる（from: なげる もとの img、to: たべる ポケモンの img）
+function throwBerryImg(fromImg, toImg, delay = 0, done) {
   setTimeout(() => {
-    const msg = document.getElementById('eating-msg-quiz');
-    msg.style.opacity = 1; msg.style.transform = "translate(-50%, -15px)"; quizPokeImg.classList.add("anim-chew");
-    spawnEffects('quiz');
-    
+    const from = fromImg.getBoundingClientRect(), to = toImg.getBoundingClientRect();
+    const flying = fromImg.cloneNode();
+    flying.className = 'flying-food';
+    Object.assign(flying.style, { left: from.left + 'px', top: from.top + 'px', width: from.width + 'px', height: from.height + 'px' });
+    document.body.appendChild(flying);
+    const dx = (to.left + to.width / 2) - (from.left + from.width / 2);
+    const dy = (to.top + to.height * 0.55) - (from.top + from.height / 2);
+    const h = 120 + Math.random() * 60, frames = [];
+    for (let k = 0; k <= 16; k++) {
+      const p = k / 16;
+      const scale = (1 + 0.45 * Math.sin(Math.PI * p)) * (1 - 0.65 * p * p * p);
+      frames.push({ transform: `translate(${dx * p}px, ${dy * p - 4 * h * p * (1 - p)}px) rotate(${400 * p}deg) scale(${scale})` });
+    }
+    flying.animate(frames, { duration: 650, easing: 'linear' }).onfinish = () => { flying.remove(); if (done) done(); };
+  }, delay);
+}
+
+let isFeeding = false;
+function feedLifePartner(index, element) {
+  if (lifeState.foods[index].isEaten || isFeeding) return;
+  isFeeding = true;
+  const go = () => {
+    element.classList.remove('ready'); element.classList.add('eaten'); lifeState.foods[index].isEaten = true;
+    sfx('throw');
+    throwBerryImg(element.querySelector('img'), roomPokeImgEl, 0, () => {
+      const msg = document.getElementById('eating-msg-room');
+      msg.innerText = 'パクッ！もぐもぐ♪'; msg.classList.add('show');
+      roomPokeImgEl.classList.add('anim-chew'); sfx('munch');
+      const c = elementCenter(roomPokeImgEl);
+      burst(c.x, c.y + 10, { count: 10, spread: 70, shapes: [''], colors: ['#FFB74D', '#FFE082', '#FF8A65', '#AED581'] });
+      setTimeout(() => burst(c.x, c.y - 30, { count: 8, spread: 90, shapes: ['heart'], colors: ['#FF6B9A', '#FF8FB1', '#FF4F81'] }), 350);
+      setTimeout(() => {
+        msg.classList.remove('show'); roomPokeImgEl.classList.remove('anim-chew');
+        showExpPop('+25'); isFeeding = false;
+        lifeState.exp = Math.min(100, lifeState.exp + 25);
+        if (lifeState.exp === 100 && !lifeState.isEvolved) {
+          lifeState.isEvolved = true;
+          const evo = eeveeEvolutions[Math.floor(Math.random() * eeveeEvolutions.length)];
+          lifeState.partnerId = evo.id; lifeState.partnerName = evo.name;
+          evolvePoke(evo);
+        } else { renderRoom(); }
+      }, 1000);
+    });
+  };
+  // ポケモンが がめんの そとに いたら、みえる ところまで もどしてから なげる
+  const stageTop = partnerStage.getBoundingClientRect().top;
+  if (stageTop < -40) { window.scrollTo({ top: Math.max(0, window.scrollY + stageTop - 12), behavior: 'smooth' }); setTimeout(go, 450); }
+  else go();
+}
+
+// けいさんクイズ：せいかいしたら ヒントの きのみを ぜんぶ パートナーに なげる
+function feedBerriesInQuiz(berryCount, callback) {
+  const icons = Array.from(document.querySelectorAll('#quiz-content .fruit-hint-area .berry-ico:not(.minus-ico)')).slice(0, 10);
+  const target = buddyImg;
+  const r = document.querySelector('.quiz-buddy').getBoundingClientRect();
+  if (r.bottom > window.innerHeight) window.scrollTo({ top: window.scrollY + r.bottom - window.innerHeight + 12, behavior: 'smooth' });
+  setTimeout(() => {
+    if (icons.length) sfx('throw');
+    icons.forEach((ic, i) => throwBerryImg(ic, target, i * 80));
     setTimeout(() => {
-      msg.style.opacity = 0; msg.style.transform = "translate(-50%, 0)"; quizPokeImg.classList.remove("anim-chew");
-      if(!isLifeMode) calcState.totalBerries += berryCount;
-      if(callback) callback();
-    }, 900);
-  }, 500);
+      buddyImg.classList.add('anim-chew'); sfx('munch');
+      buddySay(`${berryCount}こ たべた！おいしい！`);
+      const c = elementCenter(buddyImg);
+      burst(c.x, c.y, { count: 10, spread: 70, shapes: [''], colors: ['#FFB74D', '#FFE082', '#FF8A65', '#AED581'] });
+      setTimeout(() => {
+        buddyImg.classList.remove('anim-chew');
+        if (!isLifeMode) calcState.totalBerries += berryCount;
+        updateQuizMeta();
+        if (callback) callback();
+      }, 900);
+    }, Math.max(1, icons.length) * 80 + 650);
+  }, r.bottom > window.innerHeight ? 400 : 0);
 }
 
 function evolvePoke(targetPoke) {
+  const flash = document.createElement('div'); flash.className = 'flash'; document.body.appendChild(flash);
+  flash.animate([{ opacity: 0 }, { opacity: 1, offset: 0.4 }, { opacity: 0 }], { duration: 900, easing: 'ease-in-out' }).onfinish = () => flash.remove();
+  sfx('levelup');
+  setTimeout(confetti, 300);
   document.getElementById('evolve-image').src = getPokemonImageUrl(targetPoke.id);
   document.getElementById('evolve-text').innerHTML = `おめでとう！<br>${targetPoke.name} に しんかした！`;
   document.getElementById('evolve-overlay').classList.add('show');
@@ -756,22 +1019,24 @@ resetGameBtn.onclick = () => {
   renderRoom();
 };
 
+function setModeButtons() {
+  document.getElementById('start-quiz-btn').innerHTML = `${ICON.play}<span>${isLifeMode ? 'せいかつクイズ' : 'けいさんクイズ'}</span><span class="btn-sub">4もん</span>`;
+  document.getElementById('mode-toggle-btn').innerHTML = `${ICON.swap}<span>${isLifeMode ? 'けいさんモード' : 'せいかつモード'}</span>`;
+  resetGameBtn.innerHTML = `${ICON.retry}<span>${isLifeMode ? 'イーブイに もどる' : 'ゴンベと もういちど あそぶ'}</span>`;
+}
+
 document.getElementById('mode-toggle-btn').onclick = () => {
   isLifeMode = !isLifeMode;
   if (!isLifeMode) {
     document.body.classList.remove('mode-life');
     document.getElementById('main-title').innerText = "さんすう けいさんクイズ";
-    document.getElementById('start-quiz-btn').innerText = "けいさんクイズ (4もん)";
-    document.getElementById('mode-toggle-btn').innerHTML = "🔄 せいかつモードにきりかえ";
     document.getElementById('mode-select-section').style.display = "block";
-    resetGameBtn.innerText = "ゴンベともういちどあそぶ🔄";
+    setModeButtons();
   } else {
     document.body.classList.add('mode-life');
     document.getElementById('main-title').innerText = "さんすう せいかつクイズ";
-    document.getElementById('start-quiz-btn').innerText = "せいかつクイズ (4もん)";
-    document.getElementById('mode-toggle-btn').innerHTML = "🔄 けいさんモードにきりかえ";
     document.getElementById('mode-select-section').style.display = "none";
-    resetGameBtn.innerText = "イーブイにもどる🔄";
+    setModeButtons();
   }
   renderRoom();
 };
@@ -782,30 +1047,34 @@ let recentCalc = [];
 
 document.getElementById('start-quiz-btn').onclick = () => {
   roomView.classList.add('hidden'); quizView.classList.remove('hidden'); currentQIndex = 0;
-  
-  if (isLifeMode) { quizPartnerStage.style.display = "none"; }
-  else { quizPartnerStage.style.display = "block"; }
-  
-  renderRoom();
+  window.scrollTo(0, 0);
+  startBuddyRound();
   showNextQuestion();
 };
 
 function showNextQuestion() {
   if (currentQIndex >= 4) {
-    quizView.classList.add('hidden'); roomView.classList.remove('hidden'); 
-    if (!isLifeMode) {
-      if (calcState.totalBerries >= 100 && !calcState.isEvolved) {
-        calcState.isEvolved = true;
-        setTimeout(() => evolvePoke(gonbeFamily.stage1), 300);
+    answerLocked = true;
+    clearTimeout(idleTimer);
+    buddyCelebrate(() => {
+      answerLocked = false;
+      buddyBubble.classList.add('hide');
+      quizView.classList.add('hidden'); roomView.classList.remove('hidden'); window.scrollTo(0, 0);
+      if (!isLifeMode) {
+        if (calcState.totalBerries >= 100 && !calcState.isEvolved) {
+          calcState.isEvolved = true;
+          setTimeout(() => evolvePoke(gonbeFamily.stage1), 300);
+        }
+      } else {
+        lifeState.keys++;
       }
-    } else {
-      lifeState.keys++;
-    }
-    renderRoom();
+      renderRoom();
+    });
     return;
   }
-  
-  document.getElementById('quiz-progress-text').innerText = `だい ${currentQIndex + 1} もん！`;
+
+  document.getElementById('quiz-progress-text').innerText = `だい ${currentQIndex + 1} もん`;
+  document.getElementById('quiz-progress').innerHTML = [0, 1, 2, 3].map(i => `<span class="dot ${i < currentQIndex ? 'done' : (i === currentQIndex ? 'now' : '')}"></span>`).join('');
   const contentEl = document.getElementById('quiz-content'); contentEl.innerHTML = "";
   
   if (!isLifeMode) {
@@ -822,27 +1091,29 @@ function showNextQuestion() {
     else if (currentQIndex === 2) renderLifeCardQuestion(contentEl, compareData, "くらべてみよう！");
     else renderLifeCardQuestion(contentEl, moneyData, "いくらかな？");
   }
+  buddyOnQuestion();
 }
 
 function generateBerryGridHtml(count, isMinus = false) {
+  const src = getBerryImageUrl(currentQuestionBerry.img);
   let html = '<div class="fruit-grid-5">';
   for (let i = 0; i < count; i++) {
-    if (isMinus) html += `<span class="fruit-minus">${currentQuestionBerryEmoji}</span>`;
-    else html += `<span>${currentQuestionBerryEmoji}</span>`;
+    if (isMinus) html += `<span class="fruit-minus"><img class="berry-ico minus-ico" src="${src}" alt=""></span>`;
+    else html += `<img class="berry-ico" src="${src}" alt="">`;
   }
   html += '</div>';
   return html;
 }
 
 function renderMathCalcQuestion(container, q) {
-  currentQuestionBerryEmoji = berryEmojis[Math.floor(Math.random() * berryEmojis.length)];
+  currentQuestionBerry = allFoods[Math.floor(Math.random() * allFoods.length)];
   let hintHtml = "";
 
   if (q.op === '+') {
     let group1 = generateBerryGridHtml(q.num1); let group2 = generateBerryGridHtml(q.num2);
     hintHtml = `<div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
                   ${group1}
-                  <span style="font-size:1.6rem; font-weight:900; margin:2px 0;">＋</span>
+                  <span class="fruit-plus">＋</span>
                   ${group2}
                 </div>`;
   } else if (q.op === '-') {
@@ -855,19 +1126,19 @@ function renderMathCalcQuestion(container, q) {
   } else {
     let groupsHtml = "";
     for(let i=0; i<q.num2; i++) {
-      groupsHtml += `<div style="display:inline-block; border:2px dashed #FFB300; border-radius:12px; padding:2px 6px; margin:3px; background:rgba(255,255,255,0.9);">${currentQuestionBerryEmoji.repeat(q.num1)}</div>`;
+      groupsHtml += `<div class="fruit-group">${`<img class="berry-ico" src="${getBerryImageUrl(currentQuestionBerry.img)}" alt="">`.repeat(q.num1)}</div>`;
     }
     hintHtml = `<div style="text-align:center;">${groupsHtml}</div>`;
   }
 
   container.innerHTML = `
-    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-      <p style="font-size:1.1rem; font-weight:800; margin:0;">こたえは いくつかな？</p>
-      <button class="voice-btn" id="math-voice-btn">🔊</button>
+    <div class="q-head">
+      <p class="q-title">こたえは いくつかな？</p>
+      <button class="voice-btn" id="math-voice-btn">${ICON.speaker}</button>
     </div>
-    <div class="math-expr">${q.num1} ${q.op} ${q.num2} = ？</div>
+    <div class="math-expr">${q.num1} ${q.op === '-' ? '−' : q.op} ${q.num2} = <span class="q-mark">?</span></div>
     <div class="fruit-hint-area">${hintHtml}</div>
-    <div class="options-grid" id="math-opts"></div>
+    <div class="options-grid two-col" id="math-opts"></div>
   `;
 
   document.getElementById('math-voice-btn').onclick = () => {
@@ -879,6 +1150,7 @@ function renderMathCalcQuestion(container, q) {
   const optsGrid = document.getElementById('math-opts');
   q.options.forEach(opt => {
     const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
+    if (opt === q.ans) btn.dataset.correct = '1';
     btn.onclick = () => checkAnswer(opt === q.ans, q.ans, true);
     optsGrid.appendChild(btn);
   });
@@ -901,9 +1173,9 @@ function renderClockQuestion(container) {
   }
 
   container.innerHTML = `
-    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-      <p style="font-size:1.1rem; font-weight:800; margin:0;">いま なんじかな？</p>
-      <button class="voice-btn" id="clock-voice-btn">🔊</button>
+    <div class="q-head">
+      <p class="q-title">いま なんじかな？</p>
+      <button class="voice-btn" id="clock-voice-btn">${ICON.speaker}</button>
     </div>
     <div class="clock-face">
       ${numbersHtml}
@@ -911,7 +1183,7 @@ function renderClockQuestion(container) {
       <div class="clock-hand hand-minute" style="transform: rotate(${minuteDeg}deg);"></div>
       <div class="clock-center"></div>
     </div>
-    <div class="options-grid" id="clock-opts"></div>
+    <div class="options-grid two-col" id="clock-opts"></div>
   `;
 
   document.getElementById('clock-voice-btn').onclick = () => speakJapaneseVoice("いま なんじかな？");
@@ -919,6 +1191,7 @@ function renderClockQuestion(container) {
   const optsGrid = document.getElementById('clock-opts');
   q.options.slice().sort(() => 0.5 - Math.random()).forEach(opt => {
     const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
+    if (opt === q.ans) btn.dataset.correct = '1';
     btn.onclick = () => checkAnswer(opt === q.ans, q.ans, false);
     optsGrid.appendChild(btn);
   });
@@ -930,13 +1203,13 @@ function renderLifeCardQuestion(container, dataList, titleText) {
   const q = pickFresh(dataList, titleText);
 
   container.innerHTML = `
-    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-      <p style="font-size:1.1rem; font-weight:800; margin:0;">${titleText}</p>
-      <button class="voice-btn" id="life-voice-btn">🔊</button>
+    <div class="q-head">
+      <p class="q-title">${titleText}</p>
+      <button class="voice-btn" id="life-voice-btn">${ICON.speaker}</button>
     </div>
-    <p style="font-size:1.3rem; font-weight:900; margin:10px 0;">${q.text}</p>
+    <p class="question-word" style="font-size:1.45rem; margin:12px 0 4px;">${q.text}</p>
     ${q.html ? q.html : ''}
-    <div class="options-grid" id="life-opts"></div>
+    <div class="options-grid two-col" id="life-opts"></div>
   `;
 
   document.getElementById('life-voice-btn').onclick = () => {
@@ -955,7 +1228,10 @@ function renderLifeCardQuestion(container, dataList, titleText) {
   }
 
   displayOptions.forEach(opt => {
-    const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
+    const btn = document.createElement('div'); btn.className = 'option-btn';
+    // かたちの えもじは おおきく みせる
+    if (/\p{Extended_Pictographic}/u.test(opt)) btn.innerHTML = `<span class="opt-emoji">${opt}</span>`; else btn.innerText = opt;
+    if (opt === q.ans) btn.dataset.correct = '1';
     btn.onclick = () => checkAnswer(opt === q.ans, q.ans, false);
     optsGrid.appendChild(btn);
   });
@@ -963,14 +1239,142 @@ function renderLifeCardQuestion(container, dataList, titleText) {
   setTimeout(() => { document.getElementById('life-voice-btn').click(); }, 300);
 }
 
+// =========================================================
+// ▼▼ クイズの おうえん パートナー・ヒント・ごほうびの よこく・れんぞく せいかい ▼▼
+// =========================================================
+const buddyImg = document.getElementById('buddy-img');
+const buddyBubble = document.getElementById('buddy-bubble');
+const hintChip = document.getElementById('hint-chip');
+const cheerLines = ["がんばれー！", "ゆっくりで いいよ！", "いっしょに がんばろう！", "きみなら できる！", "わくわくするね！"];
+const praiseLines = ["やったね！", "すごーい！", "さすが！", "そのちょうし！"];
+const wrongLines = ["どんまい！", "おしい！", "つぎは できるよ！", "もういっかい！"];
+let hintsLeft = 1, streak = 0, currentHint = null, bubbleTimer = null, idleTimer = null;
+
+function buddySay(text, ms = 2600) {
+  buddyBubble.innerText = text;
+  buddyBubble.classList.remove('hide');
+  clearTimeout(bubbleTimer);
+  if (ms) bubbleTimer = setTimeout(() => buddyBubble.classList.add('hide'), ms);
+}
+function buddyMove(cls, ms) {
+  buddyImg.classList.remove('anim-jump', 'anim-shake', 'anim-spin');
+  void buddyImg.offsetWidth;
+  buddyImg.classList.add(cls);
+  setTimeout(() => buddyImg.classList.remove(cls), ms);
+}
+function updateHintChip() {
+  hintChip.classList.toggle('used', hintsLeft <= 0);
+  hintChip.innerHTML = hintsLeft > 0 ? `${ICON.bulb}<span>ヒント（あと ${hintsLeft}かい）</span>` : `${ICON.bulb}<span>ヒントは つかったよ</span>`;
+}
+function currentState() { return lifeState; }
+function updateQuizMeta() {
+  let html = '';
+  if (!isLifeMode) {
+    // けいさんモード：しんかまでに たべた きのみの かず
+    if (!calcState.isEvolved) html += `<span class="meta-chip" id="berry-count-chip"><img src="${getBerryImageUrl('oran')}" alt=""><span>きのみ ${Math.min(100, calcState.totalBerries)} / 100こ</span></span>`;
+  } else {
+    const next = lifeState.keys < lifeState.foods.length ? lifeState.foods[lifeState.keys] : null;
+    if (next) html += `<span class="meta-chip" id="reward-chip"><img src="${getBerryImageUrl(next.img)}" alt="${next.name}"><span>クリアで ゲット！</span></span>`;
+  }
+  if (streak >= 2) html += `<span class="meta-chip streak">${ICON.flame}<span>${streak}れんぞく せいかい</span></span>`;
+  document.getElementById('quiz-meta').innerHTML = html;
+}
+function startBuddyRound() {
+  hintsLeft = 1;
+  buddyImg.src = getPokemonImageUrl(getCurrentPoke().id);
+  buddyImg.alt = getCurrentPoke().name;
+  updateHintChip();
+}
+// もんだいが でた とき
+function buddyOnQuestion() {
+  currentHint = null;
+  updateQuizMeta();
+  buddySay(cheerLines[Math.floor(Math.random() * cheerLines.length)]);
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    if (answerLocked || quizView.classList.contains('hidden')) return;
+    buddySay(hintsLeft > 0 ? 'わからなかったら わたしを タップしてね！' : 'スピーカーを おすと もういちど きけるよ！', 4000);
+    buddyMove('anim-jump', 400);
+  }, 12000);
+}
+// こたえた とき
+function buddyOnAnswer(isCorrect) {
+  clearTimeout(idleTimer);
+  if (isCorrect) {
+    streak++;
+    buddySay(streak >= 3 ? `${streak}れんぞく！すごすぎる！` : praiseLines[Math.floor(Math.random() * praiseLines.length)]);
+    buddyMove('anim-jump', 400);
+    const c = elementCenter(buddyImg);
+    burst(c.x, c.y, { count: 10, spread: 70, shapes: ['star', ''] });
+  } else {
+    streak = 0;
+    buddySay(wrongLines[Math.floor(Math.random() * wrongLines.length)]);
+    buddyMove('anim-shake', 400);
+  }
+  updateQuizMeta();
+}
+// 4もん クリア！
+function buddyCelebrate(done) {
+  // パートナーが がめんの したに かくれていたら みえる ところまで スクロール
+  const r = document.querySelector('.quiz-buddy').getBoundingClientRect();
+  if (r.bottom > window.innerHeight) window.scrollTo({ top: window.scrollY + r.bottom - window.innerHeight + 12, behavior: 'smooth' });
+  const chip = document.getElementById('reward-chip');
+  buddySay(isLifeMode ? (chip ? 'クリア！きのみ ゲット！' : 'クリア！よく がんばったね！') : 'クリア！きのみ おいしかった！', 0);
+  buddyMove('anim-spin', 500);
+  setTimeout(() => buddyMove('anim-jump', 400), 550);
+  if (chip) chip.classList.add('get');
+  sfx('levelup'); confetti();
+  if (!isMuted) { try { const a = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${getCurrentPoke().id}.ogg`); a.volume = 0.4; a.play().catch(() => {}); } catch (e) {} }
+  setTimeout(done, 2000);
+}
+// ヒント：まちがいの せんたくしを 1つ けす（ならべかえは つぎの ことばを おく）
+function useHint() {
+  if (answerLocked || quizView.classList.contains('hidden')) return;
+  if (hintsLeft <= 0) { buddySay('ヒントは もう つかったよ。きみなら できる！'); buddyMove('anim-shake', 400); return; }
+  let used = false;
+  if (currentHint) {
+    used = currentHint();
+  } else {
+    const wrong = Array.from(document.querySelectorAll('#quiz-content .option-btn:not(.hinted-out)')).filter(b => b.dataset.correct !== '1');
+    if (wrong.length >= 2) {
+      const pick = wrong[Math.floor(Math.random() * wrong.length)];
+      pick.classList.add('hinted-out');
+      used = true;
+      buddySay('これは ちがうよ！');
+    }
+  }
+  if (used === 'said') return; // ヒントを つかわずに おてほんだけ きかせた
+  if (used) {
+    hintsLeft--; updateHintChip(); sfx('correct');
+    buddyMove('anim-jump', 400);
+  } else {
+    buddySay('この もんだいは ヒントなしで やってみよう！');
+  }
+}
+document.getElementById('buddy-btn').onclick = useHint;
+hintChip.onclick = useHint;
+// =========================================================
+
+let lastTappedOption = null;
+document.getElementById('quiz-content').addEventListener('pointerdown', (e) => { lastTappedOption = e.target.closest('.option-btn'); }, true);
+
 function checkAnswer(isCorrect, ansText, isCalc = false) {
   if (answerLocked) return;
   answerLocked = true;
   const overlay = document.getElementById('feedback-overlay'), icon = document.getElementById('feedback-icon'), text = document.getElementById('feedback-text');
-  
+  // おした ボタンを みどり（せいかい）／あか（まちがい）に する
+  const tapped = lastTappedOption && document.body.contains(lastTappedOption) ? lastTappedOption : null;
+  if (tapped) {
+    tapped.classList.add(isCorrect ? 'is-correct' : 'is-wrong');
+    if (!isCorrect) setTimeout(() => tapped.classList.remove('is-wrong'), 900);
+  }
+  icon.className = 'fb-mark ' + (isCorrect ? 'correct' : 'wrong');
+  void icon.offsetWidth;
+  buddyOnAnswer(isCorrect);
+
   if (isCorrect) {
-    icon.innerText = "⭕"; icon.style.color = "var(--correct)";
-    text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span style="font-size:1.4rem; color:var(--primary-shadow); display:block; margin-top:10px;">せいかい：${ansText}</span>`;
+    sfx('correct'); confetti();
+    text.innerHTML = `${correctTexts[Math.floor(Math.random() * correctTexts.length)]}<br><span class="en" style="font-size:1.6rem; color:var(--accent-ink); display:block; margin-top:10px;">${ansText}</span>`;
     text.style.color = "var(--correct)";
     
     // 正解時に英語ボイス再生
@@ -982,8 +1386,8 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     }
     speakSequence(parts);
   } else {
-    icon.innerText = "❌"; icon.style.color = "var(--incorrect)";
-    text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.2rem; color:#666; display:block; margin-top:10px;">もういちど かんがえてみよう！</span>`;
+    sfx('wrong');
+    text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.15rem; color:var(--ink-soft); display:block; margin-top:10px;">べつの こたえも ためしてみよう！</span>`;
     text.style.color = "var(--incorrect)";
     
     // 不正解時に英語ボイス再生
@@ -991,8 +1395,8 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     if (/[a-zA-Z]/.test(voice)) speakEnglishVoice(voice); else speakJapaneseVoice(voice);
   }
   
-  overlay.classList.add('show');
-  
+  setTimeout(() => overlay.classList.add('show'), tapped ? 350 : 0);
+
   setTimeout(() => {
     overlay.classList.remove('show');
     if (isCorrect) {
@@ -1008,15 +1412,21 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     } else {
       answerLocked = false;
     }
-  }, 1800); 
+  }, 2200);
 }
 
 setMuted(isMuted);
+setModeButtons();
 
 window.onload = () => {
   const saved = loadProgress(SAVE_KEY);
   if (saved && saved.calcState && saved.lifeState) {
     calcState = saved.calcState; lifeState = saved.lifeState;
+    // まえの バージョン（えもじの ごはん）で ほぞんされていたら きのみに おきかえる
+    if (!Array.isArray(lifeState.foods) || lifeState.foods.length !== 4 || lifeState.foods.some(fd => !fd.img)) {
+      const fresh = randomBerries();
+      lifeState.foods = fresh.map((b, i) => ({ ...b, isEaten: !!(lifeState.foods && lifeState.foods[i] && lifeState.foods[i].isEaten) }));
+    }
   } else {
     initCalcGame(); initLifeGame();
   }
