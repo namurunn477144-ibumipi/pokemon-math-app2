@@ -1228,7 +1228,9 @@ function renderLifeCardQuestion(container, dataList, titleText) {
   }
 
   displayOptions.forEach(opt => {
-    const btn = document.createElement('div'); btn.className = 'option-btn'; btn.innerText = opt;
+    const btn = document.createElement('div'); btn.className = 'option-btn';
+    // かたちの えもじは おおきく みせる
+    if (/\p{Extended_Pictographic}/u.test(opt)) btn.innerHTML = `<span class="opt-emoji">${opt}</span>`; else btn.innerText = opt;
     if (opt === q.ans) btn.dataset.correct = '1';
     btn.onclick = () => checkAnswer(opt === q.ans, q.ans, false);
     optsGrid.appendChild(btn);
