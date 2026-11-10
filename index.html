@@ -191,6 +191,7 @@
     <div class="action-buttons">
       <button id="start-quiz-btn" class="btn btn-primary btn-large">けいさんクイズ (4もん)</button>
       <button id="mode-toggle-btn" class="btn btn-outline btn-large" style="margin-top:5px;">🔄 せいかつモードにきりかえ</button>
+      <button id="mute-btn" class="btn btn-outline btn-large" style="margin-top:5px;" onclick="setMuted(!isMuted)">🔇 おとを けす</button>
       <button id="reset-game-btn" class="btn btn-danger btn-large" style="margin-top:5px; display:none;">ゴンベともういちどあそぶ🔄</button>
     </div>
   </div>
@@ -486,7 +487,7 @@ function stopSpeech() {
 
 // parts: [{ text: "...", lang: "en" | "ja", pauseAfter: ミリびょう }]
 function speakSequence(parts) {
-  if (!hasSpeech) return;
+  if (!hasSpeech || isMuted) return;
   const wasBusy = window.speechSynthesis.speaking || window.speechSynthesis.pending;
   stopSpeech();
   const token = speechToken;
@@ -532,6 +533,31 @@ document.addEventListener('click', unlockSpeech, true);
 
 // こたえボタンの れんだ たいさく
 let answerLocked = false;
+
+// おとの オン・オフ（へやの「おとを けす」ボタン）
+const APP_ID = 'sansu';
+let isMuted = loadProgress(APP_ID + '-muted') === true;
+function setMuted(m) {
+  isMuted = m; saveProgress(APP_ID + '-muted', m);
+  if (m) stopSpeech();
+  const b = document.getElementById('mute-btn');
+  if (b) b.innerText = m ? '🔊 おとを だす' : '🔇 おとを けす';
+}
+
+// おなじ もんだいが つづけて でないように、さいきん でた もんだいを おぼえておく
+function pickFresh(list, name) {
+  const key = APP_ID + '-recent-' + name;
+  let recent = loadProgress(key);
+  if (!Array.isArray(recent)) recent = [];
+  recent = recent.filter(i => i < list.length);
+  const pool = list.map((_, i) => i).filter(i => !recent.includes(i));
+  const idx = pool.length ? pool[Math.floor(Math.random() * pool.length)] : Math.floor(Math.random() * list.length);
+  recent.push(idx);
+  const limit = Math.max(1, Math.floor(list.length / 2));
+  while (recent.length > limit) recent.shift();
+  saveProgress(key, recent);
+  return list[idx];
+}
 
 // すすみぐあいの ほぞん
 function saveProgress(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {} }
@@ -667,7 +693,7 @@ function interactPokemon(type) {
   else {
     const pokeId = getCurrentPoke().id;
     const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pokeId}.ogg`);
-    audio.volume = 0.5; audio.play().catch(e => console.log(e));
+    audio.volume = 0.5; if (!isMuted) audio.play().catch(e => console.log(e));
     pokeImg.classList.add('anim-shake'); setTimeout(() => pokeImg.classList.remove('anim-shake'), 400);
   }
 }
@@ -719,7 +745,7 @@ function evolvePoke(targetPoke) {
   document.getElementById('evolve-overlay').classList.add('show');
   
   const audio = new Audio(`https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${targetPoke.id}.ogg`);
-  audio.volume = 0.5; audio.play().catch(e => console.log(e));
+  audio.volume = 0.5; if (!isMuted) audio.play().catch(e => console.log(e));
   renderRoom();
 }
 
@@ -752,6 +778,7 @@ document.getElementById('mode-toggle-btn').onclick = () => {
 
 let currentQIndex = 0;
 let currentQuestionData = null;
+let recentCalc = [];
 
 document.getElementById('start-quiz-btn').onclick = () => {
   roomView.classList.add('hidden'); quizView.classList.remove('hidden'); currentQIndex = 0;
@@ -782,7 +809,12 @@ function showNextQuestion() {
   const contentEl = document.getElementById('quiz-content'); contentEl.innerHTML = "";
   
   if (!isLifeMode) {
-    currentQuestionData = generateCalcQuestion();
+    // おなじ けいさんが つづけて でないようにする
+    let tries = 0;
+    do { currentQuestionData = generateCalcQuestion(); tries++; }
+    while (recentCalc.includes(`${currentQuestionData.num1}${currentQuestionData.op}${currentQuestionData.num2}`) && tries < 20);
+    recentCalc.push(`${currentQuestionData.num1}${currentQuestionData.op}${currentQuestionData.num2}`);
+    if (recentCalc.length > 8) recentCalc.shift();
     renderMathCalcQuestion(contentEl, currentQuestionData);
   } else {
     if (currentQIndex === 0) renderClockQuestion(contentEl);
@@ -855,7 +887,7 @@ function renderMathCalcQuestion(container, q) {
 }
 
 function renderClockQuestion(container) {
-  const q = clockData[Math.floor(Math.random() * clockData.length)];
+  const q = pickFresh(clockData, 'clock');
   const hourDeg = (q.hour % 12) * 30 + (q.minute === 30 ? 15 : 0);
   const minuteDeg = q.minute * 6;
 
@@ -895,7 +927,7 @@ function renderClockQuestion(container) {
 }
 
 function renderLifeCardQuestion(container, dataList, titleText) {
-  const q = dataList[Math.floor(Math.random() * dataList.length)];
+  const q = pickFresh(dataList, titleText);
 
   container.innerHTML = `
     <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
@@ -978,6 +1010,8 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     }
   }, 1800); 
 }
+
+setMuted(isMuted);
 
 window.onload = () => {
   const saved = loadProgress(SAVE_KEY);
