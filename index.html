@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>さんすうクイズ - いぶちゃん＆みーちゃん</title>
+  <meta name="color-scheme" content="only light">
   <meta name="theme-color" content="#38C6EE">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=M+PLUS+Rounded+1c:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -116,6 +117,8 @@
     body, button { word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
     h1, h2, h3, p, .question-word, .question-ja, .question-sub, .feedback-text, .option-btn { text-wrap: balance; }
 
+    /* スマホの「じどう ダークモード」で くらく されないように、あかるい ページだと つたえる */
+    :root { color-scheme: only light; }
     html { background: var(--bg-bottom); }
     body { margin: 0; color: var(--ink); overflow-x: hidden; touch-action: manipulation; min-height: 100vh; background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%); transition: background 0.6s; }
     .bg-deco { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
