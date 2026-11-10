@@ -252,7 +252,7 @@ const correctVoices = ["やったー！", "せいかい！", "Great!", "Good job
 const incorrectVoices = ["おしい！", "もういっかい！", "Oh no!", "Almost!"];
 
 const kukuSpeechMap = {
-  "2x1": "にいちがいち", "2x2": "ににんがし", "2x3": "にさんがろく", "2x4": "にしがはち", "2x5": "にごじゅう", "2x6": "にろくじゅうに", "2x7": "にしちじゅうし", "2x8": "にはちじゅうろく", "2x9": "にくじゅうはち",
+  "2x1": "にいちがに", "2x2": "ににんがし", "2x3": "にさんがろく", "2x4": "にしがはち", "2x5": "にごじゅう", "2x6": "にろくじゅうに", "2x7": "にしちじゅうし", "2x8": "にはちじゅうろく", "2x9": "にくじゅうはち",
   "3x1": "さんいちがさん", "3x2": "さんにがろく", "3x3": "さざんがく", "3x4": "さんしじゅうに", "3x5": "さんごじゅうご", "3x6": "さぶろくじゅうはち", "3x7": "さんしちにじゅういち", "3x8": "さんぱにじゅうし", "3x9": "さんくにじゅうなな"
 };
 
@@ -388,6 +388,7 @@ const moneyData = [
 
 function setMode(modeNum) {
   currentCalcMode = modeNum;
+  saveCurrentProgress();
   document.querySelectorAll('.btn-mode').forEach((btn, idx) => {
     if(idx + 1 === modeNum) btn.classList.add('active');
     else btn.classList.remove('active');
@@ -445,8 +446,97 @@ let calcState = { totalBerries: 0, isEvolved: false };
 let lifeState = { exp: 0, keys: 0, isEvolved: false, partnerId: 133, partnerName: "イーブイ", foods: [] };
 let currentQuestionBerryEmoji = "🍎";
 
+// =========================================================
+// ▼▼ よみあげ（こえ）の しくみ ▼▼
+//  - あたらしく しゃべる まえに、まえの こえを かならず とめる
+//  - 「まえはん → ま → うしろはん」の よみあげも、つぎの もんだいに すすんだら とめる
+//  - iPhone は さいしょの タップで こえを「じゅんび」しておく
+// =========================================================
+const VOICE_PREFS = {
+  en: ["Samantha", "Karen", "Google US English", "Microsoft Aria", "Microsoft Jenny", "Microsoft Zira"],
+  ja: ["Kyoko", "O-Ren", "Google 日本語", "Microsoft Nanami", "Microsoft Haruka"]
+};
+const VOICE_SETTINGS = { en: { rate: 0.8, pitch: 1.1 }, ja: { rate: 0.95, pitch: 1.1 } };
+const hasSpeech = ('speechSynthesis' in window) && (typeof SpeechSynthesisUtterance !== 'undefined');
 let synthVoices = [];
-window.speechSynthesis.onvoiceschanged = () => { synthVoices = window.speechSynthesis.getVoices(); };
+let speechToken = 0;
+let speechTimers = [];
+let currentUtterance = null; // とちゅうで こえが きえないように さんしょうを もっておく
+
+function loadVoices() { if (hasSpeech) synthVoices = window.speechSynthesis.getVoices(); }
+if (hasSpeech) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
+
+function pickVoice(lang) {
+  if (synthVoices.length === 0) loadVoices();
+  const norm = (v) => (v.lang || '').replace('_', '-').toLowerCase();
+  const matches = synthVoices.filter(v => norm(v).startsWith(lang));
+  for (const name of VOICE_PREFS[lang]) {
+    const v = matches.find(v => v.name.includes(name));
+    if (v) return v;
+  }
+  const region = lang === 'en' ? 'en-us' : 'ja-jp';
+  return matches.find(v => norm(v) === region) || matches[0] || null;
+}
+
+function stopSpeech() {
+  speechToken++;
+  speechTimers.forEach(clearTimeout); speechTimers = [];
+  if (hasSpeech && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) window.speechSynthesis.cancel();
+}
+
+// parts: [{ text: "...", lang: "en" | "ja", pauseAfter: ミリびょう }]
+function speakSequence(parts) {
+  if (!hasSpeech) return;
+  const wasBusy = window.speechSynthesis.speaking || window.speechSynthesis.pending;
+  stopSpeech();
+  const token = speechToken;
+  const list = parts.filter(p => p && p.text && String(p.text).trim());
+  const playAt = (i) => {
+    if (token !== speechToken || i >= list.length) return;
+    const p = list[i];
+    const msg = new SpeechSynthesisUtterance(p.text);
+    msg.lang = p.lang === 'en' ? 'en-US' : 'ja-JP';
+    const voice = pickVoice(p.lang);
+    if (voice) msg.voice = voice;
+    const s = VOICE_SETTINGS[p.lang];
+    msg.rate = s.rate; msg.pitch = s.pitch;
+    msg.onend = () => {
+      if (token !== speechToken) return;
+      speechTimers.push(setTimeout(() => playAt(i + 1), p.pauseAfter || 0));
+    };
+    currentUtterance = msg;
+    window.speechSynthesis.speak(msg);
+  };
+  // とめた ちょくごに すぐ しゃべると むしされる たんまつが あるので すこし まつ
+  if (wasBusy) speechTimers.push(setTimeout(() => playAt(0), 120));
+  else playAt(0);
+}
+function speakText(text, lang) { speakSequence([{ text, lang }]); }
+function speakEnglishVoice(text) { speakText(text, 'en'); }
+function speakJapaneseVoice(text) { speakText(text, 'ja'); }
+// ことばの ( ___ ) を「ま」に して よむ
+function speakWithBlank(text, lang) {
+  const parts = text.split('( ___ )');
+  speakSequence([{ text: parts[0].trim(), lang, pauseAfter: 900 }, { text: (parts[1] || '').trim(), lang }]);
+}
+
+function unlockSpeech() {
+  document.removeEventListener('touchend', unlockSpeech, true);
+  document.removeEventListener('click', unlockSpeech, true);
+  if (!hasSpeech || window.speechSynthesis.speaking) return;
+  const u = new SpeechSynthesisUtterance(' '); u.volume = 0;
+  window.speechSynthesis.speak(u);
+}
+document.addEventListener('touchend', unlockSpeech, true);
+document.addEventListener('click', unlockSpeech, true);
+
+// こたえボタンの れんだ たいさく
+let answerLocked = false;
+
+// すすみぐあいの ほぞん
+function saveProgress(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {} }
+function loadProgress(key) { try { const s = localStorage.getItem(key); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
+// =========================================================
 
 const roomView = document.getElementById('room-view'), quizView = document.getElementById('quiz-view');
 const foodListEl = document.getElementById('food-list'), foodSection = document.getElementById('food-section');
@@ -477,7 +567,10 @@ function updateStageBackground() {
   quizPartnerStage.classList.add(targetBg);
 }
 
+const SAVE_KEY = 'sansu-quiz-progress-v1';
+function saveCurrentProgress() { saveProgress(SAVE_KEY, { isLifeMode, calcState, lifeState, currentCalcMode }); }
 function renderRoom() {
+  saveCurrentProgress();
   foodListEl.innerHTML = "";
   const currentPoke = getCurrentPoke();
   
@@ -746,8 +839,9 @@ function renderMathCalcQuestion(container, q) {
   `;
 
   document.getElementById('math-voice-btn').onclick = () => {
-    if (q.op === '×' && q.speechText) speakJapaneseVoice(q.speechText);
-    else speakJapaneseVoice(`${q.num1} ${q.op === '+' ? 'たす' : 'ひく'} ${q.num2} わ？`); // 「は」を「わ」に変更！
+    // こたえは いわない（くくの となえかたは せいかいの あとに きかせる）
+    const opWord = q.op === '+' ? 'たす' : (q.op === '-' ? 'ひく' : 'かける');
+    speakJapaneseVoice(`${q.num1} ${opWord} ${q.num2} わ？`); // 「は」を「わ」に変更！
   };
 
   const optsGrid = document.getElementById('math-opts');
@@ -814,7 +908,7 @@ function renderLifeCardQuestion(container, dataList, titleText) {
   `;
 
   document.getElementById('life-voice-btn').onclick = () => {
-    let cleanText = q.text.replace(/（[^）]*）/g, '').replace(/[\u1F600-\u1F64F\u1F300-\u1F5FF\u1F680-\u1F6FF\u2600-\u26FF\u2700-\u27BF]/g, '');
+    let cleanText = q.text.replace(/（[^）]*）/g, '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, '');
     speakJapaneseVoice(cleanText);
   };
 
@@ -837,26 +931,9 @@ function renderLifeCardQuestion(container, dataList, titleText) {
   setTimeout(() => { document.getElementById('life-voice-btn').click(); }, 300);
 }
 
-function speakJapaneseVoice(text) {
-  if (!text) return;
-  const msg = new SpeechSynthesisUtterance(text); msg.lang = 'ja-JP';
-  if (synthVoices.length === 0) synthVoices = window.speechSynthesis.getVoices();
-  const jaVoice = synthVoices.find(v => v.lang.startsWith('ja'));
-  if (jaVoice) msg.voice = jaVoice;
-  msg.pitch = 1.1; msg.rate = 0.9;
-  window.speechSynthesis.speak(msg);
-}
-
-function speakEnglishVoice(text) {
-  const msg = new SpeechSynthesisUtterance(text); msg.lang = 'en-US';
-  if (synthVoices.length === 0) synthVoices = window.speechSynthesis.getVoices();
-  const enVoice = synthVoices.find(v => v.lang.startsWith('en'));
-  if (enVoice) msg.voice = enVoice;
-  msg.pitch = 1.1; msg.rate = 0.8;
-  window.speechSynthesis.speak(msg);
-}
-
 function checkAnswer(isCorrect, ansText, isCalc = false) {
+  if (answerLocked) return;
+  answerLocked = true;
   const overlay = document.getElementById('feedback-overlay'), icon = document.getElementById('feedback-icon'), text = document.getElementById('feedback-text');
   
   if (isCorrect) {
@@ -866,10 +943,15 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     
     // 正解時に英語ボイス再生
     const voice = correctVoices[Math.floor(Math.random() * correctVoices.length)];
-    if (/[a-zA-Z]/.test(voice)) speakEnglishVoice(voice); else speakJapaneseVoice(voice);
+    const parts = [{ text: voice, lang: /[a-zA-Z]/.test(voice) ? 'en' : 'ja', pauseAfter: 300 }];
+    // かけざんは せいかいの あとに くくの となえかたを きかせる
+    if (isCalc && currentQuestionData && currentQuestionData.op === '×' && currentQuestionData.speechText) {
+      parts.push({ text: currentQuestionData.speechText, lang: 'ja' });
+    }
+    speakSequence(parts);
   } else {
     icon.innerText = "❌"; icon.style.color = "var(--incorrect)";
-    text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.2rem; color:#666; display:block; margin-top:10px;">せいかいは：${ansText}</span>`;
+    text.innerHTML = `${incorrectTexts[Math.floor(Math.random() * incorrectTexts.length)]}<br><span style="font-size:1.2rem; color:#666; display:block; margin-top:10px;">もういちど かんがえてみよう！</span>`;
     text.style.color = "var(--incorrect)";
     
     // 不正解時に英語ボイス再生
@@ -884,19 +966,29 @@ function checkAnswer(isCorrect, ansText, isCalc = false) {
     if (isCorrect) {
       if (isCalc) {
         feedBerriesInQuiz(parseInt(ansText) || 5, () => {
+          answerLocked = false;
           currentQIndex++; showNextQuestion();
         });
       } else {
+        answerLocked = false;
         currentQIndex++; showNextQuestion();
       }
+    } else {
+      answerLocked = false;
     }
   }, 1800); 
 }
 
-window.onload = () => { 
-  initCalcGame(); 
-  initLifeGame(); 
-  renderRoom(); 
+window.onload = () => {
+  const saved = loadProgress(SAVE_KEY);
+  if (saved && saved.calcState && saved.lifeState) {
+    calcState = saved.calcState; lifeState = saved.lifeState;
+  } else {
+    initCalcGame(); initLifeGame();
+  }
+  if (saved && [1, 2, 3].includes(saved.currentCalcMode)) setMode(saved.currentCalcMode);
+  if (saved && saved.isLifeMode === true) document.getElementById('mode-toggle-btn').onclick(); // せいかつモードで おわっていたら もどす
+  else renderRoom();
 };
 </script>
 </body>
