@@ -413,6 +413,10 @@
     /* しんかした あとの「もどる」ボタンは ステージの みぎうえに */
     .reset-pill { position: absolute; top: 10px; right: 10px; z-index: 25; display: inline-flex; align-items: center; gap: 4px; padding: 7px 12px; border: none; border-radius: 999px; font-size: 0.8rem; font-weight: 900; color: #FFF; background: linear-gradient(135deg, #34D399, var(--correct-2)); box-shadow: 0 6px 14px var(--shadow); white-space: nowrap; cursor: pointer; }
     .reset-pill:active { transform: scale(0.94); }
+    /* ---------- タブレットでは ぜんたいを おおきく（--z は がめんの おおきさから けいさん）---------- */
+    #app, .feedback-card, #evolve-overlay > *:not(.evo-rings) { zoom: var(--z, 1); }
+    #app, .view { min-height: calc(100vh / var(--z, 1)); }
+    @supports (height: 100dvh) { .view { min-height: calc(100dvh / var(--z, 1)); } }
   </style>
 </head>
 <body>
@@ -486,6 +490,16 @@
 </div>
 
 <script>
+// タブレットでは がめんの おおきさに あわせて ぜんたいを おおきく する（スマホは そのまま）
+function fitZoom() {
+  const w = window.innerWidth, h = window.innerHeight;
+  let z = 1;
+  if (w >= 600) z = Math.min(w * 0.92 / 480, h / 790);
+  z = Math.max(1, Math.min(z, 1.9));
+  document.documentElement.style.setProperty('--z', z.toFixed(3));
+}
+fitZoom();
+window.addEventListener('resize', fitZoom);
   // 計算クイズ専用：ゴンベ(446) -> カビゴン(143)
 const gonbeFamily = { stage0: {id: 446, name: "ゴンベ"}, stage1: {id: 143, name: "カビゴン"} };
 
